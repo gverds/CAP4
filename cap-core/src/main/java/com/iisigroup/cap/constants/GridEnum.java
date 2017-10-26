@@ -33,8 +33,8 @@ package com.iisigroup.cap.constants;
  *          </ul>
  */
 public enum GridEnum {
-    PAGE("page"),
-    PAGEROWS("rows"),
+    PAGE("draw"),
+    PAGEROWS("length"),
     TOTAL("total"),
     RECORDS("records"),
     SORTTYPE("sord"),
@@ -44,7 +44,8 @@ public enum GridEnum {
     CELL("cell"),
     COL_NAME("name"),
     COL_INDEX("index"),
-    COL_PARAM("_columnParam");
+    COL_PARAM("_columnParam"),
+    START("start");
 
     private String code;
 

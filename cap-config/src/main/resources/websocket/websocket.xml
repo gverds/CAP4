@@ -9,7 +9,7 @@
     <context:component-scan base-package="com.iisigroup.cap.websocket.handler" />
     <!-- @Controller @Service -->
     <context:component-scan base-package="com.iisigroup.cap.websocket.service" />
-    <!-- @Task -->
+    <!-- @Task
     <bean id="reminderTask" class="com.iisigroup.cap.websocket.timer.CapReminderTimerTask"></bean>
     <bean id="scheduledExecutorTask" class="org.springframework.scheduling.concurrent.ScheduledExecutorTask">
         <property name="runnable" ref="reminderTask"></property>
@@ -23,4 +23,5 @@
             </list>
         </property>
     </bean>
+    -->
 </beans>
