@@ -24,7 +24,7 @@ import com.iisigroup.cap.annotation.HandlerType.HandlerTypeEnum;
 import com.iisigroup.cap.component.GridResult;
 import com.iisigroup.cap.component.Request;
 import com.iisigroup.cap.component.Result;
-import com.iisigroup.cap.component.impl.DataTablesAjaxFormResult;
+import com.iisigroup.cap.component.impl.AjaxFormResult;
 import com.iisigroup.cap.constants.GridEnum;
 import com.iisigroup.cap.context.CapParameter;
 import com.iisigroup.cap.db.dao.SearchSetting;
@@ -143,7 +143,7 @@ public abstract class MFormHandler extends HandlerPlugin {
 
     }
 
-    @SuppressWarnings({ "rawtypes" })
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     private Result getGridData(Method method, Request params) {
         SearchSetting search = createSearchTemplete();
         boolean pages = params.containsParamsKey(GridEnum.PAGE.getCode());
@@ -166,15 +166,15 @@ public abstract class MFormHandler extends HandlerPlugin {
             }
         }
         GridResult result = null;
-        DataTablesAjaxFormResult wrapper = new DataTablesAjaxFormResult();
+        AjaxFormResult wrapper = new AjaxFormResult();
         try {
             result = (GridResult) method.invoke(this, search, params);
             // result.setColumns(getColumns(params.get(GridEnum.COL_PARAM.getCode())));
-            // result.setPage(page);
+            result.setPage(page);
             // result.setPageCount(result.getRecords(), pageRows);
             wrapper.set("recordsTotal", result.getRecords());
             wrapper.set("recordsFiltered", result.getRecords());
-            wrapper.set("data", result.getRowData(), null);
+            wrapper.set("data", result.getRowData());
         } catch (InvocationTargetException e) {
             if (e.getCause() instanceof CapMessageException) {
                 throw (CapMessageException) e.getCause();
