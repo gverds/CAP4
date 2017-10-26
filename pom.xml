@@ -104,8 +104,6 @@
         <module>cap-core</module>
         <module>cap-mvc</module>
         <module>cap-security</module>
-        <module>cap-config</module>
-        <module>cap-web</module>
         <module>cap-hg</module>
         <module>cap-db</module>
         <module>cap-base</module>
