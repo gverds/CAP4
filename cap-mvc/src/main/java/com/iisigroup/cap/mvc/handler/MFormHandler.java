@@ -24,6 +24,7 @@ import com.iisigroup.cap.annotation.HandlerType.HandlerTypeEnum;
 import com.iisigroup.cap.component.GridResult;
 import com.iisigroup.cap.component.Request;
 import com.iisigroup.cap.component.Result;
+import com.iisigroup.cap.component.impl.DataTablesAjaxFormResult;
 import com.iisigroup.cap.constants.GridEnum;
 import com.iisigroup.cap.context.CapParameter;
 import com.iisigroup.cap.db.dao.SearchSetting;
@@ -148,9 +149,11 @@ public abstract class MFormHandler extends HandlerPlugin {
         boolean pages = params.containsParamsKey(GridEnum.PAGE.getCode());
         int page = 0, pageRows = 0, startRow = 0;
         if (pages) {
-            page = params.getParamsAsInteger(GridEnum.PAGE.getCode());
+            // page = params.getParamsAsInteger(GridEnum.PAGE.getCode());
             pageRows = params.getParamsAsInteger(GridEnum.PAGEROWS.getCode());
-            startRow = (page - 1) * pageRows;
+            // startRow = (page - 1) * pageRows;
+            startRow = params.getParamsAsInteger(GridEnum.START.getCode());
+            page = startRow / pageRows + 1;
             search.setFirstResult(startRow).setMaxResults(pageRows);
         }
         boolean sort = params.containsParamsKey(GridEnum.SORTCOLUMN.getCode()) && !CapString.isEmpty(params.get(GridEnum.SORTCOLUMN.getCode()));
@@ -163,11 +166,15 @@ public abstract class MFormHandler extends HandlerPlugin {
             }
         }
         GridResult result = null;
+        DataTablesAjaxFormResult wrapper = new DataTablesAjaxFormResult();
         try {
             result = (GridResult) method.invoke(this, search, params);
-            result.setColumns(getColumns(params.get(GridEnum.COL_PARAM.getCode())));
-            result.setPage(page);
-            result.setPageCount(result.getRecords(), pageRows);
+            // result.setColumns(getColumns(params.get(GridEnum.COL_PARAM.getCode())));
+            // result.setPage(page);
+            // result.setPageCount(result.getRecords(), pageRows);
+            wrapper.set("recordsTotal", result.getRecords());
+            wrapper.set("recordsFiltered", result.getRecords());
+            wrapper.set("data", result.getRowData(), null);
         } catch (InvocationTargetException e) {
             if (e.getCause() instanceof CapMessageException) {
                 throw (CapMessageException) e.getCause();
@@ -179,7 +186,7 @@ public abstract class MFormHandler extends HandlerPlugin {
         } catch (Throwable t) {
             throw new CapException(t, this.getClass());
         }
-        return result;
+        return wrapper;
     }
 
     /**
