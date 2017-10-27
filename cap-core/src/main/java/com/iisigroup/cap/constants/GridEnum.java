@@ -42,7 +42,7 @@ public enum GridEnum {
     SORTDESC("desc"),
     SORTCOLUMN("sidx"),
     CELL("cell"),
-    COL_NAME("name"),
+    COL_NAME("data"),
     COL_INDEX("index"),
     COL_PARAM("_columnParam"),
     START("start");

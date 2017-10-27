@@ -26,7 +26,6 @@ import com.google.gson.JsonArray;
 import com.iisigroup.cap.component.GridResult;
 import com.iisigroup.cap.component.Result;
 import com.iisigroup.cap.constants.GridEnum;
-import com.iisigroup.cap.exception.CapException;
 import com.iisigroup.cap.formatter.BeanFormatter;
 import com.iisigroup.cap.formatter.Formatter;
 import com.iisigroup.cap.formatter.impl.ADDateFormatter;
@@ -164,7 +163,7 @@ public class MapGridResult extends AjaxFormResult implements GridResult<MapGridR
 
     @Override
     public String getResult() {
-        resultMap.put(GridEnum.PAGEROWS.getCode(), getRowDataToJSON());
+        resultMap.put(GridEnum.PAGEROWS.getCode(), getRowDataToList());
         return GsonUtil.mapToJson(resultMap);
     }
 
@@ -198,17 +197,12 @@ public class MapGridResult extends AjaxFormResult implements GridResult<MapGridR
         return this.rowData;
     }
 
-    private List<Map<String, Object>> getRowDataToJSON() {
+    @Override
+    public List<Map<String, Object>> getRowDataToList() {
         List<Map<String, Object>> rows = new ArrayList<Map<String, Object>>();
         if (rowData != null && !rowData.isEmpty()) {
             for (Map<String, Object> data : rowData) {
-            	Map<String, Object> row = new HashMap<String, Object>();
-                try {
-                    row.put(GridEnum.CELL.getCode(), dataToJsonObject(data));
-                } catch (CapException e) {
-                    logger.error(e.getMessage(), getClass());
-                }
-                rows.add(row);
+                rows.add(dataToJsonObject(data));
             }
         }
         return rows;

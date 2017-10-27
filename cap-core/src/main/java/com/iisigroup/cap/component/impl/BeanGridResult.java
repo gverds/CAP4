@@ -193,17 +193,12 @@ public class BeanGridResult extends AjaxFormResult implements GridResult<BeanGri
         return this.rowData;
     }
 
-    private List<Map<String, Object>> getRowDataToList() {
+    @Override
+    public List<Map<String, Object>> getRowDataToList() {
         List<Map<String, Object>> rows = new ArrayList<Map<String, Object>>();
         if (rowData != null && !rowData.isEmpty()) {
             for (GenericBean data : rowData) {
-            	Map<String, Object> row = new HashMap<String, Object>();
-                try {
-                    row.put(GridEnum.CELL.getCode(), data.toJSONObject(this.columns, dataReformatter));
-                } catch (CapException e) {
-                    logger.error(e.getMessage(), e);
-                }
-                rows.add(row);
+                rows.add(data.toJSONObject(this.columns, dataReformatter));
             }
         }
         return rows;
