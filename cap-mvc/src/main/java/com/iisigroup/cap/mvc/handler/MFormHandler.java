@@ -169,12 +169,12 @@ public abstract class MFormHandler extends HandlerPlugin {
         AjaxFormResult wrapper = new AjaxFormResult();
         try {
             result = (GridResult) method.invoke(this, search, params);
-            // result.setColumns(getColumns(params.get(GridEnum.COL_PARAM.getCode())));
+            result.setColumns(getColumns(params.get(GridEnum.COL_PARAM.getCode())));
             result.setPage(page);
             // result.setPageCount(result.getRecords(), pageRows);
             wrapper.set("recordsTotal", result.getRecords());
             wrapper.set("recordsFiltered", result.getRecords());
-            wrapper.set("data", result.getRowData());
+            wrapper.set("data", result.getRowDataToList());
         } catch (InvocationTargetException e) {
             if (e.getCause() instanceof CapMessageException) {
                 throw (CapMessageException) e.getCause();

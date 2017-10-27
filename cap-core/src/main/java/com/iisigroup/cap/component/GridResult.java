@@ -95,4 +95,5 @@ public interface GridResult<T, E> extends Result {
 
     Map<String, Formatter> getDataReformatter();
 
+    List<Map<String, Object>> getRowDataToList();
 }
