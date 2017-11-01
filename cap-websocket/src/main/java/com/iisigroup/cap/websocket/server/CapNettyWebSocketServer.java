@@ -44,7 +44,7 @@ public class CapNettyWebSocketServer {
 
     public CapNettyWebSocketServer() {
         Configuration config = new Configuration();
-        config.setPort(9092);
+        config.setPort(9094);
 
         server = new SocketIOServer(config);
 
