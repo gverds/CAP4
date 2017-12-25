@@ -36,6 +36,9 @@ public class AccessControlServiceImpl implements AccessControlService {
     @Resource
     private UserDao userDao;
 
+    @Resource
+    private HttpServletRequest req;
+
     private String systemType;
 
     public void setSystemType(String systemType) {
@@ -76,8 +79,6 @@ public class AccessControlServiceImpl implements AccessControlService {
     }
 
     public boolean checkCaptcha() {
-//        HttpServletRequest req = CapSecurityContext.getUser().get("request");
-        HttpServletRequest req = (HttpServletRequest) CapSecurityContext.getUser().getExtraAttrib().get("request");
         String captchaData1 = req != null ? req.getParameter("captcha") : "";
         String captchaData2 = req != null ? req.getParameter("audioCaptcha") : "";
         CheckCodeService captcha = CapAppContext.getBean("capCaptcha");
