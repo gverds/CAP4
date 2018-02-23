@@ -101,6 +101,7 @@
         </dependencies>
     </dependencyManagement>
     <modules>
+        <module>cap-config</module>
         <module>cap-core</module>
         <module>cap-mvc</module>
         <module>cap-security</module>
