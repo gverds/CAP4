@@ -137,8 +137,8 @@ public class ErrorCodeServiceImpl implements ErrorCodeService {
         errorCode.setSeverity(severity);
         errorCode.setMessage(message);
         errorCode.setSuggestion(suggestion);
-        errorCode.setLastModifyBy(CapSecurityContext.getUserId());
-        errorCode.setLastModifyTime(CapDate.getCurrentTimestamp());
+        errorCode.setUpdater(CapSecurityContext.getUserId());
+        errorCode.setUpdateTime(CapDate.getCurrentTimestamp());
         errorCodeDao.save(errorCode);
     }
 

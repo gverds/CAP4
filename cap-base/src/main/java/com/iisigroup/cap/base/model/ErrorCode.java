@@ -41,75 +41,75 @@ import com.iisigroup.cap.utils.CapString;
  */
 @Entity
 @EntityListeners({ CapOidGeneratorListener.class })
-@Table(name = "CFG_ErrorCode", uniqueConstraints = @UniqueConstraint(columnNames = { "code", "locale" }))
+@Table(name = "CFG_ERRORCODE", uniqueConstraints = @UniqueConstraint(columnNames = { "CODE", "LOCALE" }))
 public class ErrorCode extends GenericBean implements DataObject {
     private static final long serialVersionUID = 1L;
 
     private static final String SEPARATOR = "|";
 
     @Id
-    @Column(unique = true, nullable = false, length = 32)
+    @Column(unique = true, nullable = false, length = 32, name = "OID")
     private String oid;
 
     /**
      * 狀況代碼
      */
-    @Column(unique = true, nullable = false, length = 20)
+    @Column(unique = true, nullable = false, length = 20, name = "CODE")
     private String code;
 
     /**
      * 語言別
      */
-    @Column(nullable = false, length = 5)
+    @Column(nullable = false, length = 5, name = "LOCALE")
     private String locale;
 
     /**
      * 等級(INFO/ERROR/WARN)
      */
-    @Column(length = 5)
+    @Column(length = 5, name = "SEVERITY")
     private String severity;
 
     /**
      * 狀況說明
      */
-    @Column(length = 1024)
+    @Column(length = 1024, name = "MESSAGE")
     private String message;
 
     /**
      * 建議處理方式
      */
-    @Column(length = 1024)
+    @Column(length = 1024, name = "SUGGESTION")
     private String suggestion;
 
     /**
      * 系統別
      */
-    @Column(length = 5)
+    @Column(length = 5, name = "SYS_ID")
     private String sysId;
 
     /**
      * 是否送監控
      */
-    @Column(length = 1, columnDefinition="CHAR")
+    @Column(length = 1, name = "SEND_MON")
     private String sendMon;
 
     /**
      * Help URL
      */
-    @Column(length = 128)
-    private String helpURL;
+    @Column(length = 128, name = "HELP_URL")
+    private String helpUrl;
 
     /**
      * 最後修改人
      */
-    @Column(length = 10)
-    private String lastModifyBy;
+    @Column(length = 10, name = "UPDATER")
+    private String updater;
 
     /**
      * 最後修改時間
      */
-    @Column(columnDefinition = "TIMESTAMP")
-    private Timestamp lastModifyTime;
+    @Column(name = "UPDATE_TIME")
+    private Timestamp updateTime;
 
     /**
      * get the code
@@ -206,44 +206,6 @@ public class ErrorCode extends GenericBean implements DataObject {
         this.suggestion = suggestion;
     }
 
-    /**
-     * get the lastmodif
-     *
-     * @return the lastModifyTime
-     */
-    public Timestamp getLastModifyTime() {
-        return lastModifyTime;
-    }
-
-    /**
-     * set the lastModifyTime
-     *
-     * @param lastModifyTime
-     *            the lastModiryTime to set
-     */
-    public void setLastModifyTime(Timestamp lastModifyTime) {
-        this.lastModifyTime = lastModifyTime;
-    }
-
-    /**
-     * get the lastModifyBy
-     *
-     * @return the lastModifyBy
-     */
-    public String getLastModifyBy() {
-        return lastModifyBy;
-    }
-
-    /**
-     * set the lastModifyBy
-     *
-     * @param lastModifyBy
-     *            the lastModifyBy to set
-     */
-    public void setLastModifyBy(String lastModifyBy) {
-        this.lastModifyBy = lastModifyBy;
-    }
-
     /*
      * (non-Javadoc)
      *
@@ -293,21 +255,6 @@ public class ErrorCode extends GenericBean implements DataObject {
     }
 
     /**
-     * @return the helpURL
-     */
-    public String getHelpURL() {
-        return helpURL;
-    }
-
-    /**
-     * @param helpURL
-     *            the helpURL to set
-     */
-    public void setHelpURL(String helpURL) {
-        this.helpURL = helpURL;
-    }
-
-    /**
      * set the sysId
      *
      * @param sysId
@@ -318,8 +265,8 @@ public class ErrorCode extends GenericBean implements DataObject {
     }
 
     public String getMonitorHelpURL() {
-        String tmpHelpUrl = StringUtils.trimToEmpty(this.helpURL);
-        return "".equals(tmpHelpUrl) ? "N/A" : this.helpURL;
+        String tmpHelpUrl = StringUtils.trimToEmpty(this.getHelpUrl());
+        return "".equals(tmpHelpUrl) ? "N/A" : this.getHelpUrl();
     }
 
     public String getMonitorSeverity() {
@@ -329,6 +276,51 @@ public class ErrorCode extends GenericBean implements DataObject {
 
     public String getI18nPropString() {
         return CapString.concat(this.severity, SEPARATOR, this.message, SEPARATOR, StringUtils.trimToEmpty(this.suggestion));
+    }
+
+    /**
+     * @return the helpUrl
+     */
+    public String getHelpUrl() {
+        return helpUrl;
+    }
+
+    /**
+     * @param helpUrl
+     *            the helpUrl to set
+     */
+    public void setHelpUrl(String helpUrl) {
+        this.helpUrl = helpUrl;
+    }
+
+    /**
+     * @return the updater
+     */
+    public String getUpdater() {
+        return updater;
+    }
+
+    /**
+     * @param updater
+     *            the updater to set
+     */
+    public void setUpdater(String updater) {
+        this.updater = updater;
+    }
+
+    /**
+     * @return the updateTime
+     */
+    public Timestamp getUpdateTime() {
+        return updateTime;
+    }
+
+    /**
+     * @param updateTime
+     *            the updateTime to set
+     */
+    public void setUpdateTime(Timestamp updateTime) {
+        this.updateTime = updateTime;
     }
 
 }
