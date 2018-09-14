@@ -12,7 +12,6 @@
 package com.iisigroup.cap.db.dao;
 
 import java.io.Serializable;
-import java.util.Iterator;
 import java.util.List;
 
 import com.iisigroup.cap.db.model.Page;
@@ -64,8 +63,6 @@ public interface GenericDao<T> {
      */
     T find(Serializable pk);
 
-    <S> List<S> find(Class<S> clazz, SearchSetting search);
-
     T find(T entity);
 
     T findUniqueOrNone(SearchSetting search);
@@ -81,11 +78,7 @@ public interface GenericDao<T> {
      */
     int count(SearchSetting search);
 
-    Iterator<T> list(int first, int count);
-
     Page<T> findPage(SearchSetting search);
-
-    <S> Page<S> findPage(Class<S> clazz, SearchSetting search);
 
     /**
      * create new search requirement
@@ -94,11 +87,32 @@ public interface GenericDao<T> {
      */
     SearchSetting createSearchTemplete();
 
-    /**
-     * flush
-     */
-    void flush();
-
     <S> S findById(Class<S> clazz, Serializable pk);
+
+    /**
+     * find by SearchSetting
+     * 
+     * @param <S>
+     *            bean
+     * @param search
+     *            SearchSetting
+     * @param clazz
+     *            Class<S>
+     * @return List<S>
+     */
+    <S> List<S> find(Class<S> clazz, SearchSetting search);
+
+    /**
+     * 查詢頁的資料
+     * 
+     * @param <S>
+     *            bean
+     * @param clazz
+     *            Class<S>
+     * @param search
+     *            SearchSetting
+     * @return Page<S>
+     */
+    <S> Page<S> findPage(Class<S> clazz, SearchSetting search);
 
 }

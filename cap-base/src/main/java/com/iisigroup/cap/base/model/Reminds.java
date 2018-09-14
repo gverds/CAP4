@@ -13,20 +13,8 @@ package com.iisigroup.cap.base.model;
 
 import java.math.BigDecimal;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-
+import com.iisigroup.cap.db.annotation.Table;
 import com.iisigroup.cap.db.model.DataObject;
-import com.iisigroup.cap.db.model.listener.CapOidGeneratorListener;
 import com.iisigroup.cap.model.GenericBean;
 
 /**
@@ -40,40 +28,35 @@ import com.iisigroup.cap.model.GenericBean;
  *          <li>2014/1/27,tammy,new
  *          </ul>
  */
-@SuppressWarnings("serial")
-@Entity
-@EntityListeners({ CapOidGeneratorListener.class })
-@Table(name = "CFG_REMINDS", uniqueConstraints = @UniqueConstraint(columnNames = "oid"))
+@Table(name = "CFG_REMINDS")
 public class Reminds extends GenericBean implements DataObject {
 
+    private static final long serialVersionUID = -6589065415398449822L;
+
     /** id */
-    @Id
-    @Column(length = 32, nullable = false, columnDefinition="CHAR")
     private String oid;
+    
     /** pid */
-    @Column(length = 32, nullable = false, columnDefinition="CHAR")
     private String pid;
+    
     /** 對象號碼 */
-    @Column(length = 10)
     private String scopePid;
+    
     /** 提醒方式 */
-    @Column(length = 1, columnDefinition="CHAR")
     private String styleTyp;
+    
     /** 顏色 */
-    @Column(length = 1, columnDefinition="CHAR")
     private String styleClr;
+    
     /** 數值 */
-    @Column(precision = 5)
     private BigDecimal style;
+    
     /** 單位 */
-    @Column(columnDefinition="INTEGER")
     private BigDecimal unit;
+    
     /** 是否完成 */
-    @Column(length = 1, columnDefinition="CHAR")
     private String ynFlag;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    @JoinColumns({ @JoinColumn(name = "pid", referencedColumnName = "oid", nullable = false, insertable = false, updatable = false) })
     private Remind remind;
 
     public String getOid() {

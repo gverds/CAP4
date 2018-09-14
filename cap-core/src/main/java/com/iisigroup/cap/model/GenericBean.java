@@ -127,8 +127,6 @@ public class GenericBean {
 
     }
 
-    private static String SPLIT = "\\|";
-
     /**
      * 取得每個欄位的值
      * 
@@ -144,7 +142,7 @@ public class GenericBean {
             Object val = null;
             try {
                 try {
-                    String[] s = str.split(SPLIT);
+                    String[] s = str.split("\\|");
                     val = s.length == 1 ? get(s[0]) : get(s[1]);
                     str = s[0];
                 } catch (Exception e) {

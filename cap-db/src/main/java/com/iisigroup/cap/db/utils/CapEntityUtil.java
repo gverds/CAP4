@@ -11,22 +11,20 @@
  */
 package com.iisigroup.cap.db.utils;
 
+import java.beans.Transient;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 /**
  * <pre>
@@ -55,15 +53,30 @@ public class CapEntityUtil {
      */
     public static <T> String[] getColumnName(T entity) {
         Set<Class<? extends Annotation>> ignore = new HashSet<Class<? extends Annotation>>();
-        ignore.add(OneToMany.class);
-        ignore.add(OneToOne.class);
-        ignore.add(ManyToMany.class);
-        ignore.add(ManyToOne.class);
+        ignore.add(Transient.class);
         return getColumnName(entity, ignore);
     }
 
-    @SuppressWarnings({ "rawtypes" })
+    public static <T> String[] getColumnName(T entity, boolean constantize) {
+        Set<Class<? extends Annotation>> ignore = new HashSet<Class<? extends Annotation>>();
+        ignore.add(Transient.class);
+        return getColumnName(entity, ignore, constantize);
+    }
+
     public static <T> String[] getColumnName(T entity, Set<Class<? extends Annotation>> ignoreAnnotation) {
+        return getColumnName(entity, ignoreAnnotation, false);
+    }
+
+    /**
+     * 取得傳入 entity 的 column name
+     * 
+     * @param entity
+     * @param ignoreAnnotation
+     * @param constantize
+     *            轉成常數命名方式(全大寫，以底線分隔)
+     * @return
+     */
+    public static <T> String[] getColumnName(T entity, Set<Class<? extends Annotation>> ignoreAnnotation, boolean constantize) {
         Set<String> cols = new LinkedHashSet<String>();
         try {
             Class searchClazz = getEntityClass(entity);
@@ -77,7 +90,13 @@ public class CapEntityUtil {
                             }
                         }
                     }
-                    cols.add(field.getName());
+                    if (!Modifier.isStatic(field.getModifiers())) {
+                        if (constantize) {
+                            cols.add(underscoreName(field.getName()));
+                        } else {
+                            cols.add(field.getName());
+                        }
+                    }
                 }
                 searchClazz = searchClazz.getSuperclass();
             }
@@ -129,18 +148,28 @@ public class CapEntityUtil {
     @SuppressWarnings({ "unchecked" })
     public static <T> Class<T> getEntityClass(T entity) throws ClassNotFoundException {
         return (Class<T>) entity.getClass();
-        // String entityName = PCEnhancer.toManagedTypeName(entity.getClass()
-        // .getName());
-        // return (Class<T>) Class.forName(entityName);
     }
 
-    @SuppressWarnings("rawtypes")
-    public static int getEntityFieldLength(Class clazz, String filedName, int defValue) {
-        try {
-            return clazz.getDeclaredField(filedName).getAnnotation(Column.class).length();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return defValue;
+    public static String underscoreName(String name) {
+        if (!StringUtils.hasLength(name)) {
+            return "";
         }
+        StringBuilder result = new StringBuilder();
+        result.append(lowerCaseName(name.substring(0, 1)));
+        for (int i = 1; i < name.length(); i++) {
+            String s = name.substring(i, i + 1);
+            String slc = lowerCaseName(s);
+            if (!s.equals(slc)) {
+                result.append("_").append(slc);
+            } else {
+                result.append(s);
+            }
+        }
+        return result.toString();
     }
+
+    public static String lowerCaseName(String name) {
+        return name.toLowerCase(Locale.US);
+    }
+
 }

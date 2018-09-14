@@ -13,16 +13,8 @@ package com.iisigroup.cap.base.model;
 
 import java.sql.Timestamp;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.NotNull;
-
+import com.iisigroup.cap.db.annotation.Table;
 import com.iisigroup.cap.db.model.DataObject;
-import com.iisigroup.cap.db.model.listener.CapOidGeneratorListener;
 import com.iisigroup.cap.model.GenericBean;
 
 /**
@@ -37,37 +29,25 @@ import com.iisigroup.cap.model.GenericBean;
  *          <li>2014/4/24,Lancelot,new
  *          </ul>
  */
-@SuppressWarnings("serial")
-@Entity
-@EntityListeners({ CapOidGeneratorListener.class })
-@Table(name = "DEF_I18N", uniqueConstraints = @UniqueConstraint(columnNames = { "locale", "codeType", "codeValue" }))
+@Table(name = "DEF_I18N")
 public class I18n extends GenericBean implements DataObject {
 
-    @Id
-    @Column(nullable = false, length = 32)
+    private static final long serialVersionUID = 4258423300438439079L;
+
     private String oid;
 
-    @NotNull
-    @Column(length = 5)
     private String locale;
 
-    @NotNull
-    @Column(length = 32, nullable = false)
     private String codeType;
 
-    @Column(length = 32)
     private String codeValue;
 
-    @Column(length = 300)
     private String codeDesc;
 
-    @Column(nullable = false, length = 3)
     private Integer codeOrder;
 
-    @Column(length = 6)
     private String updater;
 
-    @Column
     private Timestamp updateTime;
 
     public String getOid() {

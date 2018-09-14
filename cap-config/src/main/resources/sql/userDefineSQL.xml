@@ -10,6 +10,7 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
             <util:set value-type="java.util.HashMap">
                 <ref bean="baseSql" />
                 <ref bean="userSql" />
+                <ref bean="dmlTemplate" />
                 <ref bean="batchSql" />
             </util:set>
         </constructor-arg>

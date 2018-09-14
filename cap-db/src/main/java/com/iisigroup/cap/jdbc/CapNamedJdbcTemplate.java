@@ -12,6 +12,7 @@
 package com.iisigroup.cap.jdbc;
 
 import java.sql.BatchUpdateException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -540,6 +541,11 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
         } finally {
             logger.info("CapNamedJdbcTemplate spend {} ms", (System.currentTimeMillis() - cur));
         }
+    }
+
+    public <T> List<T> query(String sqlId, SearchSetting search, RowMapper<T> rm) {
+        // FIXME
+        return new ArrayList<T>();
     }
 
 }// ~

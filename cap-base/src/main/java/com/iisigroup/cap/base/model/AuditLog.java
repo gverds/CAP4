@@ -1,27 +1,31 @@
-/*
+/* 
  * AuditLog.java
- *
- * Copyright (c) 2011 International Integrated System, Inc.
+ * 
+ * Copyright (c) 2011 International Integrated System, Inc. 
  * All Rights Reserved.
- *
+ * 
  * Licensed Materials - Property of International Integrated System, Inc.
- *
- * This software is confidential and proprietary information of
+ * 
+ * This software is confidential and proprietary information of 
  * International Integrated System, Inc. (&quot;Confidential Information&quot;).
  */
 package com.iisigroup.cap.base.model;
 
 import java.sql.Timestamp;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-
+import com.iisigroup.cap.db.annotation.Table;
 import com.iisigroup.cap.db.model.DataObject;
 import com.iisigroup.cap.model.GenericBean;
 
+/**<pre>
+ * TODO Write a short description on the purpose of the program
+ * </pre>
+ * @since  2018年7月27日
+ * @author Lancelot
+ * @version <ul>
+ *           <li>2018年7月27日,Lancelot,new
+ *          </ul>
+ */
 /**
  * <pre>
  * 使用軌跡 persistence model.
@@ -34,53 +38,48 @@ import com.iisigroup.cap.model.GenericBean;
  *          <li>2014/1/16,Sunkist Wang,new
  *          </ul>
  */
-@SuppressWarnings("serial")
-@Entity
-@Table(name = "AUDIT_LOG", uniqueConstraints = @UniqueConstraint(columnNames = "oid"))
+@Table(name = "AUDIT_LOG")
 public class AuditLog extends GenericBean implements DataObject {
+
+    private static final long serialVersionUID = 4443971927284313493L;
+
     /** unique id */
-    @Id
-    @Column(length = 32, nullable = false)
     private String oid;
 
     /** 使用者SSOID */
-    @Column(name = "user_id", length = 20)
-    private String userId;
+    private String userCode;
 
     /** IP 位址 */
-    @Column(name = "ip_address", length = 50)
     private String ipAddress;
 
     /** 作業代號 */
-    @Column(name = "function_id", length = 20)
     private String functionId;
 
     /** 新增/修改/刪除/查詢/匯出/匯入 */
-    @Column(name = "action_type", length = 20)
     private String actionType;
 
     /** 執行時間 */
-    @Column(name = "execute_date")
     private Timestamp executeDate;
 
     /** 備註/Key值 */
-    @Column(length = 50)
     private String remark;
+
+    private String systype;
 
     public String getId() {
         return oid;
     }
 
+    public String getSystype() {
+        return systype;
+    }
+
+    public void setSystype(String systype) {
+        this.systype = systype;
+    }
+
     public void setId(String id) {
         this.oid = id;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
     }
 
     public String getIpAddress() {
@@ -99,12 +98,12 @@ public class AuditLog extends GenericBean implements DataObject {
         this.functionId = functionId;
     }
 
-    public String getAction() {
+    public String getActionType() {
         return actionType;
     }
 
-    public void setAction(String action) {
-        this.actionType = action;
+    public void setActionType(String actionType) {
+        this.actionType = actionType;
     }
 
     public Timestamp getExecuteDate() {
@@ -129,6 +128,21 @@ public class AuditLog extends GenericBean implements DataObject {
 
     public void setOid(String oid) {
         this.oid = oid;
+    }
+
+    /**
+     * @return the userCode
+     */
+    public String getUserCode() {
+        return userCode;
+    }
+
+    /**
+     * @param userCode
+     *            the userCode to set
+     */
+    public void setUserCode(String userCode) {
+        this.userCode = userCode;
     }
 
 }

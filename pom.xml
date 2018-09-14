@@ -44,47 +44,12 @@
             </dependency>
             <dependency>
                 <groupId>com.iisigroup.cap</groupId>
-                <artifactId>cap-hg</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.iisigroup.cap</groupId>
                 <artifactId>cap-db</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.iisigroup.cap</groupId>
                 <artifactId>cap-base</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.iisigroup.cap</groupId>
-                <artifactId>cap-auth-admin</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.iisigroup.cap</groupId>
-                <artifactId>cap-batch</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.iisigroup.cap</groupId>
-                <artifactId>cap-report</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.iisigroup.cap</groupId>
-                <artifactId>cap-captcha</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.iisigroup.cap</groupId>
-                <artifactId>cap-rule</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.iisigroup.cap</groupId>
-                <artifactId>cap-websocket</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -102,19 +67,12 @@
         </dependencies>
     </dependencyManagement>
     <modules>
-        <module>cap-config</module>
         <module>cap-core</module>
+        <module>cap-config</module>
         <module>cap-mvc</module>
         <module>cap-security</module>
-        <module>cap-hg</module>
         <module>cap-db</module>
         <module>cap-base</module>
-        <module>cap-auth-admin</module>
-        <module>cap-batch</module>
-        <module>cap-rule</module>
-        <module>cap-websocket</module>
-        <module>cap-captcha</module>
-        <module>cap-report</module>
     </modules>
     <dependencies>
         <!-- SERVLET API ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->

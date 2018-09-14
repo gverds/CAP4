@@ -255,10 +255,10 @@ public class CapAuditLog4HandlerAdvice {
         if (haveToAudit) {
             auditLog = new AuditLog();
             auditLog.setId(UUIDGenerator.getUUID());
-            auditLog.setUserId(uid);
+            auditLog.setUserCode(uid);
             auditLog.setIpAddress(trimByLen(CapString.trimNull(ipAddress), 50));
             auditLog.setFunctionId(trimByLen(function, 20));
-            auditLog.setAction(trimByLen(action.toLowerCase(), 20));
+            auditLog.setActionType(trimByLen(action.toLowerCase(), 20));
             // auditLog.setRemark(trimByLen(CapString.trimNull(params.toString()),
             // 50));
 

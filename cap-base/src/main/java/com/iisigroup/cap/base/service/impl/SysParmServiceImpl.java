@@ -59,7 +59,7 @@ public class SysParmServiceImpl implements SysParmService {
         if (!search.hasOrderBy()) {
             search.addOrderBy("parmId");
         }
-        return sysParmDao.findPage(SysParm.class, search);
+        return sysParmDao.findPage(search);
     }
 
     /*
@@ -69,7 +69,7 @@ public class SysParmServiceImpl implements SysParmService {
      */
     @Override
     public void addSysParm(String parmId, String parmValue, String parmDesc) {
-        SysParm sysParm = sysParmDao.findById(SysParm.class, parmId);
+        SysParm sysParm = sysParmDao.find(parmId);
         if (sysParm != null) {
             throw new CapMessageException(CapAppContext.getMessage("sysparm.error.01"), getClass()); // 參數代碼已存在
         }
@@ -83,7 +83,7 @@ public class SysParmServiceImpl implements SysParmService {
      */
     @Override
     public void modifySysParm(String parmId, String parmValue, String parmDesc) {
-        SysParm sysParm = sysParmDao.findById(SysParm.class, parmId);
+        SysParm sysParm = sysParmDao.find(parmId);
         if (sysParm == null) {
             throw new CapMessageException(CapAppContext.getMessage("sysparm.error.02"), getClass()); // 參數代碼不存在
         }
@@ -106,7 +106,7 @@ public class SysParmServiceImpl implements SysParmService {
      */
     @Override
     public void deleteSysParmByParmId(String parmId) {
-        SysParm sysParm = sysParmDao.findById(SysParm.class, parmId);
+        SysParm sysParm = sysParmDao.find(parmId);
         if (sysParm != null) {
             sysParmDao.delete(sysParm);
         }

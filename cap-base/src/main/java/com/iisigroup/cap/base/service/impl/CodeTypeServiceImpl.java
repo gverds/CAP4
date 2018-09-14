@@ -255,7 +255,7 @@ public class CodeTypeServiceImpl implements CodeTypeService {
                 search.addOrderBy("codeOrder");
             }
         }
-        return dao.findPage(CodeType.class, search);
+        return dao.findPage(search);
     }
 
 }

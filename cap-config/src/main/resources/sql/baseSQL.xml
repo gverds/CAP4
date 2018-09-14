@@ -169,4 +169,22 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
             ]]></value>
         </entry>
     </util:map>
+    <util:map id="dmlTemplate" map-class="java.util.HashMap" key-type="java.lang.String">
+        <entry key="insert">
+            <value><![CDATA[
+                INSERT INTO @{['tableName']} (@{['columns']}) VALUES (@{['values']})]]></value>
+        </entry>
+        <entry key="select">
+            <value><![CDATA[
+                SELECT @{['columns']} FROM @{['tableName']} WHERE @{['whereClause']}]]></value>
+        </entry>
+        <entry key="update">
+            <value><![CDATA[
+                UPDATE @{['tableName']} SET @{['updateInfo']} WHERE @{['whereClause']}]]></value>
+        </entry>
+        <entry key="delete">
+            <value><![CDATA[
+                DELETE FROM @{['tableName']} WHERE @{['whereClause']}]]></value>
+        </entry>
+    </util:map>
 </beans>

@@ -237,7 +237,7 @@ public class ErrorCodeServiceImpl implements ErrorCodeService {
             search.addSearchModeParameters(SearchMode.LIKE, "sysId", sysId);
         }
         search.addOrderBy("code");
-        return errorCodeDao.findPage(ErrorCode.class, search);
+        return errorCodeDao.findPage(search);
     }
 
 }

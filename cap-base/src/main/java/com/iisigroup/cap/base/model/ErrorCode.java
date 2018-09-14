@@ -13,17 +13,10 @@ package com.iisigroup.cap.base.model;
 
 import java.sql.Timestamp;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-
 import org.apache.commons.lang.StringUtils;
 
+import com.iisigroup.cap.db.annotation.Table;
 import com.iisigroup.cap.db.model.DataObject;
-import com.iisigroup.cap.db.model.listener.CapOidGeneratorListener;
 import com.iisigroup.cap.model.GenericBean;
 import com.iisigroup.cap.utils.CapString;
 
@@ -39,76 +32,62 @@ import com.iisigroup.cap.utils.CapString;
  *          <li>2011/08/02,UFO,new
  *          </ul>
  */
-@Entity
-@EntityListeners({ CapOidGeneratorListener.class })
-@Table(name = "CFG_ERRORCODE", uniqueConstraints = @UniqueConstraint(columnNames = { "CODE", "LOCALE" }))
+@Table(name = "CFG_ERRORCODE")
 public class ErrorCode extends GenericBean implements DataObject {
     private static final long serialVersionUID = 1L;
 
     private static final String SEPARATOR = "|";
 
-    @Id
-    @Column(unique = true, nullable = false, length = 32, name = "OID")
     private String oid;
 
     /**
      * 狀況代碼
      */
-    @Column(unique = true, nullable = false, length = 20, name = "CODE")
     private String code;
 
     /**
      * 語言別
      */
-    @Column(nullable = false, length = 5, name = "LOCALE")
     private String locale;
 
     /**
      * 等級(INFO/ERROR/WARN)
      */
-    @Column(length = 5, name = "SEVERITY")
     private String severity;
 
     /**
      * 狀況說明
      */
-    @Column(length = 1024, name = "MESSAGE")
     private String message;
 
     /**
      * 建議處理方式
      */
-    @Column(length = 1024, name = "SUGGESTION")
     private String suggestion;
 
     /**
      * 系統別
      */
-    @Column(length = 5, name = "SYS_ID")
     private String sysId;
 
     /**
      * 是否送監控
      */
-    @Column(length = 1, name = "SEND_MON")
     private String sendMon;
 
     /**
      * Help URL
      */
-    @Column(length = 128, name = "HELP_URL")
     private String helpUrl;
 
     /**
      * 最後修改人
      */
-    @Column(length = 10, name = "UPDATER")
     private String updater;
 
     /**
      * 最後修改時間
      */
-    @Column(name = "UPDATE_TIME")
     private Timestamp updateTime;
 
     /**

@@ -18,66 +18,9 @@
             <artifactId>cap-base</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.iisigroup.cap</groupId>
-            <artifactId>cap-config</artifactId>
-            <!-- 包版時不包進 war 中 使用 build plugin copy 進classes -->
-            <scope>provided</scope>
-        </dependency>
-        <!-- optional -->
-        <dependency>
-            <groupId>com.iisigroup.cap</groupId>
-            <artifactId>cap-batch</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.freemarker</groupId>
-                    <artifactId>freemarker</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.iisigroup.cap</groupId>
-            <artifactId>cap-auth-admin</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.iisigroup.cap</groupId>
-            <artifactId>cap-websocket</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.iisigroup.cap</groupId>
-            <artifactId>cap-hg</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.iisigroup.cap</groupId>
-            <artifactId>cap-captcha</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.iisigroup.cap</groupId>
-            <artifactId>cap-report</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.iisigroup.cap</groupId>
-            <artifactId>cap-rule</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.tuckey</groupId>
             <artifactId>urlrewritefilter</artifactId>
             <version>4.0.3</version>
-        </dependency>
-        <!-- HIBERNATE DEPENDENCIES ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>${hibernate.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-ehcache</artifactId>
-            <version>${hibernate.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-validator</artifactId>
-            <version>${hibernate.validator.version}</version>
         </dependency>
         <!-- provided：在編譯和測試的過程有效,在最後生成war時不加入 runtime：在運行的時候依賴,在編譯的時候不依賴 -->
         <dependency>

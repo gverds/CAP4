@@ -14,18 +14,8 @@ package com.iisigroup.cap.base.model;
 import java.sql.Timestamp;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-
+import com.iisigroup.cap.db.annotation.Table;
 import com.iisigroup.cap.db.model.DataObject;
-import com.iisigroup.cap.db.model.listener.CapOidGeneratorListener;
 import com.iisigroup.cap.model.GenericBean;
 
 /**
@@ -39,41 +29,41 @@ import com.iisigroup.cap.model.GenericBean;
  *          <li>2014/1/27,tammy,new
  *          </ul>
  */
-@SuppressWarnings("serial")
-@Entity
-@EntityListeners({ CapOidGeneratorListener.class })
-@Table(name = "CFG_REMIND", uniqueConstraints = @UniqueConstraint(columnNames = "oid"))
+@Table(name = "CFG_REMIND")
 public class Remind extends GenericBean implements DataObject {
 
+    private static final long serialVersionUID = 2861492264248660547L;
+
     /** id */
-    @Id
-    @Column(length = 32, nullable = false, columnDefinition="CHAR")
     private String oid;
+
     /** 內文 */
-    @Column(length = 2000)
     private String content;
+    
     /** 0.個人 1.組別(業務) 2.群組 3.部門 9.全體 */
-    @Column(length = 1, columnDefinition="CHAR")
     private String scopeTyp;
+
     /** 對象號碼 */
-    @Column(length = 10)
     private String scopePid;
+    
     /** 資料有效期間 */
     private Timestamp startDate;
+    
     /** 資料有效期間 */
     private Timestamp endDate;
+    
     /** 建立時間 */
     private Timestamp crTime;
+    
     /** 語系 */
-    @Column(length = 5, columnDefinition="CHAR")
     private String locale;
+    
     /** 最後異動人員 */
-    @Column(length = 10)
     private String updater;
+    
     /** 修改時間 */
     private Timestamp updTime;
 
-    @OneToMany(mappedBy = "remind", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Reminds> reminds;
 
     public String getOid() {

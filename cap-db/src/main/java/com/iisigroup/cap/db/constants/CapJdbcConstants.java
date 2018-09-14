@@ -36,4 +36,22 @@ public interface CapJdbcConstants {
     String SQL_PAGING_SOURCE_ORDER = "sourceOrder";
 
     String SQL_PAGING_DUMMY_ORDER_BY = "order by TempColumn";
+
+    String SQL_DML_INSERT = "insert";
+
+    String SQL_DML_SELECT = "select";
+
+    String SQL_DML_UPDATE = "update";
+
+    String SQL_DML_DELETE = "delete";
+
+    String SQL_DML_TABLE_NAME = "tableName";
+
+    String SQL_DML_COLUMNS = "columns";
+
+    String SQL_DML_VALUES = "values";
+
+    String SQL_DML_UPDATE_INFO = "updateInfo";
+
+    String SQL_DML_WHERE_CLAUSE = "whereClause";
 }
