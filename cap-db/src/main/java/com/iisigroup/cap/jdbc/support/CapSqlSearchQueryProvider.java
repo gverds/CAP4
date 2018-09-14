@@ -25,6 +25,7 @@ import org.springframework.util.CollectionUtils;
 import com.iisigroup.cap.db.constants.SearchMode;
 import com.iisigroup.cap.db.dao.SearchSetting;
 import com.iisigroup.cap.db.model.SearchModeParameter;
+import com.iisigroup.cap.db.utils.CapEntityUtil;
 
 /**
  * <pre>
@@ -127,12 +128,12 @@ public class CapSqlSearchQueryProvider {
     public String generateOrderCause() {
         StringBuffer sb = new StringBuffer();
         if (search.hasOrderBy()) {
-            sb.append(" order by ");
+            sb.append(" ORDER BY ");
             Map<String, Boolean> orderMap = search.getOrderBy();
             for (Entry<String, Boolean> entry : orderMap.entrySet()) {
-                sb.append(entry.getKey());
+                sb.append(CapEntityUtil.underscoreName(entry.getKey()));
                 if (entry.getValue()) {
-                    sb.append(" desc ");
+                    sb.append(" DESC ");
                 }
                 sb.append(',');
             }
@@ -143,15 +144,15 @@ public class CapSqlSearchQueryProvider {
     }
 
     private String generateItemQuery(SearchModeParameter search) {
-        String key = search.getKey();
-        String paramKey = key + search.hashCode();
+        String key = CapEntityUtil.underscoreName(search.getKey());
+        String paramKey = (String) search.getKey() + search.hashCode();
         Object value = search.getValue();
         StringBuffer sb = new StringBuffer();
         switch (search.getMode()) {
         case BETWEEN:
             Object[] values = asArray(value);
             if (values != null) {
-                sb.append(key).append(" between :").append(paramKey).append("1 and :").append(paramKey).append('2');
+                sb.append(key).append(" BETWEEN :").append(paramKey).append("1 AND :").append(paramKey).append('2');
                 params.put(paramKey + "1", values[0]);
                 params.put(paramKey + "2", values[1]);
             }
@@ -173,21 +174,21 @@ public class CapSqlSearchQueryProvider {
             params.put(paramKey, value);
             break;
         case IS_NULL:
-            sb.append(key).append(" is null ");
+            sb.append(key).append(" IS NULL ");
             break;
         case IS_NOT_NULL:
-            sb.append(key).append(" is not null ");
+            sb.append(key).append(" IS NOT NULL ");
             break;
         case IN:
-            sb.append(key).append(" in :").append(paramKey);
+            sb.append(key).append(" IN :").append(paramKey);
             params.put(paramKey, asCollection(value));
             break;
         case LIKE:
-            sb.append(key).append(" like :").append(paramKey);
+            sb.append(key).append(" LIKE :").append(paramKey);
             params.put(paramKey, value);
             break;
         case NOT_LIKE:
-            sb.append(key).append(" not like :").append(paramKey);
+            sb.append(key).append(" NOT LIKE :").append(paramKey);
             params.put(paramKey, value);
             break;
         case EQUALS:

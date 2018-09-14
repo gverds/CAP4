@@ -1,5 +1,5 @@
 /* 
- * Table.java
+ * Ignore.java
  * 
  * Copyright (c) 2018 International Integrated System, Inc. 
  * All Rights Reserved.
@@ -11,7 +11,7 @@
  */
 package com.iisigroup.cap.db.annotation;
 
-import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Retention;
@@ -19,31 +19,18 @@ import java.lang.annotation.Target;
 
 /**
  * <pre>
- * Annotation for define table name and primary key column in model
+ * Mark a filed in model as ignored one.
  * </pre>
  * 
- * @since 2018年9月13日
+ * @since 2018年9月14日
  * @author Lancelot
  * @version
  *          <ul>
- *          <li>2018年9月13日,Lancelot,new
+ *          <li>2018年9月14日,Lancelot,new
  *          </ul>
  */
-@Target(TYPE)
+@Target(FIELD)
 @Retention(RUNTIME)
-public @interface Table {
-    /**
-     * (Optional) The name of the table.
-     * <p/>
-     * Defaults to the entity name.
-     */
-    String name() default "";
-
-    /**
-     * (Optional) The primary key column of the table. Composite primary key is not allowed.
-     * <p/>
-     * Defaults to the default primary key column.
-     */
-    String pkColumn() default "OID";
+public @interface Ignored {
 
 }

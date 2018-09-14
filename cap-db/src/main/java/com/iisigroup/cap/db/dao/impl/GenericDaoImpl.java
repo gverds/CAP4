@@ -301,11 +301,8 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
             return null;
         }
         Map<String, Object> params = new HashMap<String, Object>();
-        String pkColumn = clazz.getAnnotation(Table.class).pkColumn();
-        String pkField = getPkField(entity);
         params.put(CapJdbcConstants.SQL_DML_TABLE_NAME, clazz.getAnnotation(Table.class).name());
         params.put(CapJdbcConstants.SQL_DML_COLUMNS, getCombineColumnString(entity));
-        params.put(CapJdbcConstants.SQL_DML_WHERE_CLAUSE, pkColumn + "=:" + pkField);
         CapSqlSearchQueryProvider provider = new CapSqlSearchQueryProvider(search);
         StringBuffer sql = new StringBuffer().append(CapCommonUtil.spelParser((String) sqltemp.getValue(CapJdbcConstants.SQL_DML_SELECT), params, sqltemp.getParserContext()))
                 .append(provider.generateWhereCause()).append(provider.generateOrderCause());
@@ -336,8 +333,8 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
         params.put(CapJdbcConstants.SQL_DML_COLUMNS, "COUNT(" + pkColumn + ")");
         CapSqlSearchQueryProvider provider = new CapSqlSearchQueryProvider(search);
         StringBuffer sql = new StringBuffer().append(CapCommonUtil.spelParser((String) sqltemp.getValue(CapJdbcConstants.SQL_DML_SELECT), params, sqltemp.getParserContext()))
-                .append(provider.generateWhereCause()).append(provider.generateOrderCause());
-        return getNamedJdbcTemplate().queryForObject(sql.toString(), new HashMap<String, Object>(), Integer.class);
+                .append(provider.generateWhereCause());
+        return getNamedJdbcTemplate().queryForObject(sql.toString(), provider.getParams(), Integer.class);
     }
 
     private String getCombineColumnString(Object entity) {
