@@ -64,22 +64,22 @@ public class AuditLog extends GenericBean implements DataObject {
     /** 備註/Key值 */
     private String remark;
 
-    private String systype;
+    private String sysType;
 
     public String getId() {
         return oid;
     }
 
-    public String getSystype() {
-        return systype;
-    }
-
-    public void setSystype(String systype) {
-        this.systype = systype;
-    }
-
     public void setId(String id) {
         this.oid = id;
+    }
+
+    public String getSysType() {
+        return sysType;
+    }
+
+    public void setSysType(String sysType) {
+        this.sysType = sysType;
     }
 
     public String getIpAddress() {

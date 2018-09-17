@@ -18,6 +18,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 
@@ -95,6 +96,7 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
             params.put(CapJdbcConstants.SQL_DML_COLUMNS, getCombineColumnString(entity));
             params.put(CapJdbcConstants.SQL_DML_VALUES, getCombineParameterString(entity));
             StringBuffer sql = new StringBuffer().append(CapCommonUtil.spelParser((String) sqltemp.getValue(CapJdbcConstants.SQL_DML_INSERT), params, sqltemp.getParserContext()));
+            ((DataObject) entity).setOid(UUID.randomUUID().toString().replace("-", ""));
             Map<String, Object> args = CapBeanUtil.bean2Map((GenericBean) entity, CapEntityUtil.getColumnName(entity));
             getNamedJdbcTemplate().execute(sql.toString(), args, new PreparedStatementCallback<Boolean>() {
                 @Override
