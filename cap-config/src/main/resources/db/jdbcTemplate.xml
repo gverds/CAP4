@@ -45,7 +45,7 @@
         </tx:attributes>
     </tx:advice>
     <aop:config proxy-target-class="true">
-        <aop:pointcut id="capJdbcServiceOperation" expression="execution(* com..service.impl.*(..)) and !@annotation(com.iisigroup.cap.annotation.NonTransactional)" />
+        <aop:pointcut id="capJdbcServiceOperation" expression="execution(* com..service.*.*(..)) and !@annotation(com.iisigroup.cap.annotation.NonTransactional)" />
         <aop:advisor advice-ref="capJdbcTxAdvice" pointcut-ref="capJdbcServiceOperation" />
     </aop:config>
 </beans>
