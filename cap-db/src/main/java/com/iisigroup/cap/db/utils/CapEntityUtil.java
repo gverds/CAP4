@@ -158,7 +158,7 @@ public class CapEntityUtil {
         boolean process = false;
         for (int i = 0; i < name.length(); i++) {
             char c = name.charAt(i);
-            if (!Character.isUpperCase(c) && '_' != c) {
+            if (!Character.isUpperCase(c) && '_' != c && '.' != c) {
                 process = true;
                 break;
             }
