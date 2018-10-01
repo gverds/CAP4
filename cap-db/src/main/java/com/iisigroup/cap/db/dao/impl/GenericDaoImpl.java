@@ -33,8 +33,10 @@ import com.iisigroup.cap.db.annotation.Table;
 import com.iisigroup.cap.db.constants.CapJdbcConstants;
 import com.iisigroup.cap.db.dao.GenericDao;
 import com.iisigroup.cap.db.dao.SearchSetting;
+import com.iisigroup.cap.db.exception.CapDBException;
 import com.iisigroup.cap.db.model.DataObject;
 import com.iisigroup.cap.db.model.Page;
+import com.iisigroup.cap.db.utils.CapDbUtil;
 import com.iisigroup.cap.db.utils.CapEntityUtil;
 import com.iisigroup.cap.jdbc.CapNamedJdbcTemplate;
 import com.iisigroup.cap.jdbc.support.CapSqlSearchQueryProvider;
@@ -67,6 +69,8 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
     protected Logger logger;
     @Resource(name = "capDml")
     private CapSqlStatement sqltemp;
+    @Resource(name = "capSqlStatement")
+    private CapSqlStatement paging;
 
     @Resource(name = "capJdbcTemplate")
     private CapNamedJdbcTemplate namedJdbcTemplate;
@@ -318,7 +322,51 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
      */
     @Override
     public <S> Page<S> findPage(Class<S> clazz, SearchSetting search) {
-        return new Page<S>(find(clazz, search), count(clazz, search), search.getMaxResults(), search.getFirstResult());
+        Object entity = null;
+        try {
+            entity = clazz.newInstance();
+        } catch (Exception e) {
+            return null;
+        }
+        Map<String, Object> orignalSqlParam = new HashMap<String, Object>();
+        orignalSqlParam.put(CapJdbcConstants.SQL_DML_TABLE_NAME, clazz.getAnnotation(Table.class).name());
+        orignalSqlParam.put(CapJdbcConstants.SQL_DML_COLUMNS, getCombineColumnString(entity));
+        CapSqlSearchQueryProvider provider = new CapSqlSearchQueryProvider(search);
+        StringBuffer orignalSql = new StringBuffer().append(CapCommonUtil.spelParser((String) sqltemp.getValue(CapJdbcConstants.SQL_DML_SELECT), orignalSqlParam, sqltemp.getParserContext()))
+                .append(provider.generateWhereCause());
+        String _sql = orignalSql.toString();
+        StringBuffer sourceSql = new StringBuffer(_sql).append(_sql.toUpperCase().lastIndexOf("WHERE") > 0 ? " AND " : " WHERE ").append(provider.generateWhereCause());
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put(CapJdbcConstants.SQL_PAGING_SOURCE_SQL, sourceSql.toString());
+        // 準備查詢筆數sql
+        StringBuffer sql = new StringBuffer().append(CapCommonUtil.spelParser((String) paging.getValue(CapJdbcConstants.SQL_PAGING_TOTAL_PAGE), params, sqltemp.getParserContext()));
+        sql.append(' ').append(paging.getValue(CapJdbcConstants.SQL_QUERY_SUFFIX, ""));
+        if (logger.isTraceEnabled()) {
+            logger.trace(new StringBuffer("\n\t").append(CapDbUtil.convertToSQLCommand(sql.toString(), provider.getParams())).toString());
+        }
+        String sqlRow = sql.toString();
+        // 準備查詢list sql
+        // sourceSql.append(provider.generateOrderCause());
+        params.put(CapJdbcConstants.SQL_PAGING_SOURCE_SQL, sourceSql.toString());
+        String orderBy = search.hasOrderBy() ? provider.generateOrderCause() : CapJdbcConstants.SQL_PAGING_DUMMY_ORDER_BY;
+        params.put(CapJdbcConstants.SQL_PAGING_SOURCE_ORDER, orderBy);
+        sql = new StringBuffer().append(CapCommonUtil.spelParser((String) paging.getValue(CapJdbcConstants.SQL_PAGING_QUERY), params, sqltemp.getParserContext()));
+        sql.append(' ').append(paging.getValue(CapJdbcConstants.SQL_QUERY_SUFFIX, ""));
+        // 此處的 order by 是組完分頁 sql 後，再做一次 order by，因為子查詢中的 order by 不會反映在最後的查詢結果
+        sql.append(provider.generateOrderCause());
+        if (logger.isTraceEnabled()) {
+            logger.trace(new StringBuffer("\n\t").append(CapDbUtil.convertToSQLCommand(sql.toString(), provider.getParams())).toString());
+        }
+        long cur = System.currentTimeMillis();
+        try {
+            int totalRows = getNamedJdbcTemplate().queryForObject(sqlRow, provider.getParams(), Integer.class);
+            List<S> list = getNamedJdbcTemplate().query(sql.toString(), provider.getParams(), new BeanPropertyRowMapper<S>(clazz));
+            return new Page<S>(list, totalRows, search.getMaxResults(), search.getFirstResult());
+        } catch (Exception e) {
+            throw new CapDBException(e, clazz);
+        } finally {
+            logger.info("CapNamedJdbcTemplate spend {} ms", (System.currentTimeMillis() - cur));
+        }
     }
 
     /**
