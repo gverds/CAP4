@@ -12,7 +12,6 @@
 package com.iisigroup.cap.jdbc;
 
 import java.sql.BatchUpdateException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -544,8 +543,21 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
     }
 
     public <T> List<T> query(String sqlId, SearchSetting search, RowMapper<T> rm) {
-        // FIXME
-        return new ArrayList<T>();
+        CapSqlSearchQueryProvider provider = new CapSqlSearchQueryProvider(search);
+        String _sql = sqlp.getValue(sqlId, sqlId);
+        StringBuffer sourceSql = new StringBuffer(_sql).append(_sql.toUpperCase().lastIndexOf("WHERE") > 0 ? " AND " : " WHERE ").append(provider.generateWhereCause());
+        sourceSql.append(provider.generateOrderCause());
+        if (logger.isTraceEnabled()) {
+            logger.trace(new StringBuffer("\n\t").append(CapDbUtil.convertToSQLCommand(sourceSql.toString(), provider.getParams())).toString());
+        }
+        long cur = System.currentTimeMillis();
+        try {
+            return super.query(sourceSql.toString(), provider.getParams(), rm);
+        } catch (Exception e) {
+            throw new CapDBException(e, causeClass);
+        } finally {
+            logger.info("CapNamedJdbcTemplate spend {} ms", (System.currentTimeMillis() - cur));
+        }
     }
 
 }// ~
