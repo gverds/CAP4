@@ -27,7 +27,6 @@ import com.iisigroup.cap.utils.CapDate;
  *          <li>2013/4/16,iristu,new
  *          </ul>
  */
-@SuppressWarnings("serial")
 public class CapDateFormatter implements Formatter {
 
     String fromDateFormat;
@@ -38,7 +37,6 @@ public class CapDateFormatter implements Formatter {
         this.toDateFormat = toDateFormat;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public String reformat(Object in) {
         if (in != null) {

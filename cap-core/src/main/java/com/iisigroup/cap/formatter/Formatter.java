@@ -11,8 +11,6 @@
  */
 package com.iisigroup.cap.formatter;
 
-import java.io.Serializable;
-
 import com.iisigroup.cap.exception.CapFormatException;
 
 /**
@@ -27,7 +25,7 @@ import com.iisigroup.cap.exception.CapFormatException;
  *          <li>2011/11/1,rodeschen,from cap
  *          </ul>
  */
-public interface Formatter extends Serializable {
+public interface Formatter {
 
     /**
      * 重新format傳入的值
@@ -39,6 +37,6 @@ public interface Formatter extends Serializable {
      * @return String
      * @throws CapFormatException
      */
-    public <T> T reformat(Object in);
+    public <T> String reformat(Object in);
 
 }

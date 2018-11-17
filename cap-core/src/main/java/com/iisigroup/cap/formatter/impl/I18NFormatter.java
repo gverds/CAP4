@@ -28,7 +28,6 @@ import com.iisigroup.cap.utils.CapString;
  *          <li>2012/11/12,iristu,new
  *          </ul>
  */
-@SuppressWarnings("serial")
 public class I18NFormatter implements Formatter {
 
     String prefix;
@@ -48,7 +47,6 @@ public class I18NFormatter implements Formatter {
      * 
      * @see com.iisigroup.cap.formatter.IFormatter#reformat(java.lang.Object)
      */
-    @SuppressWarnings("unchecked")
     @Override
     public String reformat(Object in) {
         String key = CapString.trimNull(in);

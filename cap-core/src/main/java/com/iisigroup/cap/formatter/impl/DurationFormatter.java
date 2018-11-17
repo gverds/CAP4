@@ -33,7 +33,6 @@ import com.iisigroup.cap.model.GenericBean;
  *          <li>2012/11/7,iristu,new
  *          </ul>
  */
-@SuppressWarnings("serial")
 public class DurationFormatter implements BeanFormatter {
 
     private String startCol;
