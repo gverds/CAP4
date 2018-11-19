@@ -11,11 +11,13 @@
  */
 package com.iisigroup.cap.utils;
 
+import java.io.StringReader;
 import java.util.List;
 import java.util.Map;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
 
 /**
  * <pre>
@@ -71,7 +73,9 @@ public class GsonUtil {
      */
     public static Map<String, Object> jsonToMap(String jsonString) {
         Gson gson = new Gson();
-        return gson.fromJson(jsonString, new TypeToken<Map<String, Object>>() {
+        JsonReader reader = new JsonReader(new StringReader(jsonString));
+        reader.setLenient(true);
+        return gson.fromJson(reader, new TypeToken<Map<String, Object>>() {
         }.getType());
     }
 
