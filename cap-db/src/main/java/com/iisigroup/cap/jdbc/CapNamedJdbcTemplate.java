@@ -560,4 +560,24 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
         }
     }
 
+    public <T> List<T> query(String sqlId, SearchSetting search, RowMapper<T> rm, Map<String, Object> inSqlParam) {
+        CapSqlSearchQueryProvider provider = new CapSqlSearchQueryProvider(search);
+        String _sql = sqlp.getValue(sqlId, sqlId);
+        StringBuffer sourceSql = new StringBuffer(_sql).append(_sql.toUpperCase().lastIndexOf("WHERE") > 0 ? " AND " : " WHERE ").append(provider.generateWhereCause());
+        sourceSql.append(provider.generateOrderCause());
+        Map<String, Object> param = provider.getParams();
+        param.putAll(inSqlParam);
+        if (logger.isTraceEnabled()) {
+            logger.trace(new StringBuffer("\n\t").append(CapDbUtil.convertToSQLCommand(sourceSql.toString(), param)).toString());
+        }
+        long cur = System.currentTimeMillis();
+        try {
+            return super.query(sourceSql.toString(), param, rm);
+        } catch (Exception e) {
+            throw new CapDBException(e, causeClass);
+        } finally {
+            logger.info("CapNamedJdbcTemplate spend {} ms", (System.currentTimeMillis() - cur));
+        }
+    }
+
 }// ~

@@ -3,7 +3,7 @@
     <parent>
         <artifactId>cap</artifactId>
         <groupId>com.iisigroup.cap</groupId>
-        <version>4.0.1-esun-201811191708</version>
+        <version>4.0.1-esun-201811231620</version>
     </parent>
     <artifactId>cap-db</artifactId>
     <dependencies>
