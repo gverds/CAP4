@@ -180,7 +180,7 @@ public class CapSqlSearchQueryProvider {
             sb.append(key).append(" IS NOT NULL ");
             break;
         case IN:
-            sb.append(key).append(" IN :").append(paramKey);
+            sb.append(key).append(" IN (:").append(paramKey).append(')');
             params.put(paramKey, asCollection(value));
             break;
         case LIKE:
