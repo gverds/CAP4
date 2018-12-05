@@ -53,7 +53,7 @@ public class AuditLog extends GenericBean implements DataObject {
     private String ipAddress;
 
     /** 作業代號 */
-    private String functionId;
+    private String funcName;
 
     /** 新增/修改/刪除/查詢/匯出/匯入 */
     private String actionType;
@@ -78,14 +78,6 @@ public class AuditLog extends GenericBean implements DataObject {
 
     public void setIpAddress(String ipAddress) {
         this.ipAddress = ipAddress;
-    }
-
-    public String getFunctionId() {
-        return functionId;
-    }
-
-    public void setFunctionId(String functionId) {
-        this.functionId = functionId;
     }
 
     public String getActionType() {
@@ -133,6 +125,14 @@ public class AuditLog extends GenericBean implements DataObject {
      */
     public void setUserCode(String userCode) {
         this.userCode = userCode;
+    }
+
+    public String getFuncName() {
+        return funcName;
+    }
+
+    public void setFuncName(String funcName) {
+        this.funcName = funcName;
     }
 
 }
