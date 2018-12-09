@@ -102,8 +102,17 @@ public class GsonUtil {
      */
     public static <T> T jsonToObj(String jsonString) {
         Gson gson = new Gson();
-        return gson.fromJson(jsonString, new TypeToken<T>() {
+        JsonReader reader = new JsonReader(new StringReader(jsonString));
+        reader.setLenient(true);
+        return gson.fromJson(reader, new TypeToken<T>() {
         }.getType());
+    }
+
+    public static <T> T jsonToObj(String jsonString, Class<T> c) {
+        Gson gson = new Gson();
+        JsonReader reader = new JsonReader(new StringReader(jsonString));
+        reader.setLenient(true);
+        return gson.fromJson(reader, c);
     }
 
     public static String objToJson(Object obj) {
