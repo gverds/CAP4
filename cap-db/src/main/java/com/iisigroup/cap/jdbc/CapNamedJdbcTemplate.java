@@ -563,7 +563,7 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
     public <T> List<T> query(String sqlId, SearchSetting search, RowMapper<T> rm, Map<String, Object> inSqlParam) {
         CapSqlSearchQueryProvider provider = new CapSqlSearchQueryProvider(search);
         String _sql = sqlp.getValue(sqlId, sqlId);
-        StringBuffer sourceSql = new StringBuffer(_sql).append(_sql.toUpperCase().lastIndexOf("WHERE") > 0 ? " AND " : " WHERE ").append(provider.generateWhereCause());
+        StringBuffer sourceSql = new StringBuffer(_sql).append(" WHERE ").append(provider.generateWhereCause());
         sourceSql.append(provider.generateOrderCause());
         Map<String, Object> param = provider.getParams();
         param.putAll(inSqlParam);
