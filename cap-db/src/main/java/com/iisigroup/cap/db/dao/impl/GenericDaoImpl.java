@@ -236,7 +236,7 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
         params.put(CapJdbcConstants.SQL_DML_COLUMNS, getCombineColumnString(entity));
         CapSqlSearchQueryProvider provider = new CapSqlSearchQueryProvider(search);
         StringBuffer sql = new StringBuffer().append(CapCommonUtil.spelParser((String) sqltemp.getValue(CapJdbcConstants.SQL_DML_SELECT), params, sqltemp.getParserContext()))
-                .append(provider.generateWhereCause()).append(provider.generateOrderCause());
+                .append(provider.generateWhereClause()).append(provider.generateOrderClause());
         return getNamedJdbcTemplate().query(sql.toString(), provider.getParams(), new BeanPropertyRowMapper<T>(type));
     }
 
@@ -311,7 +311,7 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
         params.put(CapJdbcConstants.SQL_DML_COLUMNS, getCombineColumnString(entity));
         CapSqlSearchQueryProvider provider = new CapSqlSearchQueryProvider(search);
         StringBuffer sql = new StringBuffer().append(CapCommonUtil.spelParser((String) sqltemp.getValue(CapJdbcConstants.SQL_DML_SELECT), params, sqltemp.getParserContext()))
-                .append(provider.generateWhereCause()).append(provider.generateOrderCause());
+                .append(provider.generateWhereClause()).append(provider.generateOrderClause());
         return getNamedJdbcTemplate().query(sql.toString(), provider.getParams(), new BeanPropertyRowMapper<>(clazz));
     }
 
@@ -333,7 +333,7 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
         orignalSqlParam.put(CapJdbcConstants.SQL_DML_COLUMNS, getCombineColumnString(entity));
         CapSqlSearchQueryProvider provider = new CapSqlSearchQueryProvider(search);
         StringBuffer orignalSql = new StringBuffer().append(CapCommonUtil.spelParser((String) sqltemp.getValue(CapJdbcConstants.SQL_DML_SELECT), orignalSqlParam, sqltemp.getParserContext()))
-                .append(provider.generateWhereCause());
+                .append(provider.generateWhereClause());
         String _sql = orignalSql.toString();
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(CapJdbcConstants.SQL_PAGING_SOURCE_SQL, _sql);
@@ -345,12 +345,12 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
         }
         String sqlRow = sql.toString();
         // 準備查詢list sql
-        String orderBy = search.hasOrderBy() ? provider.generateOrderCause() : "";
+        String orderBy = search.hasOrderBy() ? provider.generateOrderClause() : "";
         params.put(CapJdbcConstants.SQL_PAGING_SOURCE_ORDER, orderBy);
         sql = new StringBuffer().append(CapCommonUtil.spelParser((String) paging.getValue(CapJdbcConstants.SQL_PAGING_QUERY), params, sqltemp.getParserContext()));
         sql.append(' ').append(paging.getValue(CapJdbcConstants.SQL_QUERY_SUFFIX, ""));
         // 此處的 order by 是組完分頁 sql 後，再做一次 order by，因為子查詢中的 order by 不會反映在最後的查詢結果
-        sql.append(provider.generateOrderCause());
+        sql.append(provider.generateOrderClause());
         if (logger.isTraceEnabled()) {
             logger.trace(new StringBuffer("\n\t").append(CapDbUtil.convertToSQLCommand(sql.toString(), provider.getParams())).toString());
         }
@@ -380,7 +380,7 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
         params.put(CapJdbcConstants.SQL_DML_COLUMNS, "COUNT(" + pkColumn + ")");
         CapSqlSearchQueryProvider provider = new CapSqlSearchQueryProvider(search);
         StringBuffer sql = new StringBuffer().append(CapCommonUtil.spelParser((String) sqltemp.getValue(CapJdbcConstants.SQL_DML_SELECT), params, sqltemp.getParserContext()))
-                .append(provider.generateWhereCause());
+                .append(provider.generateWhereClause());
         return getNamedJdbcTemplate().queryForObject(sql.toString(), provider.getParams(), Integer.class);
     }
 

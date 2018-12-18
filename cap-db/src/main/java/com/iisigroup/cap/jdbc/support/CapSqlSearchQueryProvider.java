@@ -57,7 +57,7 @@ public class CapSqlSearchQueryProvider {
         return params;
     }
 
-    public String generateWhereCause() {
+    public String generateWhereClause() {
         StringBuffer sb = new StringBuffer();
         if (!CollectionUtils.isEmpty(search.getSearchModeParameters())) {
             for (SearchModeParameter s : search.getSearchModeParameters()) {
@@ -125,7 +125,7 @@ public class CapSqlSearchQueryProvider {
         return v;
     }
 
-    public String generateOrderCause() {
+    public String generateOrderClause() {
         StringBuffer sb = new StringBuffer();
         if (search.hasOrderBy()) {
             sb.append(" ORDER BY ");
