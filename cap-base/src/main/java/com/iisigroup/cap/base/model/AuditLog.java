@@ -64,6 +64,9 @@ public class AuditLog extends GenericBean implements DataObject {
     /** 備註/Key值 */
     private String remark;
 
+    /** KeyLabel/群組名稱 */
+    private String info;
+
     public String getId() {
         return oid;
     }
@@ -133,6 +136,21 @@ public class AuditLog extends GenericBean implements DataObject {
 
     public void setFuncName(String funcName) {
         this.funcName = funcName;
+    }
+
+    /**
+     * @return the info
+     */
+    public String getInfo() {
+        return info;
+    }
+
+    /**
+     * @param info
+     *            the info to set
+     */
+    public void setInfo(String info) {
+        this.info = info;
     }
 
 }
