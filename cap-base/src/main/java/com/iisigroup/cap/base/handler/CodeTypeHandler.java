@@ -14,6 +14,8 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -125,6 +127,14 @@ public class CodeTypeHandler extends MFormHandler {
                 code = codeTypeService.getById(request.get("oid"));
             }
         }
+
+        boolean ptypeEmpty = CapString.isEmpty(request.get("ptype"));
+        boolean pvalueEmpty = CapString.isEmpty(request.get("pvalue"));
+        // ptype, pvalue要同時有值或同時沒有值
+        if ((!ptypeEmpty && pvalueEmpty) || (ptypeEmpty && !pvalueEmpty)) {
+            throw new CapMessageException(CapAppContext.getMessage("codetype.0002"), getClass());
+        }
+
         CapBeanUtil.map2Bean(request, code, CodeType.class);
         if ("A".equals(type)) {
             code.setOid(null);
@@ -189,4 +199,15 @@ public class CodeTypeHandler extends MFormHandler {
         return mresult;
     }
 
+    public Result getPtype(Request request) {
+        AjaxFormResult result = new AjaxFormResult();
+        Map<String, Object> map = new LinkedHashMap<String, Object>();
+        List<Map<String, Object>> list = codeTypeService.getDistinctCodeType();
+        list.forEach(codeTypeMap -> {
+            String codeType = (String) codeTypeMap.get("CODETYPE");
+            map.put(codeType, codeType);
+        });
+        result.putAll(map);
+        return result;
+    }
 }// ~

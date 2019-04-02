@@ -115,5 +115,11 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
         <entry key="Sequence.insert">
             <value><![CDATA[INSERT INTO cfg_Sequence (seqNode, NEXTSEQ, ROUNDS,updateTime ) VALUES (:seqNode,:nextSeq,:rounds,:updateTime)]]></value>
         </entry>
+        <entry key="codeType_getDistinctCodeType">
+            <value><![CDATA[
+                SELECT DISTINCT(CODETYPE) 
+                FROM CFG_CODETYPE
+            ]]></value>
+        </entry>
     </util:map>
 </beans>

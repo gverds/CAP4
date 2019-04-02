@@ -71,7 +71,8 @@ public class GenericBean {
         try {
             Field f = ReflectionUtils.findField(getClass(), field);
             if (f != null) {
-                String setter = new StringBuffer("set").append(String.valueOf(f.getName().charAt(0)).toUpperCase()).append(f.getName().substring(1)).toString();
+                String setter = new StringBuffer("set").append(String.valueOf(f.getName().charAt(0)).toUpperCase()).append(f.getName().substring(1))
+                        .toString();
                 Method method = ReflectionUtils.findMethod(this.getClass(), setter, new Class[] { f.getType() });
                 if (method != null) {
                     method.invoke(this, value);

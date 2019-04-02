@@ -12,6 +12,7 @@
 package com.iisigroup.cap.base.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.iisigroup.cap.base.model.CodeType;
 import com.iisigroup.cap.db.dao.GenericDao;
@@ -86,5 +87,7 @@ public interface CodeTypeDao extends GenericDao<CodeType> {
      * @return CodeType
      */
     CodeType findByOid(String oid);
+
+    List<Map<String, Object>> getDistinctCodeType();
 
 }

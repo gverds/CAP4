@@ -11,7 +11,9 @@
 
 package com.iisigroup.cap.base.dao.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
@@ -80,6 +82,12 @@ public class CodeTypeDaoImpl extends GenericDaoImpl<CodeType> implements CodeTyp
     @Override
     public CodeType findByOid(String oid) {
         return find(oid);
+    }
+
+    @Override
+    public List<Map<String, Object>> getDistinctCodeType() {
+        Map<String, Object> args = new HashMap<String, Object>();
+        return getNamedJdbcTemplate().query("codeType_getDistinctCodeType", args);
     }
 
 }

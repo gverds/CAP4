@@ -70,6 +70,28 @@ public class CodeType extends GenericBean implements DataObject {
     @Column
     private Timestamp updateTime;
 
+    @Column(length = 32)
+    private String ptype;
+
+    @Column(length = 32)
+    private String pvalue;
+
+    public String getPtype() {
+        return ptype;
+    }
+
+    public void setPtype(String ptype) {
+        this.ptype = ptype;
+    }
+
+    public String getPvalue() {
+        return pvalue;
+    }
+
+    public void setPvalue(String pvalue) {
+        this.pvalue = pvalue;
+    }
+
     public String getOid() {
         return oid;
     }

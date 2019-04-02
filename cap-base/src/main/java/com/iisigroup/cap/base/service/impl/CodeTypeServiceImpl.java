@@ -157,4 +157,14 @@ public class CodeTypeServiceImpl implements CodeTypeService {
     public CodeType getByCodeTypeAndValue(String type, String value) {
         return getByCodeTypeAndValue(type, value, SimpleContextHolder.get(CapWebUtil.localeKey).toString());
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.iisigroup.cap.base.service.CodeTypeService#getDistinctCodeType()
+     */
+    @Override
+    public List<Map<String, Object>> getDistinctCodeType() {
+        return dao.getDistinctCodeType();
+    }
 }

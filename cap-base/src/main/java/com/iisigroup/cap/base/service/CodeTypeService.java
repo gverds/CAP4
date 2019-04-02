@@ -9,6 +9,7 @@
  */
 package com.iisigroup.cap.base.service;
 
+import java.util.List;
 import java.util.Map;
 
 import com.iisigroup.cap.base.model.CodeType;
@@ -140,5 +141,7 @@ public interface CodeTypeService {
      *            oid
      */
     void deleteById(String oid);
+
+    List<Map<String, Object>> getDistinctCodeType();
 
 }
