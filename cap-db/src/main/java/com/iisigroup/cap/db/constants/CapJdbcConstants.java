@@ -35,5 +35,5 @@ public interface CapJdbcConstants {
 
     String SQL_PAGING_SOURCE_ORDER = "sourceOrder";
 
-    String SQL_PAGING_DUMMY_ORDER_BY = "order by TempColumn";
+    String SQL_PAGING_DUMMY_ORDER_BY = "dummyOrder";
 }
