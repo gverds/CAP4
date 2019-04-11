@@ -23,10 +23,13 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
         </entry>
         <entry key="paging.querySql">
             <value><![CDATA[select * from ( select source.*, ROWNUM rn from (
-	@{['sourceSQL']} ) source where ROWNUM <= :endRow) where rn > :startRow]]></value>
+	@{['sourceSQL']} @{['sourceOrder']} ) source where ROWNUM <= :endRow) where rn > :startRow]]></value>
         </entry>
         <entry key="paging.totalPage">
             <value><![CDATA[select count(1) as TOTAL from (@{['sourceSQL']})]]></value>
+        </entry>
+        <entry key="dummyOrder">
+            <value><![CDATA[order by 1]]></value>
         </entry>
     </util:map>
     <!-- h2 paging JDBC template -->
@@ -36,10 +39,13 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
         </entry>
         <entry key="paging.querySql">
             <value><![CDATA[select * from ( select source.*, ROWNUM() ROWNM from (
-	@{['sourceSQL']} ) source ) rows where ROWNM > :startRow and ROWNUM <= :endRow]]></value>
+	@{['sourceSQL']} @{['sourceOrder']} ) source ) rows where ROWNM > :startRow and ROWNM <= :endRow]]></value>
         </entry>
         <entry key="paging.totalPage">
             <value><![CDATA[select count(1) as TOTAL from (@{['sourceSQL']}) rows]]></value>
+        </entry>
+        <entry key="dummyOrder">
+            <value><![CDATA[order by 1]]></value>
         </entry>
     </util:map>
     <!-- sqlserver paging JDBC template -->
@@ -49,10 +55,13 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
         </entry>
         <entry key="paging.querySql">
             <value><![CDATA[select * from ( select source.*, ROW_NUMBER() ROWNM from (
-	@{['sourceSQL']} ) source ) rows where ROWNM > :startRow and ROWNUM <= :endRow]]></value>
+	@{['sourceSQL']} ) source ) rows where ROWNM > :startRow and ROWNM <= :endRow]]></value>
         </entry>
         <entry key="paging.totalPage">
             <value><![CDATA[select count(1) as TOTAL from (@{['sourceSQL']}) rows]]></value>
+        </entry>
+        <entry key="dummyOrder">
+            <value><![CDATA[order by 1]]></value>
         </entry>
     </util:map>
     <!-- MS SQL Server 2005 paging JDBC template -->
@@ -63,6 +72,9 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
         <entry key="paging.querySql">
             <value><![CDATA[select * from ( select source.*, ROW_NUMBER() over ( @{['sourceOrder']} ) ROWNM from (
 			select 0 TempColumn, ss.* from (@{['sourceSQL']} ) ss ) source ) rows where ROWNM > :startRow and ROWNM <= :endRow]]></value>
+        </entry>
+        <entry key="dummyOrder">
+            <value><![CDATA[order by TempColumn]]></value>
         </entry>
         <entry key="paging.totalPage">
             <value><![CDATA[select count(1) as TOTAL from (@{['sourceSQL']}) rows]]></value>
