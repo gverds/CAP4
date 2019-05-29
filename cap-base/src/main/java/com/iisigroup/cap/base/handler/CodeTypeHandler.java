@@ -199,6 +199,26 @@ public class CodeTypeHandler extends MFormHandler {
         return mresult;
     }
 
+    /**
+     * 找第二層CodeType下拉選單的值
+     * 
+     * @param request
+     * @return
+     */
+    public Result queryByKeyAndParentTypeValue(Request request) {
+        String locale = CapSecurityContext.getLocale().toString();
+        String codeType = request.get("key");
+        String ptype = request.get("ptype");
+        String pvalue = request.get("pvalue");
+
+        AjaxFormResult mresult = new AjaxFormResult();
+        if (!CapString.isEmpty(codeType) && !CapString.isEmpty(ptype) && !CapString.isEmpty(pvalue)) {
+            Map<String, AjaxFormResult> m = codeTypeService.findCodeTypeByKeyAndParentTypeValue(codeType, ptype, pvalue, locale);
+            mresult.setResultMap(m);
+        }
+        return mresult;
+    }
+
     public Result getPtype(Request request) {
         AjaxFormResult result = new AjaxFormResult();
         Map<String, Object> map = new LinkedHashMap<String, Object>();

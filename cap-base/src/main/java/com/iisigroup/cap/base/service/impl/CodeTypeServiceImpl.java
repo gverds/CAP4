@@ -167,4 +167,25 @@ public class CodeTypeServiceImpl implements CodeTypeService {
     public List<Map<String, Object>> getDistinctCodeType() {
         return dao.getDistinctCodeType();
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.iisigroup.cap.base.service.CodeTypeService#findCodeTypeByKeyAndParentTypeValue(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+     */
+    @Override
+    public Map<String, AjaxFormResult> findCodeTypeByKeyAndParentTypeValue(String codeType, String ptype, String pvalue, String locale) {
+        List<CodeType> codes = dao.findByCodeTypeAndParentTypeValue(codeType, ptype, pvalue, locale);
+        Map<String, AjaxFormResult> m = new LinkedHashMap<String, AjaxFormResult>();
+        for (CodeType c : codes) {
+            String type = c.getCodeType();
+            AjaxFormResult sm = m.get(type);
+            if (sm == null) {
+                sm = new AjaxFormResult(true);
+            }
+            sm.set(c.getCodeValue(), c.getCodeDesc());
+            m.put(type, sm);
+        }
+        return m;
+    }
 }

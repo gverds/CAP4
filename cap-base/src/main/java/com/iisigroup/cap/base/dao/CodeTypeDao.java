@@ -90,4 +90,15 @@ public interface CodeTypeDao extends GenericDao<CodeType> {
 
     List<Map<String, Object>> getDistinctCodeType();
 
+    /**
+     * get CodeType by codeType, ptype, pvalue, locale
+     * 
+     * @param codeType
+     * @param ptype
+     * @param pvalue
+     * @param locale
+     * @return
+     */
+    List<CodeType> findByCodeTypeAndParentTypeValue(String codeType, String ptype, String pvalue, String locale);
+
 }

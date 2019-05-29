@@ -90,4 +90,16 @@ public class CodeTypeDaoImpl extends GenericDaoImpl<CodeType> implements CodeTyp
         return getNamedJdbcTemplate().query("codeType_getDistinctCodeType", args);
     }
 
+    @Override
+    public List<CodeType> findByCodeTypeAndParentTypeValue(String codeType, String ptype, String pvalue, String locale) {
+        SearchSetting search = createSearchTemplete();
+        search.addSearchModeParameters(SearchMode.EQUALS, "codeType", codeType);
+        search.addSearchModeParameters(SearchMode.EQUALS, "ptype", ptype);
+        search.addSearchModeParameters(SearchMode.EQUALS, "pvalue", pvalue);
+        search.addSearchModeParameters(SearchMode.EQUALS, "locale", locale);
+        search.setFirstResult(0).setMaxResults(Integer.MAX_VALUE);
+        search.addOrderBy("codeOrder");
+        return find(search);
+    }
+
 }
