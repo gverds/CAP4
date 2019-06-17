@@ -22,10 +22,12 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.iisigroup.cap.component.Request;
 import com.iisigroup.cap.utils.CapString;
+import com.iisigroup.cap.utils.GsonUtil;
 
 /**
  * <pre>
@@ -75,13 +77,31 @@ public class CapSpringMVCRequest extends HashMap<String, Object> implements Requ
         while (fids.hasMoreElements()) {
             String field = (String) fids.nextElement();
             String[] value = req.getParameterValues(field);
-            if (value.length == 1) {
-                hm.put(field, value[0]);
-                continue;
-            }
+            Map<String, Object> mapFromJson = flattenJson(field, value[0]);
+            hm.putAll(mapFromJson);
             hm.put(field, value);
         }
         return hm;
+    }
+
+    private Map<String, Object> flattenJson(String key, String str) {
+        Map<String, Object> result = new HashMap<>();
+        if(!StringUtils.isEmpty(str) && str.trim().startsWith("{") && str.trim().endsWith("}")) {
+            Map<String, Object> map;
+            try {
+                map = GsonUtil.jsonToMap(str);
+                if(map != null) {
+                    for (Entry<String, Object> e : map.entrySet()) {
+                        String field = key + '_' + e.getKey();
+                        Object value = e.getValue();
+                        result.put(field, value);
+                    }
+                }
+            } catch (Exception e) {
+                // do nothing 代表無法轉換成
+            }
+        }
+        return result;
     }
 
     /*

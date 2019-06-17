@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.iisigroup.cap</groupId>
         <artifactId>cap</artifactId>
-        <version>4.0.1-fcb-2019052912</version>
+        <version>4.0.1-fcb-2019061714</version>
     </parent>
     <artifactId>cap-captcha</artifactId>
     <dependencies>
