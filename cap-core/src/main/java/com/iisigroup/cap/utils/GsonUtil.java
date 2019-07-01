@@ -1,21 +1,25 @@
-/* 
+/*
  * GsonUtil.java
- * 
- * Copyright (c) 2016 International Integrated System, Inc. 
+ *
+ * Copyright (c) 2016 International Integrated System, Inc.
  * All Rights Reserved.
- * 
+ *
  * Licensed Materials - Property of International Integrated System, Inc.
- * 
- * This software is confidential and proprietary information of 
+ *
+ * This software is confidential and proprietary information of
  * International Integrated System, Inc. (&quot;Confidential Information&quot;).
  */
 package com.iisigroup.cap.utils;
 
+import java.io.StringReader;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
 
 /**
  * <pre>
@@ -70,13 +74,15 @@ public class GsonUtil {
      * @return Map
      */
     public static Map<String, Object> jsonToMap(String jsonString) {
-        Gson gson = new Gson();
-        return gson.fromJson(jsonString, new TypeToken<Map<String, Object>>() {
+        Gson gson = new GsonBuilder().registerTypeAdapter(Timestamp.class, new SqlTimestampTypeAdapter()).setDateFormat("yyyy/MM/dd").create();
+        JsonReader reader = new JsonReader(new StringReader(jsonString));
+        reader.setLenient(true);
+        return gson.fromJson(reader, new TypeToken<Map<String, Object>>() {
         }.getType());
     }
 
     public static String mapToJson(Map<String, Object> map) {
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().registerTypeAdapter(Timestamp.class, new SqlTimestampTypeAdapter()).setDateFormat("yyyy/MM/dd").create();
         return gson.toJson(map, new TypeToken<Map<String, Object>>() {
         }.getType());
     }
@@ -97,13 +103,22 @@ public class GsonUtil {
      * @return <T>
      */
     public static <T> T jsonToObj(String jsonString) {
-        Gson gson = new Gson();
-        return gson.fromJson(jsonString, new TypeToken<T>() {
+        Gson gson = new GsonBuilder().registerTypeAdapter(Timestamp.class, new SqlTimestampTypeAdapter()).setDateFormat("yyyy/MM/dd").create();
+        JsonReader reader = new JsonReader(new StringReader(jsonString));
+        reader.setLenient(true);
+        return gson.fromJson(reader, new TypeToken<T>() {
         }.getType());
     }
 
+    public static <T> T jsonToObj(String jsonString, Class<T> c) {
+        Gson gson = new GsonBuilder().registerTypeAdapter(Timestamp.class, new SqlTimestampTypeAdapter()).setDateFormat("yyyy/MM/dd").create();
+        JsonReader reader = new JsonReader(new StringReader(jsonString));
+        reader.setLenient(true);
+        return gson.fromJson(reader, c);
+    }
+
     public static String objToJson(Object obj) {
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().registerTypeAdapter(Timestamp.class, new SqlTimestampTypeAdapter()).setDateFormat("yyyy/MM/dd").create();
         return gson.toJson(obj);
     }
 

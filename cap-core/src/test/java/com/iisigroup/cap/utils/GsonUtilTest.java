@@ -11,7 +11,10 @@
  */
 package com.iisigroup.cap.utils;
 
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -20,7 +23,6 @@ import java.util.stream.IntStream;
 
 import org.junit.Test;
 
-import java.math.BigDecimal;
 import com.iisigroup.cap.component.impl.AjaxFormResult;
 
 /**
@@ -162,4 +164,104 @@ public class GsonUtilTest {
         IntStream.range(0, testData.size()).forEach(i -> System.out.print((i == 0 ? "\n" + title + ": \n" : "\n") + "\t" + i + " => " + GsonUtil.objToObj(testData.get(i))));
     }
 
+    @Test
+    public void testDateTime() {
+        TestModel m = new TestModel();
+        m.setAmount(BigDecimal.TEN);
+        m.setCount(50);
+        m.setCurrentTime(CapDate.getCurrentTimestamp());
+        m.setToday(new Date());
+        m.setType("T1");
+        String objToJson = GsonUtil.objToJson(m);
+        System.out.println(objToJson);
+        TestModel n = GsonUtil.jsonToObj(objToJson, TestModel.class);
+        System.out.println(n.getType());
+        System.out.println(n.getAmount().toPlainString());
+        System.out.println(n.getCount());
+        System.out.println(n.getCurrentTime());
+        System.out.println(n.getToday());
+    }
+
+    class TestModel {
+        private Date today;
+        private Timestamp currentTime;
+        private String type;
+        private Integer count;
+        private BigDecimal amount;
+
+        /**
+         * @return the today
+         */
+        public Date getToday() {
+            return today;
+        }
+
+        /**
+         * @param today
+         *            the today to set
+         */
+        public void setToday(Date today) {
+            this.today = today;
+        }
+
+        /**
+         * @return the currentTime
+         */
+        public Timestamp getCurrentTime() {
+            return currentTime;
+        }
+
+        /**
+         * @param currentTime
+         *            the currentTime to set
+         */
+        public void setCurrentTime(Timestamp currentTime) {
+            this.currentTime = currentTime;
+        }
+
+        /**
+         * @return the type
+         */
+        public String getType() {
+            return type;
+        }
+
+        /**
+         * @param type
+         *            the type to set
+         */
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        /**
+         * @return the count
+         */
+        public Integer getCount() {
+            return count;
+        }
+
+        /**
+         * @param count
+         *            the count to set
+         */
+        public void setCount(Integer count) {
+            this.count = count;
+        }
+
+        /**
+         * @return the amount
+         */
+        public BigDecimal getAmount() {
+            return amount;
+        }
+
+        /**
+         * @param amount
+         *            the amount to set
+         */
+        public void setAmount(BigDecimal amount) {
+            this.amount = amount;
+        }
+    }
 }
