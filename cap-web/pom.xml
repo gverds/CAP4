@@ -3,7 +3,7 @@
     <parent>
         <artifactId>cap</artifactId>
         <groupId>com.iisigroup.cap</groupId>
-        <version>4.0.1-fcb-2018040915</version>
+        <version>4.0.1-fcb-201907191244</version>
     </parent>
     <artifactId>cap-web</artifactId>
     <packaging>war</packaging>
@@ -36,14 +36,6 @@
         </dependency>
         <dependency>
             <groupId>com.iisigroup.cap</groupId>
-            <artifactId>cap-auth-admin</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.iisigroup.cap</groupId>
-            <artifactId>cap-websocket</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.iisigroup.cap</groupId>
             <artifactId>cap-hg</artifactId>
         </dependency>
         <dependency>
@@ -53,10 +45,6 @@
         <dependency>
             <groupId>com.iisigroup.cap</groupId>
             <artifactId>cap-report</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.iisigroup.cap</groupId>
-            <artifactId>cap-rule</artifactId>
         </dependency>
         <dependency>
             <groupId>org.tuckey</groupId>
