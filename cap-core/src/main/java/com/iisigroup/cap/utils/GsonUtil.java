@@ -35,6 +35,16 @@ import com.google.gson.stream.JsonReader;
  */
 public class GsonUtil {
 
+    public static final Gson createGson(final boolean serializeNulls) {
+        final GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(Timestamp.class, new SqlTimestampTypeAdapter()).setDateFormat("yyyy/MM/dd");
+        builder.registerTypeHierarchyAdapter(Number.class, new NumberTypeAdapter());
+        if (serializeNulls) {
+            builder.serializeNulls();
+        }
+        return builder.create();
+    }
+
     /**
      * <pre>
      * test data:
@@ -74,7 +84,7 @@ public class GsonUtil {
      * @return Map
      */
     public static Map<String, Object> jsonToMap(String jsonString) {
-        Gson gson = new GsonBuilder().registerTypeAdapter(Timestamp.class, new SqlTimestampTypeAdapter()).setDateFormat("yyyy/MM/dd").create();
+        Gson gson = createGson(true);
         JsonReader reader = new JsonReader(new StringReader(jsonString));
         reader.setLenient(true);
         return gson.fromJson(reader, new TypeToken<Map<String, Object>>() {
@@ -82,7 +92,7 @@ public class GsonUtil {
     }
 
     public static String mapToJson(Map<String, Object> map) {
-        Gson gson = new GsonBuilder().registerTypeAdapter(Timestamp.class, new SqlTimestampTypeAdapter()).setDateFormat("yyyy/MM/dd").create();
+        Gson gson = createGson(true);
         return gson.toJson(map, new TypeToken<Map<String, Object>>() {
         }.getType());
     }
@@ -103,7 +113,7 @@ public class GsonUtil {
      * @return <T>
      */
     public static <T> T jsonToObj(String jsonString) {
-        Gson gson = new GsonBuilder().registerTypeAdapter(Timestamp.class, new SqlTimestampTypeAdapter()).setDateFormat("yyyy/MM/dd").create();
+        Gson gson = createGson(true);
         JsonReader reader = new JsonReader(new StringReader(jsonString));
         reader.setLenient(true);
         return gson.fromJson(reader, new TypeToken<T>() {
@@ -111,14 +121,14 @@ public class GsonUtil {
     }
 
     public static <T> T jsonToObj(String jsonString, Class<T> c) {
-        Gson gson = new GsonBuilder().registerTypeAdapter(Timestamp.class, new SqlTimestampTypeAdapter()).setDateFormat("yyyy/MM/dd").create();
+        Gson gson = createGson(true);
         JsonReader reader = new JsonReader(new StringReader(jsonString));
         reader.setLenient(true);
         return gson.fromJson(reader, c);
     }
 
     public static String objToJson(Object obj) {
-        Gson gson = new GsonBuilder().registerTypeAdapter(Timestamp.class, new SqlTimestampTypeAdapter()).setDateFormat("yyyy/MM/dd").create();
+        Gson gson = createGson(true);
         return gson.toJson(obj);
     }
 
