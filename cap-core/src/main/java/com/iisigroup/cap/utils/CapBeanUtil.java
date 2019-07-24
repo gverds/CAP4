@@ -12,10 +12,9 @@
  */
 package com.iisigroup.cap.utils;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -341,20 +340,39 @@ public class CapBeanUtil {
             Method method = ReflectionUtils.findMethod(entry.getClass(), setter, new Class[] { field.getType() });
             if (method != null) {
                 try {
-                    if (field.getType() != String.class && "".equals(value)) {
-                        value = null;
-                    } else if (field.getType() == BigDecimal.class) {
-                        value = CapMath.getBigDecimal(String.valueOf(value));
-                    } else if (value instanceof String) {
-                        if (field.getType() == java.util.Date.class || field.getType() == java.sql.Date.class) {
-                            value = CapDate.parseDate((String) value);
-                        } else if (field.getType() == Timestamp.class) {
-                            value = CapDate.convertStringToTimestamp1((String) value);
-                        }
-                    }
                     if (value == null) {
                         method.invoke(entry, new Object[] { null });
                     } else {
+                        // 如果 bean field 的 type 真的是 xxxx[]，會有問題
+                        value = value.getClass().isArray() ? Array.get(value, 0) : value;
+                        switch (field.getType().getName()) {
+                        case "java.math.BigDecimal":
+                            value = CapMath.getBigDecimal(String.valueOf(value));
+                            break;
+                        case "java.util.Date":
+                        case "java.sql.Date":
+                            value = CapDate.parseDate((String) value);
+                            break;
+                        case "java.sql.Timestamp":
+                            value = CapDate.convertStringToTimestamp1((String) value);
+                            break;
+                        default:
+                            if (field.getType() != String.class && "".equals(value)) {
+                                value = null;
+                            }
+                        }
+                        // 這段判斷有點怪...
+                        // if (field.getType() != String.class && "".equals(value)) {
+                        // value = null;
+                        // } else if (field.getType() == BigDecimal.class) {
+                        // value = CapMath.getBigDecimal(String.valueOf(value));
+                        // } else if (value instanceof String) {
+                        // if (field.getType() == java.util.Date.class || field.getType() == java.sql.Date.class) {
+                        // value = CapDate.parseDate((String) value);
+                        // } else if (field.getType() == Timestamp.class) {
+                        // value = CapDate.convertStringToTimestamp1((String) value);
+                        // }
+                        // }
                         method.invoke(entry, ConvertUtils.convert(value, field.getType()));
                     }
                 } catch (Exception e) {
