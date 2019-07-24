@@ -74,9 +74,7 @@ public class RoleSetHandler extends MFormHandler {
 
         Map<String, Formatter> fmt = new HashMap<String, Formatter>();
         fmt.put("userCount", new BeanFormatter() {
-            private static final long serialVersionUID = 1L;
 
-            @SuppressWarnings("unchecked")
             public Integer reformat(Object in) throws CapFormatException {
                 if (in instanceof DefaultRole) {
                     return ((DefaultRole) in).getUrList().size();

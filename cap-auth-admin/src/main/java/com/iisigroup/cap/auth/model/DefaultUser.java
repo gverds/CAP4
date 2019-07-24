@@ -72,6 +72,9 @@ public class DefaultUser extends GenericBean implements DataObject, User {
     private String depCode;
 
     @Column(length = 30)
+    private String depName;
+
+    @Column(length = 30)
     private String statusDesc;
 
     @Column(length = 6)
@@ -263,6 +266,20 @@ public class DefaultUser extends GenericBean implements DataObject, User {
 
     public void setUrList(List<UserRole> urList) {
         this.urList = urList;
+    }
+
+    /**
+     * @return the depName
+     */
+    public String getDepName() {
+        return depName;
+    }
+
+    /**
+     * @param depName the depName to set
+     */
+    public void setDepName(String depName) {
+        this.depName = depName;
     }
 
 }

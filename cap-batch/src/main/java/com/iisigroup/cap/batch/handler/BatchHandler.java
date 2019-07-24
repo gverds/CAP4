@@ -103,7 +103,6 @@ public class BatchHandler extends MFormHandler {
 
     private JobParametersExtractor jobParametersExtractor = new JobParametersExtractor();
 
-    @SuppressWarnings("serial")
     @HandlerType(HandlerTypeEnum.GRID)
     public BeanGridResult jobQuery(SearchSetting search, Request params) {
         if (params.containsKey("jobId")) {
@@ -116,7 +115,6 @@ public class BatchHandler extends MFormHandler {
 
             private Collection<String> jobs = jobRegistry.getJobNames();
 
-            @SuppressWarnings("unchecked")
             @Override
             public String reformat(Object in) {
                 BatchJob job = (BatchJob) in;

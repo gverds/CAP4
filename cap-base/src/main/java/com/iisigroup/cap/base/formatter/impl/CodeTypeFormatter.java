@@ -37,7 +37,6 @@ import com.iisigroup.cap.utils.CapWebUtil;
  */
 public class CodeTypeFormatter implements Formatter {
 
-    private static final long serialVersionUID = 3499609752233060894L;
     private KeyValueFormatTypeEnum show;
     private Map<String, String> codeMap;
 
@@ -66,7 +65,6 @@ public class CodeTypeFormatter implements Formatter {
      * 
      * @see com.iisigroup.cap.formatter.IFormatter#reformat(java.lang.Object)
      */
-    @SuppressWarnings("unchecked")
     @Override
     public String reformat(Object in) {
         if (in instanceof BigDecimal) {

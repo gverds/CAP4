@@ -32,7 +32,6 @@ import com.iisigroup.cap.formatter.Formatter;
  *          <li>2011/11/1,rodeschen,from cap
  *          </ul>
  */
-@SuppressWarnings("serial")
 public class ADDateTimeFormatter implements Formatter {
 
     private SimpleDateFormat _df;
@@ -52,7 +51,6 @@ public class ADDateTimeFormatter implements Formatter {
      * 
      * @see tw.com.iisi.cap.formatter.IFormatter#reformat(java.lang.Object)
      */
-    @SuppressWarnings("unchecked")
     public String reformat(Object in) {
         if (in == null) {
             return Constants.EMPTY_STRING;

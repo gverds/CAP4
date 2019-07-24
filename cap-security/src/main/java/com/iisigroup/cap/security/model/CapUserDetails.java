@@ -44,6 +44,7 @@ public class CapUserDetails implements UserDetails {
     private String userId;
     private String username;
     private String unitNo;
+    private String unitName;
     private Map<String, String> roles;
     private JsonArray menu;
     private Locale locale;
@@ -60,6 +61,7 @@ public class CapUserDetails implements UserDetails {
         this.userId = user.getCode();
         this.username = user.getName();
         this.unitNo = user.getDepCode();
+        this.unitName = user.getDepName();
         this.roles = new LinkedHashMap<String, String>();
         this.roles.putAll(roles);
         this.locale = user.getLocale();
@@ -202,6 +204,21 @@ public class CapUserDetails implements UserDetails {
         int result = 1;
         result = prime * result + ((userId == null) ? 0 : userId.hashCode());
         return result;
+    }
+
+    /**
+     * @return the unitName
+     */
+    public String getUnitName() {
+        return unitName;
+    }
+
+    /**
+     * @param unitName
+     *            the unitName to set
+     */
+    public void setUnitName(String unitName) {
+        this.unitName = unitName;
     }
 
     // TODO Mark by sk

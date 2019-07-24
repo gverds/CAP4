@@ -45,7 +45,6 @@ public class ForwardFilter implements Filter {
      *            FilterConfig
      * @throws ServletException
      */
-    @SuppressWarnings("unchecked")
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         filterRules = new LinkedHashMap<String, String>();

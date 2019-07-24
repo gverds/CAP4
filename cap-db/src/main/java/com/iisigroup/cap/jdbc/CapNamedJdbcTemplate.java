@@ -67,8 +67,6 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
     private CapSqlStatement sqlp;
     private CapSqlStatement sqltemp;
 
-    private Class<?> causeClass;
-
     DataSource dataSource;
 
     public CapNamedJdbcTemplate(DataSource dataSource) {
@@ -87,11 +85,6 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
         this.sqlp = privider;
     }
 
-    public void setCauseClass(Class<?> clazz) {
-        this.causeClass = clazz;
-        // this.logger = LoggerFactory.getLogger(clazz);
-    }
-
     public void query(String sqlId, Map<String, ?> args, RowCallbackHandler rch) {
         StringBuffer sql = new StringBuffer((String) sqlp.getValue(sqlId, sqlId));
         if (!sql.toString().trim().toUpperCase().startsWith("CALL")) {
@@ -104,7 +97,7 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
         try {
             super.query(sql.toString(), args, rch);
         } catch (Exception e) {
-            throw new CapDBException(e, causeClass);
+            throw new CapDBException(sqlId, e, getClass());
         } finally {
             logger.info("CapNamedJdbcTemplate spend {} ms", (System.currentTimeMillis() - cur));
         }
@@ -144,7 +137,7 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
         try {
             return super.query(sql.toString(), (Map<String, Object>) args, new CapRowMapperResultSetExtractor<T>(rm, startRow, fetchSize));
         } catch (Exception e) {
-            throw new CapDBException(e, causeClass);
+            throw new CapDBException(sqlId, e, getClass());
         } finally {
             logger.info("CapNamedJdbcTemplate spend {} ms", (System.currentTimeMillis() - cur));
         }
@@ -181,7 +174,7 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
         try {
             return super.query(sql.toString(), (Map<String, ?>) args, new RowMapperResultSetExtractor<T>(rm));
         } catch (Exception e) {
-            throw new CapDBException(e, causeClass);
+            throw new CapDBException(sqlId, e, getClass());
         } finally {
             logger.info("CapNamedJdbcTemplate spend {} ms", (System.currentTimeMillis() - cur));
         }
@@ -252,7 +245,7 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
             Integer result = super.queryForObject(sql.toString(), args, Integer.class);
             return result == null ? 0 : result.intValue();
         } catch (Exception e) {
-            throw new CapDBException(e, causeClass);
+            throw new CapDBException(sqlId, e, getClass());
         } finally {
             logger.info("CapNamedJdbcTemplate spend {} ms", (System.currentTimeMillis() - cur));
         }
@@ -292,7 +285,7 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
         try {
             return super.update(sql, (Map) args);
         } catch (Exception e) {
-            throw new CapDBException(e, causeClass);
+            throw new CapDBException(sqlId, e, getClass());
         } finally {
             logger.info("CapNamedJdbcTemplate spend {} ms", (System.currentTimeMillis() - cur));
         }
@@ -343,7 +336,7 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
                 }
                 msg = cause.getMessage();
             }
-            throw new CapDBException(msg, e, causeClass);
+            throw new CapDBException(sqlId + ": " + msg, e, getClass());
         } finally {
             logger.info("CapNamedJdbcTemplate spend {} ms", (System.currentTimeMillis() - cur));
         }
@@ -400,7 +393,7 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
         try {
             return super.queryForRowSet(sql.toString(), args);
         } catch (Exception e) {
-            throw new CapDBException(e, causeClass);
+            throw new CapDBException(sqlId, e, getClass());
         } finally {
             logger.info("CapNamedJdbcTemplate spend {} ms", (System.currentTimeMillis() - cur));
         }
@@ -425,7 +418,7 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
         try {
             return super.queryForList(sql.toString(), args);
         } catch (Exception e) {
-            throw new CapDBException(e, causeClass);
+            throw new CapDBException(sqlId, e, getClass());
         } finally {
             logger.info("CapNamedJdbcTemplate spend {} ms", (System.currentTimeMillis() - cur));
         }
@@ -447,7 +440,7 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
         try {
             return new Page<Map<String, Object>>(list, super.queryForObject(sql.toString(), args, Integer.class), fetchSize, startRow);
         } catch (Exception e) {
-            throw new CapDBException(e, causeClass);
+            throw new CapDBException(sqlId, e, getClass());
         } finally {
             logger.info("CapNamedJdbcTemplate spend {} ms", (System.currentTimeMillis() - cur));
         }
@@ -498,7 +491,7 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
             List<Map<String, Object>> list = super.queryForList(sql.toString(), provider.getParams());
             return new Page<Map<String, Object>>(list, totalRows, search.getMaxResults(), search.getFirstResult());
         } catch (Exception e) {
-            throw new CapDBException(e, causeClass);
+            throw new CapDBException(sqlId, e, getClass());
         } finally {
             logger.info("CapNamedJdbcTemplate spend {} ms", (System.currentTimeMillis() - cur));
         }
@@ -535,7 +528,7 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
             List<T> list = super.query(sql.toString(), provider.getParams(), rm);
             return new Page<T>(list, totalRows, search.getMaxResults(), search.getFirstResult());
         } catch (Exception e) {
-            throw new CapDBException(e, causeClass);
+            throw new CapDBException(sqlId, e, getClass());
         } finally {
             logger.info("CapNamedJdbcTemplate spend {} ms", (System.currentTimeMillis() - cur));
         }
@@ -555,7 +548,7 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
         try {
             return super.query(sourceSql.toString(), param, rm);
         } catch (Exception e) {
-            throw new CapDBException(e, causeClass);
+            throw new CapDBException(sqlId, e, getClass());
         } finally {
             logger.info("CapNamedJdbcTemplate spend {} ms", (System.currentTimeMillis() - cur));
         }

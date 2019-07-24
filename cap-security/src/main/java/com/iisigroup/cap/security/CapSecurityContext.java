@@ -101,6 +101,14 @@ public class CapSecurityContext {
         return null;
     }
 
+    public static String getUnitName() {
+        CapUserDetails user = getUser();
+        if (user != null) {
+            return user.getUnitName();
+        }
+        return null;
+    }
+
     public static Locale getLocale() {
         CapUserDetails user = getUser();
         Locale locale = null;

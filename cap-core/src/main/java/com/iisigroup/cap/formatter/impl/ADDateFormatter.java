@@ -34,7 +34,6 @@ import com.iisigroup.cap.formatter.Formatter;
  *          <li>2011/11/1,rodeschen,from cap
  *          </ul>
  */
-@SuppressWarnings("serial")
 public class ADDateFormatter implements Formatter {
 
     private SimpleDateFormat df;
@@ -54,7 +53,6 @@ public class ADDateFormatter implements Formatter {
      * 
      * @see tw.com.iisi.cap.formatter.IFormatter#reformat(java.lang.Object)
      */
-    @SuppressWarnings("unchecked")
     public String reformat(Object in) {
         if (in != null && !"".equals(in)) {
             if (in instanceof Calendar) {

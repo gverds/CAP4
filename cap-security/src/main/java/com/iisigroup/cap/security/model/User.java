@@ -37,6 +37,8 @@ public interface User extends Serializable {
 
     String getDepCode();
 
+    String getDepName();
+
     String getStatusDesc();
 
     String getUpdater();

@@ -34,7 +34,6 @@ import com.iisigroup.cap.formatter.Formatter;
  *          <li>2011/12/1,iristu,new
  *          </ul>
  */
-@SuppressWarnings("serial")
 public class StrMessageFormatter implements Formatter {
 
     String unformatMsg;
