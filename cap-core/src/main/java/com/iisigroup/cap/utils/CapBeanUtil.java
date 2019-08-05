@@ -354,7 +354,12 @@ public class CapBeanUtil {
                             value = CapDate.parseDate((String) value);
                             break;
                         case "java.sql.Timestamp":
-                            value = CapDate.convertStringToTimestamp1((String) value);
+                            String in = (String) value;
+                            if(in.indexOf(':') > 0) {
+                                value = CapDate.convertStringToTimestamp((String) value, "yyyy/MM/dd HH:mm:ss");
+                            } else {
+                                value = CapDate.convertStringToTimestamp((String) value, "yyyy/MM/dd");
+                            }
                             break;
                         default:
                             if (field.getType() != String.class && "".equals(value)) {
