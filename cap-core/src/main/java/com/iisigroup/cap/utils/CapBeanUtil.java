@@ -349,6 +349,9 @@ public class CapBeanUtil {
                         case "java.math.BigDecimal":
                             value = CapMath.getBigDecimal(String.valueOf(value));
                             break;
+                        case "java.lang.Integer":
+                            value = CapMath.getBigDecimal(String.valueOf(value)).intValue();
+                            break;
                         case "java.util.Date":
                         case "java.sql.Date":
                             value = CapDate.parseDate((String) value);
