@@ -43,8 +43,9 @@ import com.iisigroup.cap.utils.CapWebUtil;
  *          <li>2013/4/15,iristu,修正IE7下載時錯誤
  *          </ul>
  */
-@SuppressWarnings("serial")
 public class ByteArrayDownloadResult extends FileDownloadResult {
+
+    private static final long serialVersionUID = 1L;
 
     private byte[] _byteArray = null;
 

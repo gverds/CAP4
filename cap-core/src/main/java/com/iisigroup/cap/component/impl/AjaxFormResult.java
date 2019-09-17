@@ -45,8 +45,9 @@ import com.iisigroup.cap.utils.GsonUtil;
  *          <li>2013/03/29,rodeschen,field change to protected
  *          </ul>
  */
-@SuppressWarnings("serial")
 public class AjaxFormResult implements Result {
+
+    private static final long serialVersionUID = 1L;
 
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -146,7 +147,7 @@ public class AjaxFormResult implements Result {
      * @return this FormResult
      */
     public AjaxFormResult set(String key, BigDecimal val) {
-        resultMap.put(key, val.toString());
+        resultMap.put(key, val == null ? "" : val.toString());
         return this;
     }
 
@@ -188,7 +189,7 @@ public class AjaxFormResult implements Result {
      * @return this FormResult
      */
     public AjaxFormResult set(String key, AjaxFormResult val) {
-        resultMap.put(key, val.toString());
+        resultMap.put(key, val == null ? "" : val.toString());
         return this;
     }
 

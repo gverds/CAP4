@@ -47,8 +47,9 @@ import com.iisigroup.cap.utils.GsonUtil;
  *          <li>2013/5/21,rodeschen,修改format錯誤放入原值
  *          </ul>
  */
-@SuppressWarnings("serial")
 public class MapGridResult extends AjaxFormResult implements GridResult<MapGridResult, Map<String, Object>> {
+
+    private static final long serialVersionUID = 1L;
 
     protected List<? extends Map<String, Object>> rowData;
 

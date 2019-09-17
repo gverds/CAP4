@@ -44,8 +44,9 @@ import com.iisigroup.cap.utils.CapString;
  *          <li>2013/4/15,iristu,修正IE7下載時錯誤
  *          </ul>
  */
-@SuppressWarnings("serial")
 public class FileDownloadResult implements Result {
+
+    private static final long serialVersionUID = 1L;
 
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 

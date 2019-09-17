@@ -45,9 +45,9 @@ import com.iisigroup.cap.utils.GsonUtil;
  *          <li>2011/11/1,rodeschen,from cap
  *          </ul>
  */
-@SuppressWarnings("serial")
 public class DefaultErrorResult implements ErrorResult {
 
+    private static final long serialVersionUID = 1L;
     public static final String AJAX_HANDLER_EXCEPTION = "AJAX_HANDLER_EXCEPTION";
     public static final String AJAX_MESSAGE_HANDLER_EXCEPTION = "AJAX_MESSAGE_HANDLER_EXCEPTION";
     public static final String AJAX_SESSION_EXPIRE_EXCEPTION = "AJAX_SESSION_EXPIRE_EXCEPTION";

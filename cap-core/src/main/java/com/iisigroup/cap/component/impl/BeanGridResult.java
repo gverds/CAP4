@@ -21,7 +21,6 @@ import javax.servlet.ServletResponse;
 import com.iisigroup.cap.component.GridResult;
 import com.iisigroup.cap.component.Result;
 import com.iisigroup.cap.constants.GridEnum;
-import com.iisigroup.cap.exception.CapException;
 import com.iisigroup.cap.formatter.Formatter;
 import com.iisigroup.cap.model.GenericBean;
 import com.iisigroup.cap.utils.GsonUtil;
@@ -43,8 +42,9 @@ import com.iisigroup.cap.utils.GsonUtil;
  *          <li>2013/03/29,rodeschen,add extends AjaxFormResult
  *          </ul>
  */
-@SuppressWarnings("serial")
 public class BeanGridResult extends AjaxFormResult implements GridResult<BeanGridResult, GenericBean> {
+
+    private static final long serialVersionUID = 1L;
 
     protected List<? extends GenericBean> rowData;
 
