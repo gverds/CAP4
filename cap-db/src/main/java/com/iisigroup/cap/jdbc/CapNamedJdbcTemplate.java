@@ -464,7 +464,8 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
         CapSqlSearchQueryProvider provider = new CapSqlSearchQueryProvider(search);
         String _sql = sqlp.getValue(sqlId, sqlId);
         // 加入 SpEL 處理 where clause
-        StringBuffer sourceSql = new StringBuffer(processWhereClause(provider, _sql));
+        String whereClause = provider.generateWhereClause();
+        StringBuffer sourceSql = new StringBuffer(processWhereClause(whereClause, _sql));
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(CapJdbcConstants.SQL_PAGING_SOURCE_SQL, sourceSql.toString());
         // 準備查詢筆數sql
@@ -502,7 +503,8 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
         CapSqlSearchQueryProvider provider = new CapSqlSearchQueryProvider(search);
         String _sql = sqlp.getValue(sqlId, sqlId);
         // 加入 SpEL 處理 where clause
-        StringBuffer sourceSql = new StringBuffer(processWhereClause(provider, _sql));
+        String whereClause = provider.generateWhereClause();
+        StringBuffer sourceSql = new StringBuffer(processWhereClause(whereClause, _sql));
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(CapJdbcConstants.SQL_PAGING_SOURCE_SQL, sourceSql.toString());
         // 準備查詢筆數sql
@@ -540,7 +542,8 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
         CapSqlSearchQueryProvider provider = new CapSqlSearchQueryProvider(search);
         String _sql = sqlp.getValue(sqlId, sqlId);
         // 加入 SpEL 處理 where clause
-        StringBuffer sourceSql = new StringBuffer(processWhereClause(provider, _sql));
+        String whereClause = provider.generateWhereClause();
+        StringBuffer sourceSql = new StringBuffer(processWhereClause(whereClause, _sql));
         sourceSql.append(provider.generateOrderClause());
         Map<String, Object> param = provider.getParams();
         param.putAll(inSqlParam);
@@ -557,14 +560,14 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
         }
     }
 
-    private String processWhereClause(CapSqlSearchQueryProvider provider, String _sql) {
+    private String processWhereClause(String whereClause, String _sql) {
         String result = null;
         if (_sql.contains(CapJdbcConstants.SQL_SEARCH_SETTING_WHERE_CLAUSE)) {
             Map<String, Object> params = new HashMap<String, Object>();
-            params.put(CapJdbcConstants.SQL_SEARCH_SETTING_WHERE_CLAUSE, provider.generateWhereClause());
+            params.put(CapJdbcConstants.SQL_SEARCH_SETTING_WHERE_CLAUSE, whereClause);
             result = SpelUtil.spelParser(_sql, params, sqlp.getParserContext());
         } else {
-            StringBuffer sourceSql = new StringBuffer(_sql).append(_sql.toUpperCase().lastIndexOf("WHERE") > 0 ? " AND " : " WHERE ").append(provider.generateWhereClause());
+            StringBuffer sourceSql = new StringBuffer(_sql).append(_sql.toUpperCase().lastIndexOf("WHERE") > 0 ? " AND " : " WHERE ").append(whereClause);
             result = sourceSql.toString();
         }
         return result;
