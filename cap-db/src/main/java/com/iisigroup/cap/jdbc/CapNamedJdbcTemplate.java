@@ -465,6 +465,9 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
         String _sql = sqlp.getValue(sqlId, sqlId);
         // 加入 SpEL 處理 where clause
         String whereClause = provider.generateWhereClause();
+        if (logger.isTraceEnabled()) {
+            logger.trace("whereClause: " + whereClause);
+        }
         StringBuffer sourceSql = new StringBuffer(processWhereClause(whereClause, _sql));
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(CapJdbcConstants.SQL_PAGING_SOURCE_SQL, sourceSql.toString());

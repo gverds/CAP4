@@ -144,7 +144,9 @@ public class CapSqlSearchQueryProvider {
 
     private String generateItemQuery(SearchModeParameter search) {
         String key = search.getKey();
-        String paramKey = key + search.hashCode();
+        // 當 search.hashCode() 為負數時，會發生
+        // Caused by: org.springframework.dao.InvalidDataAccessApiUsageException: No value supplied for the SQL parameter 'XXXX': No value registered for key 'XXXX' 的錯誤
+        String paramKey = key + Math.abs(search.hashCode());
         Object value = search.getValue();
         StringBuffer sb = new StringBuffer();
         switch (search.getMode()) {
