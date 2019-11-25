@@ -63,19 +63,15 @@ public class CapSqlSearchQueryProvider {
                 Object _key = s.getKey();
                 Object _value = s.getValue();
                 if (_key instanceof SearchModeParameter && _value instanceof SearchModeParameter) {
-                    String mode = "";
-                    if (SearchMode.OR == s.getMode()) {
-                        mode = " or ";
-                    } else if (SearchMode.AND == s.getMode()) {
-                        mode = " and ";
-                    }
                     SearchModeParameter k = (SearchModeParameter) _key;
                     SearchModeParameter v = (SearchModeParameter) _value;
                     List<SearchModeParameter> mySearchPool = new ArrayList<SearchModeParameter>();
+                    List<SearchMode> modes = new ArrayList<SearchMode>();
 
                     // add all of key
-                    getRecursiveSearchModeParameterKey(mySearchPool, k);
-                    getRecursiveSearchModeParameterValue(mySearchPool, v);
+                    getRecursiveSearchModeParameterKey(mySearchPool, k, modes);
+                    getRecursiveSearchModeParameterValue(mySearchPool, v, modes);
+                    modes.add(s.getMode());
 
                     // append where string
                     if (!mySearchPool.isEmpty()) {
@@ -83,6 +79,12 @@ public class CapSqlSearchQueryProvider {
                     }
                     for (int i = 0; i < mySearchPool.size(); i++) {
                         if (i != 0) {
+                            String mode = "";
+                            if (SearchMode.OR == modes.get(i - 1)) {
+                                mode = " or ";
+                            } else if (SearchMode.AND == modes.get(i - 1)) {
+                                mode = " and ";
+                            }
                             sb.append(mode);
                         }
                         sb.append(generateItemQuery(mySearchPool.get(i)));
@@ -104,24 +106,26 @@ public class CapSqlSearchQueryProvider {
         return sb.toString();
     }
 
-    private SearchModeParameter getRecursiveSearchModeParameterKey(List<SearchModeParameter> mySearchPool, SearchModeParameter k) {
+    private List<SearchMode> getRecursiveSearchModeParameterKey(List<SearchModeParameter> mySearchPool, SearchModeParameter k, List<SearchMode> modes) {
         if (k.getKey() instanceof SearchModeParameter) {
-            getRecursiveSearchModeParameterKey(mySearchPool, (SearchModeParameter) k.getKey());
-            getRecursiveSearchModeParameterValue(mySearchPool, (SearchModeParameter) k.getValue());
+            getRecursiveSearchModeParameterKey(mySearchPool, (SearchModeParameter) k.getKey(), modes);
+            modes.add(k.getMode());
+            getRecursiveSearchModeParameterValue(mySearchPool, (SearchModeParameter) k.getValue(), modes);
         } else {
             mySearchPool.add(k);
         }
-        return k;
+        return modes;
     }
 
-    private SearchModeParameter getRecursiveSearchModeParameterValue(List<SearchModeParameter> mySearchPool, SearchModeParameter v) {
+    private List<SearchMode> getRecursiveSearchModeParameterValue(List<SearchModeParameter> mySearchPool, SearchModeParameter v, List<SearchMode> modes) {
         if (v.getValue() instanceof SearchModeParameter) {
-            getRecursiveSearchModeParameterValue(mySearchPool, (SearchModeParameter) v.getValue());
-            getRecursiveSearchModeParameterKey(mySearchPool, (SearchModeParameter) v.getKey());
+            getRecursiveSearchModeParameterValue(mySearchPool, (SearchModeParameter) v.getValue(), modes);
+            modes.add(v.getMode());
+            getRecursiveSearchModeParameterKey(mySearchPool, (SearchModeParameter) v.getKey(), modes);
         } else {
             mySearchPool.add(v);
         }
-        return v;
+        return modes;
     }
 
     public String generateOrderClause() {
