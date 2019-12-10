@@ -72,6 +72,8 @@ public interface GenericDao<T> {
 
     List<T> find(SearchSetting search);
 
+    List<T> findAll();
+
     /**
      * Count.
      * 
@@ -86,13 +88,6 @@ public interface GenericDao<T> {
     Page<T> findPage(SearchSetting search);
 
     <S> Page<S> findPage(Class<S> clazz, SearchSetting search);
-
-    /**
-     * create new search requirement
-     * 
-     * @return ISearch
-     */
-    SearchSetting createSearchTemplete();
 
     /**
      * flush

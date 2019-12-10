@@ -40,7 +40,7 @@ public class SearchSettingImpl implements SearchSetting {
 
     private static final long serialVersionUID = 1L;
 
-    public SearchSettingImpl() {
+    protected SearchSettingImpl() {
 
     }
 
@@ -50,7 +50,7 @@ public class SearchSettingImpl implements SearchSetting {
      * @param searchSetting
      *            searchSetting
      */
-    public SearchSettingImpl(SearchSettingImpl searchSetting) {
+    protected SearchSettingImpl(SearchSettingImpl searchSetting) {
         setOrderBy(searchSetting.getOrderBy());
         setFirstResult(searchSetting.getFirstResult());
         setMaxResults(searchSetting.getMaxResults());

@@ -67,7 +67,7 @@ public class FunctionSetServiceTest {
     @Test
     public void testProvideService() {
         // functionSetService.findFunctionBySysTypeAndLevel("A", "1");
-        // functionSetService.findPage(new SearchSettingImpl(), "A", "1");
+        // functionSetService.findPage(createSearchTemplete(), "A", "1");
         List<String> roles = new ArrayList<String>();
         roles.add("AI0001");
         functionSetService.deleteRfList("939241", roles);

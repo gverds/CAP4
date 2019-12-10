@@ -190,6 +190,10 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
         return createQuery(getType(), search).getResultList();
     }
 
+    public List<T> findAll() {
+        return find(createSearchTemplete());
+    }
+
     /**
      * 查詢頁的資料
      * 
@@ -198,7 +202,7 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
      * @return Page<S>
      */
     public Page<T> findPage(SearchSetting search) {
-        return findPage(getType(), search);
+        return findPage(getType(), search == null ? createSearchTemplete() : search);
     }
 
     /**
@@ -502,7 +506,7 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
         return this;
     }
 
-    public SearchSetting createSearchTemplete() {
+    protected SearchSetting createSearchTemplete() {
         return new SearchSettingImpl();
     }
 

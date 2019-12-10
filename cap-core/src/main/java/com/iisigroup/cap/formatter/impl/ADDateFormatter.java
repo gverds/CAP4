@@ -38,7 +38,7 @@ public class ADDateFormatter implements Formatter {
 
     private SimpleDateFormat df;
 
-    private final static String DEF_PATTERN = "yyyy-MM-dd";
+    private final static String DEF_PATTERN = "yyyy/MM/dd";
 
     public ADDateFormatter() {
         df = new SimpleDateFormat(DEF_PATTERN);

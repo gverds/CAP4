@@ -181,7 +181,11 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
     }
 
     public List<Map<String, Object>> query(String sqlId, Map<String, Object> args) {
-        return this.query(sqlId, null, args, new CapColumnMapRowMapper());
+        return query(sqlId, null, args, new CapColumnMapRowMapper());
+    }
+
+    public List<Map<String, Object>> query(String sqlId, SearchSetting search) {
+        return query(sqlId, search, new CapColumnMapRowMapper(), new HashMap<String, Object>());
     }
 
     /**
