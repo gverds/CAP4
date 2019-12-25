@@ -191,7 +191,9 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
     }
 
     public List<T> findAll() {
-        return find(createSearchTemplete());
+        SearchSetting search = createSearchTemplete();
+        search.setMaxResults(Integer.MAX_VALUE);
+        return find(search);
     }
 
     /**
