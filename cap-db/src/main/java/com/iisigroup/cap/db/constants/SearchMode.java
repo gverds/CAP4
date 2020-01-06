@@ -40,7 +40,7 @@ public enum SearchMode {
     /** in */
     IN("in"),
     /** not in */
-    NOT_IN("in"),
+    NOT_IN("notIn"),
     /** = */
     EQUALS("eq"),
     /** != */

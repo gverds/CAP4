@@ -188,6 +188,10 @@ public class CapSqlSearchQueryProvider {
             sb.append(key).append(" in :").append(paramKey);
             params.put(paramKey, asCollection(value));
             break;
+        case NOT_IN:
+            sb.append(key).append(" not in :").append(paramKey);
+            params.put(paramKey, asCollection(value));
+            break;
         case LIKE:
             sb.append(key).append(" like :").append(paramKey);
             params.put(paramKey, value);
