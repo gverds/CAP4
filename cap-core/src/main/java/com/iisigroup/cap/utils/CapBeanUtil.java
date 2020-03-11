@@ -22,6 +22,8 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.sql.rowset.serial.SerialClob;
+
 import org.apache.commons.beanutils.ConvertUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -358,11 +360,14 @@ public class CapBeanUtil {
                             break;
                         case "java.sql.Timestamp":
                             String in = (String) value;
-                            if(in.indexOf(':') > 0) {
+                            if (in.indexOf(':') > 0) {
                                 value = CapDate.convertStringToTimestamp((String) value, "yyyy/MM/dd HH:mm:ss");
                             } else {
                                 value = CapDate.convertStringToTimestamp((String) value, "yyyy/MM/dd");
                             }
+                            break;
+                        case "java.sql.Clob":
+                            value = new SerialClob(((String) value).toCharArray());
                             break;
                         default:
                             if (field.getType() != String.class && "".equals(value)) {

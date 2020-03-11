@@ -11,6 +11,7 @@
  */
 package com.iisigroup.cap.utils;
 
+import java.sql.Clob;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
@@ -43,14 +44,17 @@ public class CapBeanUtilTest {
         System.out.println(bean.getTime());
         map.put("string", "1223");
         map.put("time", "2019/08/05 11:22:33");
+        map.put("clob", "AAA");
         CapBeanUtil.map2Bean(map, bean);
         System.out.println(bean.getString());
         System.out.println(bean.getTime());
+        System.out.println(bean.getClob());
     }
 
     class TestBean extends GenericBean {
         private String string;
         private Timestamp time;
+        private Clob clob;
 
         /**
          * @return the string
@@ -81,5 +85,21 @@ public class CapBeanUtilTest {
         public void setTime(Timestamp time) {
             this.time = time;
         }
+
+        /**
+         * @return the clob
+         */
+        public Clob getClob() {
+            return clob;
+        }
+
+        /**
+         * @param clob the clob to set
+         */
+        public void setClob(Clob clob) {
+            this.clob = clob;
+        }
+        
+        
     }
 }
