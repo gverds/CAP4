@@ -96,7 +96,9 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
      */
     public void save(Object entity) {
         Assert.notNull(entity, "The entity to save cannot be null element");
-        if (!getEntityManager().contains(entity)) {
+        if (getEntityManager().contains(entity)) {
+            getEntityManager().merge(entity);
+        } else {
             getEntityManager().persist(entity);
         }
     }
