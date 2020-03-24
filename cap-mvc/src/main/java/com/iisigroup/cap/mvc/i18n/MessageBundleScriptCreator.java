@@ -201,7 +201,7 @@ public class MessageBundleScriptCreator {
             }
 
         } catch (Exception e) {
-            LOGGER.error("can't load " + i18nPath);
+            LOGGER.warn("can't load " + i18nPath);
         } finally {
             IOUtils.closeQuietly(is);
         }

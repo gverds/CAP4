@@ -20,8 +20,6 @@ import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.namedparam.NamedParameterUtils;
 
 /**
@@ -38,8 +36,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterUtils;
  */
 public class CapDbUtil {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CapDbUtil.class);
-
     /**
      * Convert a prepared statment to standard SQL command Can be used to debug SQL command
      * 
@@ -51,11 +47,12 @@ public class CapDbUtil {
      */
     public static String convertToSQLCommand(String cmd, Map<String, ?> data) {
         String sql = NamedParameterUtils.parseSqlStatementIntoString(cmd);
-        if (data == null || data.isEmpty())
+        if (data == null || data.isEmpty()) {
             return cmd;
+        }
         Object[] oa = NamedParameterUtils.buildValueArray(cmd, data);
         StringBuffer sb = new StringBuffer(sql);
-        try {
+        if (oa.length > 0) {
             int[] npos = getQuestionPos(sb, oa.length);
             for (int j = npos.length - 1; j >= 0; j--) {
                 if (npos[j] > 0) {
@@ -65,8 +62,6 @@ public class CapDbUtil {
                     sb.insert(pos, value == null ? "null" : "'" + value + "'");
                 }
             }
-        } catch (ArrayIndexOutOfBoundsException e) {
-            LOGGER.error(e.getMessage());
         }
         return sb.toString();
     }
