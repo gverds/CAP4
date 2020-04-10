@@ -11,6 +11,7 @@
  */
 package com.iisigroup.cap.batch.page;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -24,7 +25,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.iisigroup.cap.base.service.CodeTypeService;
 import com.iisigroup.cap.batch.model.BatchJob;
 import com.iisigroup.cap.batch.service.BatchJobService;
 import com.iisigroup.cap.mvc.action.BaseActionController;
@@ -44,15 +44,16 @@ import com.iisigroup.cap.mvc.action.BaseActionController;
 @Controller
 public class SchedulePage extends BaseActionController {
 
-    @Autowired
-    private CodeTypeService codeTypeSrv;
+    // @Autowired
+    // private CodeTypeService codeTypeSrv;
     @Autowired
     private BatchJobService batchSrv;
 
     @RequestMapping(value = { "/batch/schedule" })
     public ModelAndView notifyStatus(Locale locale, HttpServletRequest request, HttpServletResponse response) throws Exception {
         String path = request.getPathInfo();
-        Map<String, Map<String, String>> codes = codeTypeSrv.findByCodeTypes(new String[] { "jobExitCode", "timeZoneId", "schExeHost" }, locale.toString());
+        Map<String, Map<String, String>> codes = new HashMap<>();
+        // codes = codeTypeSrv.findByCodeTypes(new String[] { "jobExitCode", "timeZoneId", "schExeHost" }, locale.toString());
         ModelAndView model = new ModelAndView(path);
         for (Entry<String, Map<String, String>> c : codes.entrySet()) {
             model.addObject(c.getKey(), c.getValue());

@@ -40,7 +40,7 @@ import com.google.gson.JsonArray;
 @SuppressWarnings("serial")
 public class CapUserDetails implements UserDetails {
 
-    private String password;
+    private String credential;
     private String userId;
     private String username;
     private String unitNo;
@@ -56,8 +56,8 @@ public class CapUserDetails implements UserDetails {
     public CapUserDetails() {
     }
 
-    public CapUserDetails(User user, String password, Map<String, String> roles) {
-        this.password = password;
+    public CapUserDetails(User user, String credential, Map<String, String> roles) {
+        this.credential = credential;
         this.userId = user.getCode();
         this.username = user.getName();
         this.unitNo = user.getDepCode();
@@ -82,7 +82,7 @@ public class CapUserDetails implements UserDetails {
     }
 
     public String getPassword() {
-        return password;
+        return credential;
     }
 
     public String getUsername() {
@@ -144,7 +144,7 @@ public class CapUserDetails implements UserDetails {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.credential = password;
     }
 
     public void setUserId(String userId) {

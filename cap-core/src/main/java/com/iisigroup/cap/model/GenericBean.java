@@ -116,7 +116,6 @@ public class GenericBean {
                 } else {
                     Field f = ReflectionUtils.findField(getClass(), field);
                     if (f != null) {
-                        f.setAccessible(true);
                         return f.get(this);
                     }
                 }

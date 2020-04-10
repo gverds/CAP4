@@ -14,6 +14,7 @@ package com.iisigroup.cap.jdbc;
 import java.sql.BatchUpdateException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -87,7 +88,7 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
 
     public void query(String sqlId, Map<String, ?> args, RowCallbackHandler rch) {
         StringBuffer sql = new StringBuffer((String) sqlp.getValue(sqlId, sqlId));
-        if (!sql.toString().trim().toUpperCase().startsWith("CALL")) {
+        if (!sql.toString().trim().toUpperCase(Locale.ENGLISH).startsWith("CALL")) {
             sql.append(' ').append(sqltemp.getValue(CapJdbcConstants.SQL_QUERY_SUFFIX, ""));
         }
         if (logger.isTraceEnabled()) {
@@ -127,7 +128,7 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
         if (appendDynamicSql != null) {
             sql.append(' ').append(appendDynamicSql);
         }
-        if (!sql.toString().trim().toUpperCase().startsWith("CALL")) {
+        if (!sql.toString().trim().toUpperCase(Locale.ENGLISH).startsWith("CALL")) {
             sql.append(' ').append(sqltemp.getValue(CapJdbcConstants.SQL_QUERY_SUFFIX, ""));
         }
         if (logger.isTraceEnabled()) {
@@ -164,7 +165,7 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
         if (appendDynamicSql != null) {
             sql.append(' ').append(appendDynamicSql);
         }
-        if (!sql.toString().trim().toUpperCase().startsWith("CALL")) {
+        if (!sql.toString().trim().toUpperCase(Locale.ENGLISH).startsWith("CALL")) {
             sql.append(' ').append(sqltemp.getValue(CapJdbcConstants.SQL_QUERY_SUFFIX, ""));
         }
         if (logger.isTraceEnabled()) {
@@ -574,7 +575,7 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
             params.put(CapJdbcConstants.SQL_SEARCH_SETTING_WHERE_CLAUSE, whereClause);
             result = SpelUtil.spelParser(_sql, params, sqlp.getParserContext());
         } else {
-            StringBuffer sourceSql = new StringBuffer(_sql).append(_sql.toUpperCase().lastIndexOf("WHERE") > 0 ? " AND " : " WHERE ").append(whereClause);
+            StringBuffer sourceSql = new StringBuffer(_sql).append(_sql.toUpperCase(Locale.ENGLISH).lastIndexOf("WHERE") > 0 ? " AND " : " WHERE ").append(whereClause);
             result = sourceSql.toString();
         }
         return result;

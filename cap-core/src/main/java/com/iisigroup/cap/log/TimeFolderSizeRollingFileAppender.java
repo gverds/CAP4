@@ -13,7 +13,6 @@ package com.iisigroup.cap.log;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -34,7 +33,6 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Layout;
 import org.apache.log4j.helpers.CountingQuietWriter;
@@ -235,29 +233,20 @@ public class TimeFolderSizeRollingFileAppender extends FileAppender implements E
         reset();
         this.fileName = pFileName;
         LogLog.debug("setFile called: " + fileName + ", " + append);
-        // It does not make sense to have immediate flush and bufferedIO.
-        if (bufferedIO) {
-            setImmediateFlush(false);
-        }
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(fileName, append);
+        
+        try (FileOutputStream fos = new FileOutputStream(fileName, append); Writer fw = createWriter(fos);){
+            this.setQWForFiles(fw);
+            this.fileAppend = append;
+            this.bufferedIO = bufferedIO;
+            this.bufferSize = bufferSize;
+            writeHeader();
+
+            if (append) {
+                currFile = new File(fileName);
+                ((CountingQuietWriter) qw).setCount(currFile.length());
+            }
         } catch (FileNotFoundException e) {
             throw e;
-        }
-        Writer fw = createWriter(fos);
-        if (bufferedIO) {
-            fw = new BufferedWriter(fw, bufferSize);
-        }
-        this.setQWForFiles(fw);
-        this.fileAppend = append;
-        this.bufferedIO = bufferedIO;
-        this.bufferSize = bufferSize;
-        writeHeader();
-
-        if (append) {
-            currFile = new File(fileName);
-            ((CountingQuietWriter) qw).setCount(currFile.length());
         }
         LogLog.debug("setFile ended");
     }
@@ -279,38 +268,25 @@ public class TimeFolderSizeRollingFileAppender extends FileAppender implements E
     public void zipFiles(List<String> fileList, String destUrl) throws IOException {
 
         FileUtils.forceMkdir(new File(FilenameUtils.getFullPathNoEndSeparator(destUrl)));
-        BufferedInputStream origin = null;
-        FileOutputStream fos = null;
-        BufferedOutputStream bos = null;
-        ZipArchiveOutputStream out = null;
-        FileInputStream fi = null;
-        byte data[] = new byte[BUFFER];
-        try {
-            fos = new FileOutputStream(destUrl);
-            bos = new BufferedOutputStream(fos);
-            out = new ZipArchiveOutputStream(bos);
 
+        byte data[] = new byte[BUFFER];
+        try (FileOutputStream fos = new FileOutputStream(destUrl); BufferedOutputStream bos = new BufferedOutputStream(fos); ZipArchiveOutputStream out = new ZipArchiveOutputStream(bos)) {
             for (String fName : fileList) {
                 File file = new File(fName);
-                fi = new FileInputStream(file);
-                origin = new BufferedInputStream(fi, BUFFER);
-                ZipArchiveEntry entry = new ZipArchiveEntry(file.getName());
-                out.putArchiveEntry(entry);
-                int count;
-                while ((count = origin.read(data, 0, BUFFER)) != -1) {
-                    out.write(data, 0, count);
+                try (FileInputStream fi = new FileInputStream(file); BufferedInputStream origin = new BufferedInputStream(fi, BUFFER);) {
+                    ZipArchiveEntry entry = new ZipArchiveEntry(file.getName());
+                    out.putArchiveEntry(entry);
+                    int count;
+                    while ((count = origin.read(data, 0, BUFFER)) != -1) {
+                        out.write(data, 0, count);
+                    }
+                    out.closeArchiveEntry();
+                } catch (Exception e1) {
+                    LogLog.error("add to zip error: " + file.getName(), e1);
                 }
-                out.closeArchiveEntry();
-                fi.close();
-                origin.close();
             }
-
-        } finally {
-            IOUtils.closeQuietly(out);
-            IOUtils.closeQuietly(bos);
-            IOUtils.closeQuietly(fos);
-            IOUtils.closeQuietly(origin);
-            IOUtils.closeQuietly(fi);
+        } catch (Exception e) {
+            LogLog.error("zipFiles error.", e);
         }
     }
 

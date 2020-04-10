@@ -28,7 +28,6 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
-import com.iisigroup.cap.base.service.EmailService;
 import com.iisigroup.cap.batch.constants.CapBatchConstants;
 import com.iisigroup.cap.batch.model.BatchSchedule;
 import com.iisigroup.cap.batch.service.BatchJobService;
@@ -56,7 +55,7 @@ public class CapBatchMailNotifyListener implements JobListener, InitializingBean
     private final Logger logger = LoggerFactory.getLogger(CapBatchMailNotifyListener.class);
 
     private BatchJobService batchSerivce;
-    private EmailService mailSender;
+    // FIXME private EmailService mailSender;
     private JobParametersExtractor jobParametersExtractor;
     @Resource
     private CapSystemConfig config;
@@ -82,7 +81,7 @@ public class CapBatchMailNotifyListener implements JobListener, InitializingBean
                     if (CapString.trimNull(status).equals(job.getExitStatus().getExitCode())) {
                         // 主旨
                         String subject = MessageFormat.format(mailSubject, new Object[] { sch.getSchId(), sch.getSchDesc(), job.getExitStatus().getExitCode() });
-                        mailSender.sendEmail(sch.getNotifyTo().split(","), subject, buildText(job));
+                        // FIXME mailSender.sendEmail(sch.getNotifyTo().split(","), subject, buildText(job));
                         break;
                     }
                 }
@@ -161,10 +160,10 @@ public class CapBatchMailNotifyListener implements JobListener, InitializingBean
     public void setMailSubject(String mailSubject) {
         this.mailSubject = mailSubject;
     }
-
-    public void setMailSender(EmailService mailSender) {
-        this.mailSender = mailSender;
-    }
+    // FIXME
+    // public void setMailSender(EmailService mailSender) {
+    // this.mailSender = mailSender;
+    // }
 
     public void setFmConfg(FreeMarkerConfigurer fmConfg) {
         this.fmConfg = fmConfg;

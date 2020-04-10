@@ -31,18 +31,17 @@ import com.iisigroup.cap.utils.UUIDGenerator;
  */
 public class UUIDIncrementer implements JobParametersIncrementer {
 
-    private static String ID_KEY = "uuid";
+    private final static String RUN_ID = "uuid";
 
-    private String key = ID_KEY;
+    private String runId = RUN_ID;
 
     /**
      * The name of the run id in the job parameters. Defaults to "run.id".
      * 
-     * @param key
-     *            the key to set
+     * @param runId
      */
-    public void setKey(String key) {
-        this.key = key;
+    public void setRunId(String runId) {
+        this.runId = runId;
     }
 
     /*
@@ -53,6 +52,6 @@ public class UUIDIncrementer implements JobParametersIncrementer {
     @Override
     public JobParameters getNext(JobParameters parameters) {
         JobParameters params = (parameters == null) ? new JobParameters() : parameters;
-        return new JobParametersBuilder(params).addString(key, UUIDGenerator.getUUID()).toJobParameters();
+        return new JobParametersBuilder(params).addString(runId, UUIDGenerator.getUUID()).toJobParameters();
     }
 }

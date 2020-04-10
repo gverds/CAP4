@@ -416,15 +416,17 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
                     needJoin = true;
                 }
                 Path<?> path = root.get(pathElements[0]);
-                for (int i = 1; i <= pathElements.length - 1; i++) {
-                    if (needJoin) {
-                        if (i == pathElements.length - 1) {
-                            path = join.get(pathElements[i]);
+                if(join != null) {
+                    for (int i = 1; i <= pathElements.length - 1; i++) {
+                        if (needJoin) {
+                            if (i == pathElements.length - 1) {
+                                path = join.get(pathElements[i]);
+                            } else {
+                                join = join.join(pathElements[i]);
+                            }
                         } else {
-                            join = join.join(pathElements[i]);
+                            path = path.get(pathElements[i]);
                         }
-                    } else {
-                        path = path.get(pathElements[i]);
                     }
                 }
 

@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
 import com.iisigroup.cap.action.Action;
 import com.iisigroup.cap.annotation.HandlerType;
@@ -61,6 +62,9 @@ public abstract class MFormHandler extends HandlerPlugin {
     @Resource(name = "handlerOpMapping")
     private CapParameter handlerOp;
 
+    @Resource
+    private HttpSession session;
+
     /**
      * <pre>
      * 直接以method name來執行
@@ -88,6 +92,7 @@ public abstract class MFormHandler extends HandlerPlugin {
             this.executeHandler = executeObj;
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         public Result doWork(Request params) {
             Result rtn = null;
