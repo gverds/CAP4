@@ -27,6 +27,7 @@ import com.iisigroup.cap.exception.CapMessageException;
 import com.iisigroup.cap.exception.CapSessioniExpireException;
 import com.iisigroup.cap.operation.simple.SimpleContextHolder;
 import com.iisigroup.cap.utils.CapAppContext;
+import com.iisigroup.cap.utils.CapDate;
 import com.iisigroup.cap.utils.CapString;
 import com.iisigroup.cap.utils.CapWebUtil;
 import com.iisigroup.cap.utils.GsonUtil;
@@ -89,7 +90,7 @@ public class DefaultErrorResult implements ErrorResult {
                 logMessage = ce.getMessageKey();
             }
             logMessage = formatMessage(request, logMessage, ce.getExtraInformation());
-            errorMessage.put(AJAX_MESSAGE_HANDLER_EXCEPTION, logMessage);
+            errorMessage.put(AJAX_MESSAGE_HANDLER_EXCEPTION, "[" + CapDate.getCurrentTimestamp() + "] " + logMessage);
         } else if (e instanceof CapClosePageException) {
             CapClosePageException ce = (CapClosePageException) e;
             logMessage = ce.getMessage();
@@ -97,7 +98,7 @@ public class DefaultErrorResult implements ErrorResult {
                 logMessage = ce.getMessageKey();
             }
             logMessage = formatMessage(request, logMessage, ce.getExtraInformation());
-            errorMessage.put(AJAX_CLOSE_PAGE_HANDLER_EXCEPTION, logMessage);
+            errorMessage.put(AJAX_CLOSE_PAGE_HANDLER_EXCEPTION, "[" + CapDate.getCurrentTimestamp() + "] " + logMessage);
         } else if (e instanceof CapSessioniExpireException) {
             CapSessioniExpireException ce = (CapSessioniExpireException) e;
             logMessage = ce.getMessage();
@@ -105,14 +106,14 @@ public class DefaultErrorResult implements ErrorResult {
                 logMessage = ce.getMessageKey();
             }
             logMessage = formatMessage(request, logMessage, ce.getExtraInformation());
-            errorMessage.put(AJAX_SESSION_EXPIRE_EXCEPTION, logMessage);
+            errorMessage.put(AJAX_SESSION_EXPIRE_EXCEPTION, "[" + CapDate.getCurrentTimestamp() + "] " + logMessage);
         } else if (e instanceof CapException) {
             CapException ce = (CapException) e;
             logMessage = new StringBuffer(ce.getCauseClass().getName()).append(":").append(e.getMessage()).toString();
-            errorMessage.put(AJAX_HANDLER_EXCEPTION, logMessage);
+            errorMessage.put(AJAX_HANDLER_EXCEPTION, "[" + CapDate.getCurrentTimestamp() + "] " + logMessage);
         } else {
             logMessage = e.getLocalizedMessage();
-            errorMessage.put(AJAX_HANDLER_EXCEPTION, logMessage);
+            errorMessage.put(AJAX_HANDLER_EXCEPTION, "[" + CapDate.getCurrentTimestamp() + "] " + logMessage);
         }
     }
 
