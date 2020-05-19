@@ -233,8 +233,8 @@ public class TimeFolderSizeRollingFileAppender extends FileAppender implements E
         reset();
         this.fileName = pFileName;
         LogLog.debug("setFile called: " + fileName + ", " + append);
-        
-        try (FileOutputStream fos = new FileOutputStream(fileName, append); Writer fw = createWriter(fos);){
+
+        try (FileOutputStream fos = new FileOutputStream(fileName, append); Writer fw = createWriter(fos);) {
             this.setQWForFiles(fw);
             this.fileAppend = append;
             this.bufferedIO = bufferedIO;

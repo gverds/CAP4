@@ -118,7 +118,7 @@ public class FileDownloadResult implements Result {
 
     public void respondResult(ServletResponse response) {
         File file = new File(_file);
-        try (InputStream in = new FileInputStream(file); OutputStream output = response.getOutputStream()){
+        try (InputStream in = new FileInputStream(file); OutputStream output = response.getOutputStream()) {
             response.setContentType(_contentType);
             if (_outputName != null && response instanceof HttpServletResponse) {
                 HttpServletResponse resp = (HttpServletResponse) response;
@@ -130,7 +130,7 @@ public class FileDownloadResult implements Result {
             // Stream to the requester.
             byte[] bbuf = new byte[1024 * 1024];
             int len = 0;
-            
+
             while ((in != null) && ((length = in.read(bbuf)) != -1)) {
                 output.write(bbuf, 0, length);
                 len += length;

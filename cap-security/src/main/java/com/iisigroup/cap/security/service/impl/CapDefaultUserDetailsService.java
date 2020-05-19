@@ -108,7 +108,7 @@ public class CapDefaultUserDetailsService implements UserDetailsService {
             public String getEmail() {
                 return null;
             }
-            
+
         }, "P@ssw0rd", new HashMap<>());
         return u;
     }
