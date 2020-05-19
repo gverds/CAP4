@@ -146,4 +146,8 @@ public interface Request extends Map<String, Object>, Serializable {
 
     <T> List<T> getFiles(String key);
 
+    String get(String key, boolean escape);
+
+    String get(String key, String defaultValue, boolean escape);
+
 }

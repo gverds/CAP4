@@ -86,11 +86,11 @@ public class CapSpringMVCRequest extends HashMap<String, Object> implements Requ
 
     private Map<String, Object> flattenJson(String key, String str) {
         Map<String, Object> result = new HashMap<>();
-        if(!StringUtils.isEmpty(str) && str.trim().startsWith("{") && str.trim().endsWith("}")) {
+        if (!StringUtils.isEmpty(str) && str.trim().startsWith("{") && str.trim().endsWith("}")) {
             Map<String, Object> map;
             try {
                 map = GsonUtil.jsonToMap(str);
-                if(map != null) {
+                if (map != null) {
                     for (Entry<String, Object> e : map.entrySet()) {
                         String field = key + '_' + e.getKey();
                         Object value = e.getValue();
@@ -121,18 +121,7 @@ public class CapSpringMVCRequest extends HashMap<String, Object> implements Requ
      */
     @Override
     public String get(String key, String defaultValue) {
-        Object value = null;
-        value = super.containsKey(key) ? super.get(key) : request.getParameter(key);
-
-        if (value == null) {
-            logger.trace("can't find request parameter :" + key);
-            return defaultValue;
-        } else {
-            if (value instanceof String[] && ((String[]) value).length > 0) {
-                return ((String[]) value)[0];
-            }
-            return String.valueOf(value);
-        }
+        return get(key, defaultValue, true);
     }
 
     @Override
@@ -324,5 +313,26 @@ public class CapSpringMVCRequest extends HashMap<String, Object> implements Requ
     public <T> List<T> getFiles(String key) {
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
         return (List<T>) multipartRequest.getFiles(key);
+    }
+
+    @Override
+    public String get(String key, boolean escape) {
+        return get(key, null, escape);
+    }
+
+    @Override
+    public String get(String key, String defaultValue, boolean escape) {
+        Object value = null;
+        value = super.containsKey(key) ? super.get(key) : request.getParameter(key);
+
+        if (value == null) {
+            logger.trace("can't find request parameter :" + key);
+            return defaultValue;
+        } else {
+            if (value instanceof String[] && ((String[]) value).length > 0) {
+                return escape ? xssEncode(((String[]) value)[0]) : ((String[]) value)[0];
+            }
+            return escape ? xssEncode(String.valueOf(value)) : String.valueOf(value);
+        }
     }
 }

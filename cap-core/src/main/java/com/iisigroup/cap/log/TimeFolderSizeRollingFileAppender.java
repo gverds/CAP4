@@ -13,6 +13,7 @@ package com.iisigroup.cap.log;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -233,20 +234,29 @@ public class TimeFolderSizeRollingFileAppender extends FileAppender implements E
         reset();
         this.fileName = pFileName;
         LogLog.debug("setFile called: " + fileName + ", " + append);
-
-        try (FileOutputStream fos = new FileOutputStream(fileName, append); Writer fw = createWriter(fos);) {
-            this.setQWForFiles(fw);
-            this.fileAppend = append;
-            this.bufferedIO = bufferedIO;
-            this.bufferSize = bufferSize;
-            writeHeader();
-
-            if (append) {
-                currFile = new File(fileName);
-                ((CountingQuietWriter) qw).setCount(currFile.length());
-            }
+        // It does not make sense to have immediate flush and bufferedIO.
+        if (bufferedIO) {
+            setImmediateFlush(false);
+        }
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(fileName, append);
         } catch (FileNotFoundException e) {
             throw e;
+        }
+        Writer fw = createWriter(fos);
+        if (bufferedIO) {
+            fw = new BufferedWriter(fw, bufferSize);
+        }
+        this.setQWForFiles(fw);
+        this.fileAppend = append;
+        this.bufferedIO = bufferedIO;
+        this.bufferSize = bufferSize;
+        writeHeader();
+
+        if (append) {
+            currFile = new File(fileName);
+            ((CountingQuietWriter) qw).setCount(currFile.length());
         }
         LogLog.debug("setFile ended");
     }
