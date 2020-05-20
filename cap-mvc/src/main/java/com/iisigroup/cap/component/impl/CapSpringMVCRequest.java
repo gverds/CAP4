@@ -329,10 +329,17 @@ public class CapSpringMVCRequest extends HashMap<String, Object> implements Requ
             logger.trace("can't find request parameter :" + key);
             return defaultValue;
         } else {
+            String val;
             if (value instanceof String[] && ((String[]) value).length > 0) {
-                return escape ? xssEncode(((String[]) value)[0]) : ((String[]) value)[0];
+                val = ((String[]) value)[0].trim();
+            } else {
+                val = String.valueOf(value).trim();
             }
-            return escape ? xssEncode(String.valueOf(value)) : String.valueOf(value);
+            return isJsonObject(val) ? val : (escape ? xssEncode(val) : val);
         }
+    }
+
+    private boolean isJsonObject(String val) {
+        return (val.startsWith("{") && val.endsWith("}")) || (val.startsWith("[") && val.endsWith("]"));
     }
 }
