@@ -174,9 +174,9 @@ public class CapSpringMVCRequest extends HashMap<String, Object> implements Requ
             case '\'':
                 writer.write("&#x27;");
                 break;
-            case '/':
-                writer.write("&#x2F;");
-                break;
+            // case '/':
+            // writer.write("&#x2F;");
+            // break;
             case '(':
                 writer.write("&#40;");
                 break;
