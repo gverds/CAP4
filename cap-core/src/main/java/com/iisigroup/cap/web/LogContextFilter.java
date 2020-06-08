@@ -1,5 +1,5 @@
 /*
- * CapLogInfoFilter.java
+ * LogContextFilter.java
  *
  * Copyright (c) 2009-2011 International Integrated System, Inc.
  * 11F, No.133, Sec.4, Minsheng E. Rd., Taipei, 10574, Taiwan, R.O.C.
@@ -26,6 +26,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.ThreadContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,12 +44,11 @@ import com.iisigroup.cap.utils.CapWebUtil;
  *          <li>2011-11-23,iristu,new
  *          <li>2013-1-23,RodesChen,move getRequestURL to CapWebUtil
  *          <li>2013-6-3,RodesChen,增加 UUID 取代 threadID 以防值過長(Weblogic)
+ *          <li>2020-4-8,Sunkist,Update for log4j2
  *          </ul>
  */
 public class LogContextFilter implements Filter {
-
     public final static String LOGIN_USERNAME = "LOGIN_USERNAME";
-
     public final static String DEFAULT_LOGIN = "------";
 
     /*
@@ -95,36 +95,25 @@ public class LogContextFilter implements Filter {
     public void init(FilterConfig filterConfig) throws ServletException {
         // do nothing
     }
-
 }
 
 class LogContext extends InheritableThreadLocal {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(LogContext.class);
-
     private static ThreadLocal<Map> logContext = new InheritableThreadLocal<Map>();
-
     private static boolean useMDC = false;
-
     public static final String LOGIN = "login";
-
     public static final String UUID = "uuid";
-
     public static final String SESSION_ID = "sessionId";
-
     public static final String HOST = "host";
-
     public static final String CLIENT_ADDR = "clientAddr";
-
     public static final String REQUEST_URI = "reqURI";
-
     static {
         try {
-            Class.forName("org.apache.log4j.MDC");
+            Class.forName("org.apache.logging.log4j.ThreadContext");
             useMDC = true;
         } catch (Throwable t) {
             if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("org.apache.log4j.MDC was not found on the classpath, continue without");
+                LOGGER.debug("org.apache.logging.log4j.ThreadContext was not found on the classpath, continue without");
             }
         }
     }
@@ -139,7 +128,7 @@ class LogContext extends InheritableThreadLocal {
      */
     private static Map getContext() {
         if (useMDC) {
-            return org.apache.log4j.MDC.getContext();
+            return ThreadContext.getContext();
         } else {
             Map m = logContext.get();
             if (m == null) {
@@ -159,7 +148,7 @@ class LogContext extends InheritableThreadLocal {
      */
     public static Object get(String key) {
         if (useMDC) {
-            return org.apache.log4j.MDC.get(key);
+            return ThreadContext.get(key);
         } else {
             return getContext().get(key);
         }
@@ -175,7 +164,7 @@ class LogContext extends InheritableThreadLocal {
      */
     public static void put(String key, Object o) {
         if (useMDC) {
-            org.apache.log4j.MDC.put(key, o);
+            ThreadContext.put(key, CapString.trimNull(o));
         } else {
             getContext().put(key, o);
         }
@@ -189,7 +178,7 @@ class LogContext extends InheritableThreadLocal {
      */
     public static void remove(String key) {
         if (useMDC) {
-            org.apache.log4j.MDC.remove(key);
+            ThreadContext.remove(key);
         } else {
             getContext().remove(key);
         }
@@ -212,7 +201,6 @@ class LogContext extends InheritableThreadLocal {
     public static String toLogPrefixString() {
         Map m = getContext();
         Iterator i = m.entrySet().iterator();
-
         StringBuilder sb = new StringBuilder("[");
         while (i.hasNext()) {
             Map.Entry e = (Map.Entry) i.next();
@@ -266,5 +254,4 @@ class LogContext extends InheritableThreadLocal {
     public static void setUUID(String uuid) {
         put(UUID, uuid);
     }
-
 }
