@@ -546,6 +546,47 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
         }
     }
 
+    public <T> Page<T> queryForPage(String sqlId, SearchSetting search, RowMapper<T> rm, Map<String, Object> inSqlParam) {
+        CapSqlSearchQueryProvider provider = new CapSqlSearchQueryProvider(search);
+        String _sql = sqlp.getValue(sqlId, sqlId);
+        // 加入 SpEL 處理 where clause
+        String whereClause = provider.generateWhereClause();
+        StringBuffer sourceSql = new StringBuffer(processWhereClause(whereClause, _sql));
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put(CapJdbcConstants.SQL_PAGING_SOURCE_SQL, sourceSql.toString());
+        // 準備查詢筆數sql
+        StringBuffer sql = new StringBuffer().append(SpelUtil.spelParser((String) sqltemp.getValue(CapJdbcConstants.SQL_PAGING_TOTAL_PAGE), params, sqlp.getParserContext()));
+        Map<String, Object> param = provider.getParams();
+        param.putAll(inSqlParam);
+        sql.append(' ').append(sqltemp.getValue(CapJdbcConstants.SQL_QUERY_SUFFIX, ""));
+        if (logger.isTraceEnabled()) {
+            logger.trace(new StringBuffer("\n\t").append(CapDbUtil.convertToSQLCommand(sql.toString(), param)).toString());
+        }
+        String sqlRow = sql.toString();
+        // 準備查詢list sql
+        // sourceSql.append(provider.generateOrderCause());
+        params.put(CapJdbcConstants.SQL_PAGING_SOURCE_SQL, sourceSql.toString());
+        String orderBy = search.hasOrderBy() ? provider.generateOrderClause() : sqltemp.getValue(CapJdbcConstants.SQL_PAGING_DUMMY_ORDER_BY, "");
+        params.put(CapJdbcConstants.SQL_PAGING_SOURCE_ORDER, orderBy);
+        sql = new StringBuffer().append(SpelUtil.spelParser((String) sqltemp.getValue(CapJdbcConstants.SQL_PAGING_QUERY), params, sqlp.getParserContext()));
+        sql.append(' ').append(sqltemp.getValue(CapJdbcConstants.SQL_QUERY_SUFFIX, ""));
+        // 此處的 order by 是組完分頁 sql 後，再做一次 order by，因為子查詢中的 order by 不會反映在最後的查詢結果
+        sql.append(provider.generateOrderClause());
+        if (logger.isTraceEnabled()) {
+            logger.trace(new StringBuffer("\n\t").append(CapDbUtil.convertToSQLCommand(sql.toString(), param)).toString());
+        }
+        long cur = System.currentTimeMillis();
+        try {
+            int totalRows = super.queryForObject(sqlRow, param, Integer.class);
+            List<T> list = super.query(sql.toString(), param, rm);
+            return new Page<T>(list, totalRows, search.getMaxResults(), search.getFirstResult());
+        } catch (Exception e) {
+            throw new CapDBException(sqlId, e, getClass());
+        } finally {
+            logger.info("CapNamedJdbcTemplate spend {} ms", (System.currentTimeMillis() - cur));
+        }
+    }
+    
     public <T> List<T> query(String sqlId, SearchSetting search, RowMapper<T> rm, Map<String, Object> inSqlParam) {
         CapSqlSearchQueryProvider provider = new CapSqlSearchQueryProvider(search);
         String _sql = sqlp.getValue(sqlId, sqlId);
