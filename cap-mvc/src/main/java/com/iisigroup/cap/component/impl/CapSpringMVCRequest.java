@@ -159,30 +159,30 @@ public class CapSpringMVCRequest extends HashMap<String, Object> implements Requ
         for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
             switch (c) {
-            case '&':
-                writer.write("&amp;");
-                break;
+            // case '&':
+            // writer.write("&amp;");
+            // break;
             case '<':
                 writer.write("&lt;");
                 break;
             case '>':
                 writer.write("&gt;");
                 break;
-            case '\"':
-                writer.write("&quot;");
-                break;
-            case '\'':
-                writer.write("&#x27;");
-                break;
+            // case '\"':
+            // writer.write("&quot;");
+            // break;
+            // case '\'':
+            // writer.write("&#x27;");
+            // break;
             // case '/':
             // writer.write("&#x2F;");
             // break;
-            case '(':
-                writer.write("&#40;");
-                break;
-            case ')':
-                writer.write("&#41;");
-                break;
+            // case '(':
+            // writer.write("&#40;");
+            // break;
+            // case ')':
+            // writer.write("&#41;");
+            // break;
             default:
                 writer.write(c);
                 break;
