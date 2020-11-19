@@ -60,6 +60,7 @@ public class DefaultErrorResult implements ErrorResult {
     String logMessage = "";
     private String contentType;
     private String encoding;
+    private static final String READABLE_ERROR_MSG = "例外錯誤，請洽系統人員。";
 
     public DefaultErrorResult() {
     }
@@ -110,10 +111,10 @@ public class DefaultErrorResult implements ErrorResult {
         } else if (e instanceof CapException) {
             CapException ce = (CapException) e;
             logMessage = new StringBuffer(ce.getCauseClass().getName()).append(":").append(e.getMessage()).toString();
-            errorMessage.put(AJAX_HANDLER_EXCEPTION, "[" + CapDate.getCurrentTimestamp() + "] " + logMessage);
+            errorMessage.put(AJAX_HANDLER_EXCEPTION, "[" + CapDate.getCurrentTimestamp() + "] " + READABLE_ERROR_MSG);
         } else {
             logMessage = e.getLocalizedMessage();
-            errorMessage.put(AJAX_HANDLER_EXCEPTION, "[" + CapDate.getCurrentTimestamp() + "] " + logMessage);
+            errorMessage.put(AJAX_HANDLER_EXCEPTION, "[" + CapDate.getCurrentTimestamp() + "] " + READABLE_ERROR_MSG);
         }
     }
 
