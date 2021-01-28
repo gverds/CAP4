@@ -11,6 +11,7 @@ package com.iisigroup.cap.web;
 
 import java.io.IOException;
 import java.util.Locale;
+import java.util.UUID;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -55,11 +56,11 @@ import com.iisigroup.cap.utils.GsonUtil;
 public class CapHandlerServlet extends HttpServlet {
 
     protected final Logger logger = LoggerFactory.getLogger(CapHandlerServlet.class);
-    public final String HANDLER = "_handler";
-    public final String ACTION = "_action";
+    public static final String HANDLER = "_handler";
+    public static final String ACTION = "_action";
 
-    protected String DEFAULT_ERROR_RESULT;
-    protected String DEFAULT_REQUEST;
+    protected String defaultErrorResult;
+    protected String defaultRequest;
 
     protected PluginManager pluginMgr;
 
@@ -68,13 +69,13 @@ public class CapHandlerServlet extends HttpServlet {
         super.init(config);
         String manager = config.getInitParameter("pluginManager");
         pluginMgr = (PluginManager) CapAppContext.getBean(manager);
-        DEFAULT_REQUEST = config.getInitParameter("defaultRequest");
-        if (CapString.isEmpty(DEFAULT_REQUEST)) {
-            DEFAULT_REQUEST = "CapDefaultRequest";
+        defaultRequest = config.getInitParameter("defaultRequest");
+        if (CapString.isEmpty(defaultRequest)) {
+            defaultRequest = "CapDefaultRequest";
         }
-        DEFAULT_ERROR_RESULT = config.getInitParameter("errorResult");
-        if (CapString.isEmpty(DEFAULT_ERROR_RESULT)) {
-            DEFAULT_ERROR_RESULT = "CapDefaultErrorResult";
+        defaultErrorResult = config.getInitParameter("errorResult");
+        if (CapString.isEmpty(defaultErrorResult)) {
+            defaultErrorResult = "CapDefaultErrorResult";
         }
     }
 
@@ -93,8 +94,9 @@ public class CapHandlerServlet extends HttpServlet {
         String handler = (String) req.getAttribute(HANDLER);
         String action = (String) req.getAttribute(ACTION);
         long st = System.currentTimeMillis();
+        String uuidTx = UUID.randomUUID().toString().replace("-", "").substring(0, 8);
         if (logger.isTraceEnabled()) {
-            logger.trace("Request Data: {}", GsonUtil.objToJson(req.getParameterMap()));
+            logger.trace("{} Request Data: {}", uuidTx, GsonUtil.objToJson(req.getParameterMap()));
         }
         Object locale = req.getSession().getAttribute(CapWebUtil.localeKey);
         if (locale != null) {
@@ -108,11 +110,10 @@ public class CapHandlerServlet extends HttpServlet {
         try {
             request.setParameter(Handler.FORM_ACTION, action);
             HandlerPlugin plugin = pluginMgr.getPlugin(handler);
-            logger.info("plugin:" + handler + " - " + plugin.getClass().getSimpleName() + " action:" + action);
+            logger.info("{} plugin:{} - {} action: {}", uuidTx, handler, plugin.getClass().getSimpleName(), action);
             plugin.setRequest(request);
             pluginlogger = LoggerFactory.getLogger(plugin.getClass());
             result = plugin.execute(request);
-            // TODO 若 handler 回傳的 result 是 null，該如何處理？
             if (result == null) {
                 result = new AjaxFormResult();
             }
@@ -125,30 +126,30 @@ public class CapHandlerServlet extends HttpServlet {
                 result = errorResult;
             }
             if (e instanceof CapMessageException) {
-                pluginlogger.error(result.getResult().toString());
+                pluginlogger.error(result.getResult());
             } else if (e instanceof CapException && e.getCause() != null) {
-                pluginlogger.error(result.getResult().toString(), e.getCause());
+                pluginlogger.error(result.getResult(), e.getCause());
             } else {
-                pluginlogger.error(result.getResult().toString(), e);
+                pluginlogger.error(result.getResult(), e);
             }
             if (!"true".equals(request.get("iframe"))) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             }
         }
         result.respondResult(resp);
-        logger.debug("total spend time : {} ms", (System.currentTimeMillis() - st));
+        logger.debug("{} total spend time : {} ms", uuidTx, (System.currentTimeMillis() - st));
         if (logger.isTraceEnabled()) {
-            logger.trace("Response Data : " + result.getLogMessage());
+            logger.trace("{} Response Data : {}", uuidTx, result.getLogMessage());
         }
         SimpleContextHolder.resetContext();
     }
 
     protected ErrorResult getDefaultErrorResult() {
-        return CapAppContext.getBean(DEFAULT_ERROR_RESULT);
+        return CapAppContext.getBean(defaultErrorResult);
     }
 
     protected Request getDefaultRequest(HttpServletRequest req) {
-        Request cr = CapAppContext.getBean(DEFAULT_REQUEST);
+        Request cr = CapAppContext.getBean(defaultRequest);
         cr.setRequestObject(req);
         return cr;
     }

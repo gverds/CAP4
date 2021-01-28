@@ -96,4 +96,5 @@ public interface GenericDao<T> {
 
     <S> S findById(Class<S> clazz, Serializable pk);
 
+    void clear();
 }

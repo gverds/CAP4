@@ -28,6 +28,7 @@ import com.iisigroup.cap.component.Result;
 import com.iisigroup.cap.component.impl.AjaxFormResult;
 import com.iisigroup.cap.constants.GridEnum;
 import com.iisigroup.cap.context.CapParameter;
+import com.iisigroup.cap.db.dao.CommonDao;
 import com.iisigroup.cap.db.dao.SearchSetting;
 import com.iisigroup.cap.db.dao.impl.SearchSettingImpl;
 import com.iisigroup.cap.exception.CapException;
@@ -65,6 +66,9 @@ public abstract class MFormHandler extends HandlerPlugin {
     @Resource
     private HttpSession session;
 
+    @Resource
+    private CommonDao commonDao;
+
     /**
      * <pre>
      * 直接以method name來執行
@@ -92,7 +96,6 @@ public abstract class MFormHandler extends HandlerPlugin {
             this.executeHandler = executeObj;
         }
 
-        @SuppressWarnings("unchecked")
         @Override
         public Result doWork(Request params) {
             Result rtn = null;
@@ -112,23 +115,6 @@ public abstract class MFormHandler extends HandlerPlugin {
                     }
                     hasMethod = true;
                 }
-                // for (Method method : ReflectionUtils
-                // .getAllDeclaredMethods(executeHandler.getClass())) {
-                // if (methodId.equals(method.getName())) {
-                // HandlerType type = method
-                // .getAnnotation(HandlerType.class);
-                // if (type == null
-                // || HandlerTypeEnum.FORM.equals(type.value())) {
-                // rtn = (IResult) method.invoke(executeHandler,
-                // params);
-                // } else if (HandlerTypeEnum.GRID.equals(type.value())) {
-                // rtn = execute(method, params);
-                // }
-                // hasMethod = true;
-                // break;
-                // }
-                // }
-
             } catch (InvocationTargetException e) {
                 if (e.getCause() instanceof CapMessageException) {
                     throw (CapMessageException) e.getCause();
@@ -142,6 +128,14 @@ public abstract class MFormHandler extends HandlerPlugin {
             }
             if (!hasMethod) {
                 throw new CapMessageException("action not found", getClass());
+            }
+            // handler method 結束後，強制進行 flush
+            try {
+                commonDao.clear();
+            } catch (Exception e) {
+                // do nothing
+                // 不一定每個 handler method 都會 bind SharedEntityManager
+                logger.warn("clear persistenceContext fail.", e);
             }
             return rtn;
         }

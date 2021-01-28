@@ -416,7 +416,7 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
                     needJoin = true;
                 }
                 Path<?> path = root.get(pathElements[0]);
-                if(join != null) {
+                if (join != null) {
                     for (int i = 1; i <= pathElements.length - 1; i++) {
                         if (needJoin) {
                             if (i == pathElements.length - 1) {
@@ -531,6 +531,11 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
 
     protected CapNamedJdbcTemplate getNamedJdbcTemplate() {
         return namedJdbcTemplate;
+    }
+
+    @Override
+    public void clear() {
+        getEntityManager().clear();
     }
 
 }
