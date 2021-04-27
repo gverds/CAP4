@@ -18,7 +18,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.ThreadContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -89,12 +91,33 @@ public class CapHandlerServlet extends HttpServlet {
         doHandlerAction(req, resp);
     }
 
+    private void addInformationInLogger(HttpServletRequest req, String uuidTx) {
+        HttpSession session = req.getSession(false);
+        ThreadContext.put("host", req.getLocalAddr());
+        ThreadContext.put("uuid", uuidTx);
+        // 用戶端IP
+        ThreadContext.put("clientAddr", req.getRemoteAddr());
+        // Session ID
+        ThreadContext.put("sessionId", session.getId());
+        ThreadContext.put("reqURI", CapWebUtil.getRequestURL(req));
+        // User相關資訊
+        String userId = (String) session.getAttribute("LOGIN_USERNAME");
+        userId = CapString.isEmpty(userId) ? (String) req.getParameter("j_username") : userId;
+        if (CapString.isEmpty(userId)) {
+            ThreadContext.put("login", "------");
+        } else {
+            ThreadContext.put("login", userId);
+        }
+    }
+
     protected void doHandlerAction(HttpServletRequest req, HttpServletResponse resp) {
         SimpleContextHolder.resetContext();
+        ThreadContext.clearMap();
         String handler = (String) req.getAttribute(HANDLER);
         String action = (String) req.getAttribute(ACTION);
         long st = System.currentTimeMillis();
         String uuidTx = UUID.randomUUID().toString().replace("-", "").substring(0, 8);
+        addInformationInLogger(req, uuidTx);
         if (logger.isTraceEnabled()) {
             logger.trace("{} Request Data: {}", uuidTx, GsonUtil.objToJson(req.getParameterMap()));
         }
@@ -142,6 +165,7 @@ public class CapHandlerServlet extends HttpServlet {
             logger.trace("{} Response Data : {}", uuidTx, result.getLogMessage());
         }
         SimpleContextHolder.resetContext();
+        ThreadContext.clearMap();
     }
 
     protected ErrorResult getDefaultErrorResult() {
