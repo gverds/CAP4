@@ -30,6 +30,7 @@ import com.iisigroup.cap.component.Result;
 import com.iisigroup.cap.component.impl.AjaxFormResult;
 import com.iisigroup.cap.component.impl.DefaultErrorResult;
 import com.iisigroup.cap.exception.CapException;
+import com.iisigroup.cap.exception.CapFileDownloadException;
 import com.iisigroup.cap.exception.CapMessageException;
 import com.iisigroup.cap.handler.Handler;
 import com.iisigroup.cap.operation.simple.SimpleContextHolder;
@@ -151,7 +152,15 @@ public class CapHandlerServlet extends HttpServlet {
             if (e instanceof CapMessageException) {
                 pluginlogger.error(result.getResult());
             } else if (e instanceof CapException && e.getCause() != null) {
-                pluginlogger.error(result.getResult(), e.getCause());
+                if (e.getCause() instanceof CapFileDownloadException) {
+                    try {
+                        req.getRequestDispatcher("../../page/error").forward(req, resp);
+                    } catch (Exception ex) {
+                        logger.error("Download redirect to error page exception", ex);
+                    }
+                } else {
+                    pluginlogger.error(result.getResult(), e.getCause());
+                }
             } else {
                 pluginlogger.error(result.getResult(), e);
             }

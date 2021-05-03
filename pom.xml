@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.iisigroup.cap</groupId>
     <artifactId>cap</artifactId>
-    <version>4.0.1-fcb-202104271454</version>
+    <version>4.0.1-fcb-202104271500</version>
     <packaging>pom</packaging>
     <properties>
         <slf4j.version>1.7.28</slf4j.version>

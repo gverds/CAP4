@@ -3,7 +3,7 @@
     <parent>
         <artifactId>cap</artifactId>
         <groupId>com.iisigroup.cap</groupId>
-        <version>4.0.1-fcb-202104271454</version>
+        <version>4.0.1-fcb-202104271500</version>
     </parent>
     <artifactId>cap-core</artifactId>
     <dependencies>
