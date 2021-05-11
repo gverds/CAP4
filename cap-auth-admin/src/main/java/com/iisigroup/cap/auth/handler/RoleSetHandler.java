@@ -33,7 +33,7 @@ import com.iisigroup.cap.component.impl.BeanGridResult;
 import com.iisigroup.cap.component.impl.MapGridResult;
 import com.iisigroup.cap.db.dao.SearchSetting;
 import com.iisigroup.cap.db.model.Page;
-import com.iisigroup.cap.db.service.CommonService;
+import com.iisigroup.cap.db.service.CapCommonService;
 import com.iisigroup.cap.db.utils.CapEntityUtil;
 import com.iisigroup.cap.exception.CapException;
 import com.iisigroup.cap.exception.CapFormatException;
@@ -64,7 +64,7 @@ import com.iisigroup.cap.utils.GsonUtil;
 public class RoleSetHandler extends MFormHandler {
 
     @Resource
-    private CommonService commonSrv;
+    private CapCommonService commonSrv;
 
     @Resource
     private RoleSetService roleSetService;

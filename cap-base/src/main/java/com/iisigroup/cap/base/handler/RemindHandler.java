@@ -34,7 +34,7 @@ import com.iisigroup.cap.component.impl.BeanGridResult;
 import com.iisigroup.cap.db.constants.SearchMode;
 import com.iisigroup.cap.db.dao.SearchSetting;
 import com.iisigroup.cap.db.model.Page;
-import com.iisigroup.cap.db.service.CommonService;
+import com.iisigroup.cap.db.service.CapCommonService;
 import com.iisigroup.cap.db.utils.CapEntityUtil;
 import com.iisigroup.cap.exception.CapException;
 import com.iisigroup.cap.exception.CapMessageException;
@@ -67,7 +67,7 @@ import com.iisigroup.cap.utils.CapWebUtil;
 public class RemindHandler extends MFormHandler {
 
     @Resource
-    private CommonService commonSrv;
+    private CapCommonService commonSrv;
 
     @Autowired
     private CodeTypeService codeTypeService;

@@ -58,7 +58,7 @@ import com.iisigroup.cap.constants.Constants;
 import com.iisigroup.cap.db.constants.SearchMode;
 import com.iisigroup.cap.db.dao.SearchSetting;
 import com.iisigroup.cap.db.model.Page;
-import com.iisigroup.cap.db.service.CommonService;
+import com.iisigroup.cap.db.service.CapCommonService;
 import com.iisigroup.cap.exception.CapException;
 import com.iisigroup.cap.exception.CapFormatException;
 import com.iisigroup.cap.exception.CapMessageException;
@@ -118,7 +118,7 @@ public class RuleTbMntHandler extends MFormHandler {
     private RuleTbMntService ruleTbMntService;
 
     @Resource
-    private CommonService commonService;
+    private CapCommonService commonService;
 
     /**
      * 查詢Condition資料明細

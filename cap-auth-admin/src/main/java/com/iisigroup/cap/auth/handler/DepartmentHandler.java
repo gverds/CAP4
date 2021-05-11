@@ -28,7 +28,7 @@ import com.iisigroup.cap.component.impl.AjaxFormResult;
 import com.iisigroup.cap.component.impl.BeanGridResult;
 import com.iisigroup.cap.db.dao.SearchSetting;
 import com.iisigroup.cap.db.model.Page;
-import com.iisigroup.cap.db.service.CommonService;
+import com.iisigroup.cap.db.service.CapCommonService;
 import com.iisigroup.cap.exception.CapException;
 import com.iisigroup.cap.formatter.Formatter;
 import com.iisigroup.cap.mvc.handler.MFormHandler;
@@ -53,7 +53,7 @@ import com.iisigroup.cap.utils.CapString;
 public class DepartmentHandler extends MFormHandler {
 
     @Resource
-    private CommonService commonSrv;
+    private CapCommonService commonSrv;
 
     @Resource
     private DepartmentService departmentService;

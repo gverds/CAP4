@@ -17,7 +17,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import com.iisigroup.cap.base.model.SysParm;
-import com.iisigroup.cap.db.service.CommonService;
+import com.iisigroup.cap.db.service.CapCommonService;
 import com.iisigroup.cap.utils.CapString;
 
 /**
@@ -43,7 +43,7 @@ public class CapSystemProperties extends HashMap<String, String> {
     private List<String> ignoreCache;
 
     @Resource
-    private CommonService commonSrv;
+    private CapCommonService commonSrv;
 
     @Override
     public String get(Object key) {

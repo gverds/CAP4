@@ -20,8 +20,8 @@ import java.util.Set;
 import javax.annotation.Resource;
 import javax.servlet.ServletRequest;
 
-import org.apache.commons.lang.RandomStringUtils;
-import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.slf4j.Logger;
@@ -35,7 +35,7 @@ import com.iisigroup.cap.base.annotation.CapAuditLogAction;
 import com.iisigroup.cap.base.constants.CapConstants;
 import com.iisigroup.cap.base.model.AuditLog;
 import com.iisigroup.cap.component.Request;
-import com.iisigroup.cap.db.service.CommonService;
+import com.iisigroup.cap.db.service.CapCommonService;
 import com.iisigroup.cap.security.CapSecurityContext;
 import com.iisigroup.cap.security.model.CapUserDetails;
 import com.iisigroup.cap.utils.CapBeanUtil;
@@ -77,7 +77,7 @@ public class CapAuditLog4HandlerAdvice {
     }
 
     @Resource
-    private CommonService commonSrv;
+    private CapCommonService commonSrv;
 
     @Resource
     private CapSystemProperties sysProp;

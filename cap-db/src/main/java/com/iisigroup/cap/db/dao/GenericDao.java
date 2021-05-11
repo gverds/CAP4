@@ -90,6 +90,13 @@ public interface GenericDao<T> {
     <S> Page<S> findPage(Class<S> clazz, SearchSetting search);
 
     /**
+     * create new search requirement
+     * 
+     * @return ISearch
+     */
+    SearchSetting createSearchTemplete();
+
+    /**
      * flush
      */
     void flush();

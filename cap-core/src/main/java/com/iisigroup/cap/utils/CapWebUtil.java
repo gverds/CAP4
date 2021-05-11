@@ -12,8 +12,10 @@
 package com.iisigroup.cap.utils;
 
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.net.UnknownHostException;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -82,5 +84,41 @@ public class CapWebUtil {
             url = url.substring(f + 5);
         }
         return url;
+    }
+
+    private static String hostName;
+
+    /**
+     * 取得電腦名稱
+     * 
+     * @return String
+     */
+    public static String getHostName() {
+        if (hostName == null) {
+            try {
+                hostName = InetAddress.getLocalHost().getHostName();
+            } catch (UnknownHostException e) {
+                hostName = "unknow";
+            }
+        }
+        return hostName;
+    }
+
+    private static String ip;
+
+    /**
+     * 取得電腦IP
+     * 
+     * @return ip address
+     */
+    public static String getHostIp() {
+        if (ip == null) {
+            try {
+                ip = InetAddress.getLocalHost().getHostAddress();
+            } catch (UnknownHostException e) {
+                ip = "0.0.0.0";
+            }
+        }
+        return ip;
     }
 }

@@ -17,7 +17,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 
@@ -39,7 +39,7 @@ import com.iisigroup.cap.component.impl.MapGridResult;
 import com.iisigroup.cap.db.constants.SearchMode;
 import com.iisigroup.cap.db.dao.SearchSetting;
 import com.iisigroup.cap.db.model.Page;
-import com.iisigroup.cap.db.service.CommonService;
+import com.iisigroup.cap.db.service.CapCommonService;
 import com.iisigroup.cap.exception.CapMessageException;
 import com.iisigroup.cap.formatter.Formatter;
 import com.iisigroup.cap.formatter.impl.ADDateFormatter;
@@ -74,7 +74,7 @@ public class UserSetHandler extends MFormHandler {
     @Resource
     private CodeTypeService codeTypeService;
     @Resource
-    private CommonService commonService;
+    private CapCommonService commonService;
 
     @HandlerType(HandlerTypeEnum.GRID)
     public MapGridResult query(SearchSetting search, Request params) {

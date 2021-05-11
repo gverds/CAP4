@@ -36,6 +36,7 @@ import com.iisigroup.cap.formatter.impl.DurationFormatter;
 import com.iisigroup.cap.utils.CapString;
 import com.iisigroup.cap.utils.CapSystemConfig;
 
+import freemarker.template.Configuration;
 import freemarker.template.Template;
 
 /**
@@ -93,7 +94,8 @@ public class CapBatchMailNotifyListener implements JobListener, InitializingBean
         Map<String, Object> result = getExecutionResult(job);
         try {
             fmConfg.setTemplateLoaderPath(config.getProperty("batch.freemarkDir"));
-            Template t = fmConfg.getConfiguration().getTemplate(messageTemplate);
+            Configuration c = fmConfg.getConfiguration();
+            Template t = c.getTemplate(messageTemplate);
             return FreeMarkerTemplateUtils.processTemplateIntoString(t, result);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);

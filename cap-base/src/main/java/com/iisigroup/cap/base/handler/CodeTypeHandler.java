@@ -38,7 +38,7 @@ import com.iisigroup.cap.component.impl.BeanGridResult;
 import com.iisigroup.cap.db.constants.SearchMode;
 import com.iisigroup.cap.db.dao.SearchSetting;
 import com.iisigroup.cap.db.model.Page;
-import com.iisigroup.cap.db.service.CommonService;
+import com.iisigroup.cap.db.service.CapCommonService;
 import com.iisigroup.cap.exception.CapMessageException;
 import com.iisigroup.cap.formatter.Formatter;
 import com.iisigroup.cap.formatter.impl.ADDateFormatter;
@@ -70,7 +70,7 @@ public class CodeTypeHandler extends MFormHandler {
     private CodeTypeService codeTypeService;
 
     @Resource
-    private CommonService commonService;
+    private CapCommonService commonService;
 
     @CapAuditLogAction(functionCode = CapFunctionCode.F101, actionType = CapActionTypeEnum.QUERY)
     @HandlerType(HandlerTypeEnum.GRID)

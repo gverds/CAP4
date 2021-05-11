@@ -3,11 +3,11 @@
     <parent>
         <artifactId>cap</artifactId>
         <groupId>com.iisigroup.cap</groupId>
-        <version>4.0.1-fcb-201909170937</version>
+        <version>5.0.1-tcb-202105051800</version>
     </parent>
     <artifactId>cap-auth-admin</artifactId>
     <properties>
-        <spring.batch.version>3.0.7.RELEASE</spring.batch.version>
+        <spring.batch.version>4.0.2.RELEASE</spring.batch.version>
     </properties>
     <dependencies>
         <dependency>
@@ -25,9 +25,9 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>commons-collections</groupId>
-            <artifactId>commons-collections</artifactId>
-            <version>3.2.2</version>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-collections4</artifactId>
+			<version>4.4</version>
             <scope>compile</scope>
         </dependency>
         <!-- for testing -->
@@ -45,7 +45,7 @@
         <dependency>
             <groupId>com.mchange</groupId>
             <artifactId>c3p0</artifactId>
-            <version>0.9.5.2</version>
+            <version>0.9.5.5</version>
             <scope>test</scope>
         </dependency>
         <dependency>

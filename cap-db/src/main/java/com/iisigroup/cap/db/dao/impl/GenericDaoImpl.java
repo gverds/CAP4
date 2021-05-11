@@ -512,7 +512,7 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
         return this;
     }
 
-    protected SearchSetting createSearchTemplete() {
+    public SearchSetting createSearchTemplete() {
         return new SearchSettingImpl();
     }
 

@@ -28,7 +28,7 @@ import com.iisigroup.cap.component.impl.BeanGridResult;
 import com.iisigroup.cap.db.constants.SearchMode;
 import com.iisigroup.cap.db.dao.SearchSetting;
 import com.iisigroup.cap.db.model.Page;
-import com.iisigroup.cap.db.service.CommonService;
+import com.iisigroup.cap.db.service.CapCommonService;
 import com.iisigroup.cap.formatter.Formatter;
 import com.iisigroup.cap.formatter.impl.ADDateFormatter;
 import com.iisigroup.cap.mvc.handler.MFormHandler;
@@ -51,7 +51,7 @@ import com.iisigroup.cap.utils.CapDate;
 public class SysParmHandler extends MFormHandler {
 
     @Resource
-    private CommonService commonService;
+    private CapCommonService commonService;
 
     @HandlerType(HandlerTypeEnum.GRID)
     public BeanGridResult query(SearchSetting search, Request params) {

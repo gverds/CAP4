@@ -32,7 +32,7 @@ import com.iisigroup.cap.constants.Constants;
 import com.iisigroup.cap.db.constants.SearchMode;
 import com.iisigroup.cap.db.dao.SearchSetting;
 import com.iisigroup.cap.db.model.Page;
-import com.iisigroup.cap.db.service.CommonService;
+import com.iisigroup.cap.db.service.CapCommonService;
 import com.iisigroup.cap.exception.CapFormatException;
 import com.iisigroup.cap.exception.CapMessageException;
 import com.iisigroup.cap.formatter.BeanFormatter;
@@ -73,7 +73,7 @@ public class ConditionMntHandler extends MFormHandler {
     private FactorMntService factorMntService;
 
     @Resource
-    private CommonService commonService;
+    private CapCommonService commonService;
 
     /**
      * 查詢Condition資料明細

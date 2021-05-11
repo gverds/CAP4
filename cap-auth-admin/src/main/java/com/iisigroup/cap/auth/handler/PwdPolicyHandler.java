@@ -19,7 +19,7 @@ import com.iisigroup.cap.base.model.SysParm;
 import com.iisigroup.cap.component.Result;
 import com.iisigroup.cap.component.Request;
 import com.iisigroup.cap.component.impl.AjaxFormResult;
-import com.iisigroup.cap.db.service.CommonService;
+import com.iisigroup.cap.db.service.CapCommonService;
 import com.iisigroup.cap.mvc.handler.MFormHandler;
 import com.iisigroup.cap.security.constants.SecConstants.PwdPolicyKeys;
 
@@ -39,7 +39,7 @@ import com.iisigroup.cap.security.constants.SecConstants.PwdPolicyKeys;
 public class PwdPolicyHandler extends MFormHandler {
 
     @Resource
-    private CommonService commonService;
+    private CapCommonService commonService;
     @Resource
     private PwdPolicyService pwdPolicyService;
 

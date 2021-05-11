@@ -37,7 +37,7 @@ import com.iisigroup.cap.component.impl.MapGridResult;
 import com.iisigroup.cap.db.constants.SearchMode;
 import com.iisigroup.cap.db.dao.SearchSetting;
 import com.iisigroup.cap.db.model.Page;
-import com.iisigroup.cap.db.service.CommonService;
+import com.iisigroup.cap.db.service.CapCommonService;
 import com.iisigroup.cap.db.utils.CapEntityUtil;
 import com.iisigroup.cap.exception.CapException;
 import com.iisigroup.cap.exception.CapMessageException;
@@ -65,7 +65,7 @@ import com.iisigroup.cap.utils.GsonUtil;
 public class FunctionSetHandler extends MFormHandler {
 
     @Resource
-    private CommonService commonSrv;
+    private CapCommonService commonSrv;
 
     @Autowired
     private CodeTypeService codeTypeService;

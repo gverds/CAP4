@@ -24,10 +24,10 @@
         <!-- 採用utf-8 編碼 -->
         <param-value>UTF-8</param-value>
     </context-param>
-    <listener>
+    <!-- <listener>
         <description>log4j</description>
         <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
-    </listener>
+    </listener> -->
     <listener>
         <description>spring</description>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>

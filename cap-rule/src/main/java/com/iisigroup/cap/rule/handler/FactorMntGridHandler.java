@@ -25,7 +25,7 @@ import com.iisigroup.cap.component.impl.BeanGridResult;
 import com.iisigroup.cap.db.constants.SearchMode;
 import com.iisigroup.cap.db.dao.SearchSetting;
 import com.iisigroup.cap.db.model.Page;
-import com.iisigroup.cap.db.service.CommonService;
+import com.iisigroup.cap.db.service.CapCommonService;
 import com.iisigroup.cap.exception.CapFormatException;
 import com.iisigroup.cap.formatter.BeanFormatter;
 import com.iisigroup.cap.formatter.Formatter;
@@ -55,7 +55,7 @@ public class FactorMntGridHandler extends MFormHandler {
     private FactorMntService factorMntService;
 
     @Resource
-    private CommonService commonService;
+    private CapCommonService commonService;
 
     /**
      * 查詢Factor Item Grid資料明細

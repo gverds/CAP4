@@ -26,7 +26,7 @@ import com.iisigroup.cap.component.Request;
 import com.iisigroup.cap.component.Result;
 import com.iisigroup.cap.component.impl.AjaxFormResult;
 import com.iisigroup.cap.constants.Constants;
-import com.iisigroup.cap.db.service.CommonService;
+import com.iisigroup.cap.db.service.CapCommonService;
 import com.iisigroup.cap.exception.CapMessageException;
 import com.iisigroup.cap.mvc.handler.MFormHandler;
 import com.iisigroup.cap.rule.model.DivFtDtl;
@@ -58,7 +58,7 @@ public class FactorMntHandler extends MFormHandler {
     private FactorMntService factorMntService;
 
     @Resource
-    private CommonService commonService;
+    private CapCommonService commonService;
 
     /**
      * 查詢Factor資料明細

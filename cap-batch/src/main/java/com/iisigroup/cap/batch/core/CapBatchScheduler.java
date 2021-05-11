@@ -76,7 +76,7 @@ public class CapBatchScheduler implements CapBatchConstants {
         Set<String> hosts = new HashSet<String>();
         hosts.add(getHostId());
         hosts.add(LOCALHOST);
-        List<BatchSchedule> schedules = batchService.findSchByHostId(CollectionUtils.arrayToList(hosts.toArray()));
+        List<BatchSchedule> schedules = batchService.findSchByHostId((List<String>) CollectionUtils.arrayToList(hosts.toArray()));
         Map<JobDetail, Set<? extends Trigger>> triggersAndJobs = new LinkedHashMap<JobDetail, Set<? extends Trigger>>();
         for (BatchSchedule sch : schedules) {
             if (sch.isEnabled()) {
