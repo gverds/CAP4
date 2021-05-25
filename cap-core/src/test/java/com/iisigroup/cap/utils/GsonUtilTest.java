@@ -173,13 +173,22 @@ public class GsonUtilTest {
         m.setToday(new Date());
         m.setType("T1");
         String objToJson = GsonUtil.objToJson(m);
+        String objToJsonTw = GsonUtil.objToJsonForTwDate(m);
         System.out.println(objToJson);
+        System.out.println(objToJsonTw);
         TestModel n = GsonUtil.jsonToObj(objToJson, TestModel.class);
+        TestModel n2 = GsonUtil.jsonToObjForTwDate(objToJsonTw, TestModel.class);
         System.out.println(n.getType());
         System.out.println(n.getAmount().toPlainString());
         System.out.println(n.getCount());
         System.out.println(n.getCurrentTime());
         System.out.println(n.getToday());
+
+        System.out.println(n2.getType());
+        System.out.println(n2.getAmount().toPlainString());
+        System.out.println(n2.getCount());
+        System.out.println(n2.getCurrentTime());
+        System.out.println(n2.getToday());
     }
 
     class TestModel {

@@ -13,6 +13,7 @@ package com.iisigroup.cap.utils;
 
 import java.io.StringReader;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -45,6 +46,17 @@ public class GsonUtil {
         return builder.create();
     }
 
+    public static final Gson createGsonForTwDate(final boolean serializeNulls) {
+        final GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(Timestamp.class, new MinguoTimestampTypeAdapter());
+        builder.registerTypeAdapter(Date.class, new MinguoDateTypeAdapter());
+        builder.registerTypeHierarchyAdapter(Number.class, new NumberTypeAdapter());
+        if (serializeNulls) {
+            builder.serializeNulls();
+        }
+        return builder.create();
+    }
+    
     /**
      * <pre>
      * test data:
@@ -127,11 +139,23 @@ public class GsonUtil {
         return gson.fromJson(reader, c);
     }
 
+    public static <T> T jsonToObjForTwDate(String jsonString, Class<T> c) {
+        Gson gson = createGsonForTwDate(true);
+        JsonReader reader = new JsonReader(new StringReader(jsonString));
+        reader.setLenient(true);
+        return gson.fromJson(reader, c);
+    }
+    
     public static String objToJson(Object obj) {
         Gson gson = createGson(true);
         return gson.toJson(obj);
     }
-
+    
+    public static String objToJsonForTwDate(Object obj) {
+        Gson gson = createGsonForTwDate(true);
+        return gson.toJson(obj);
+    }
+    
     public static Map<String, Object> objToMap(Object obj) {
         if (obj instanceof String) {
             return jsonToMap((String) obj);
@@ -139,6 +163,13 @@ public class GsonUtil {
         return jsonToMap(objToJson(obj));
     }
 
+    public static Map<String, Object> objToMapForTwDate(Object obj) {
+        if (obj instanceof String) {
+            return jsonToMap((String) obj);
+        }
+        return jsonToMap(objToJsonForTwDate(obj));
+    }
+    
     public static <T> T objToObj(Object obj) {
         if (obj instanceof String) {
             return jsonToObj((String) obj);

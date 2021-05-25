@@ -78,7 +78,7 @@ public class AjaxFormResult implements Result {
      *            Object
      */
     public AjaxFormResult(Object obj) {
-        resultMap = GsonUtil.objToMap(obj);
+        resultMap = GsonUtil.objToMapForTwDate(obj);
     }
 
     /**
