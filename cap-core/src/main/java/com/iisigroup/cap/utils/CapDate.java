@@ -15,10 +15,21 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.chrono.Chronology;
+import java.time.chrono.MinguoChronology;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.DecimalStyle;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 import java.util.regex.Pattern;
+
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * <p>
@@ -929,4 +940,96 @@ public class CapDate {
         String dayAfter = new SimpleDateFormat("yyyy-MM-dd").format(c.getTime());
         return dayAfter;
     }
+    
+    /**
+     * 日期物件轉為民國年格式yyy/MM/dd
+     * 
+     * @param date
+     * @return
+     */
+    public static String convertDateToTwDateStr(Date date) {
+        if (null == date) {
+            return null;
+        }
+        Chronology chrono = MinguoChronology.INSTANCE;
+        DateTimeFormatter df = new DateTimeFormatterBuilder().parseLenient().appendPattern("yyy/MM/dd").toFormatter().withChronology(chrono).withDecimalStyle(DecimalStyle.of(Locale.getDefault()));
+        Timestamp ts = new Timestamp(date.getTime());
+        LocalDate localDate = ts.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return df.format(localDate);
+    }
+    
+    /**
+     * Timestamp轉為民國年格式yyy/MM/dd HH:mm:ss
+     * 
+     * @param date
+     * @return
+     */
+    public static String convertDateTimeToTwDateTimeStr(Timestamp dateTime) {
+        if (null == dateTime) {
+            return null;
+        }
+        Chronology chrono = MinguoChronology.INSTANCE;
+        DateTimeFormatter df = new DateTimeFormatterBuilder().parseLenient().appendPattern("yyy/MM/dd HH:mm:ss").toFormatter().withChronology(chrono)
+                .withDecimalStyle(DecimalStyle.of(Locale.getDefault()));
+        LocalDateTime localDateTime = dateTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+        return df.format(localDateTime);
+    }
+    
+	/**
+     * <pre>
+     * 將字串轉為 Date 
+     * 僅支援民國年yyy/MM/dd以及西元年yyyy/MM/dd
+     * 傳入日期為空則回傳null 
+     * 無法轉換時拋Exception 
+     *</pre>
+	 * @param twDate yyy/MM/dd 3 位民國年、2 位月份、2 位日期
+	 * @return
+	 */
+	public static Date convertTwDateStrToDate(String twDate) {
+        Date result = null;
+        if (StringUtils.isNotBlank(twDate)) {
+            String yearStr = StringUtils.split(twDate, "/")[0];
+            if (Integer.parseInt(yearStr) >= 1000) {
+                // 西元年
+                result = CapDate.parseDate(twDate);
+            }else {
+                // 民國年
+                String format = "yyy/MM/dd";
+                Chronology chrono = MinguoChronology.INSTANCE;
+                DateTimeFormatter df = new DateTimeFormatterBuilder().parseLenient().appendPattern(format).toFormatter().withChronology(chrono).withDecimalStyle(DecimalStyle.of(Locale.getDefault()));
+                LocalDate localDate = LocalDate.parse(twDate, df);
+                result = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+            }
+        }
+        return result;
+	}
+    
+
+	/**
+	 * 將民國年月日轉為 Timestamp，
+	 * 傳入日期為回傳null
+	 * 無法轉換時拋Exception
+	 * 預設處理"yyy/mm/dd"與"yyy-mm-dd"，有特別分隔符號需傳入
+	 *
+	 * @param twDateTime yyy/MM/dd 3 位民國年、2 位月份、2 位日期
+	 * @return
+	 */
+	public static Timestamp convertTwDateStrToTimestamp(String twDateTime) {
+        Timestamp result = null;
+        if (StringUtils.isNotBlank(twDateTime)) {
+            String yearStr = StringUtils.split(twDateTime, "/")[0];
+            if (Integer.parseInt(yearStr) >= 1000) {
+                String format = "yyyy/MM/dd HH:mm:ss";
+                result = convertStringToTimestamp(twDateTime, format);
+            }else {
+                String format = "yyy/MM/dd HH:mm:ss";
+                Chronology chrono = MinguoChronology.INSTANCE;
+                DateTimeFormatter df = new DateTimeFormatterBuilder().parseLenient().appendPattern(format).toFormatter().withChronology(chrono).withDecimalStyle(DecimalStyle.of(Locale.getDefault()));
+                LocalDateTime localDateTime = LocalDateTime.parse(twDateTime, df);
+                result = Timestamp.valueOf(localDateTime);
+            }
+        }
+        return result;
+	}
+	
 }//

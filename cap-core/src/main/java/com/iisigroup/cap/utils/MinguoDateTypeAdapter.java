@@ -65,57 +65,14 @@ public final class MinguoDateTypeAdapter extends TypeAdapter<Date> {
             in.nextNull();
             return null;
         }
-        final long utilDate = convertTwDateToTimestamp(in.nextString(), null).getTime();
+        final long utilDate = CapDate.convertTwDateStrToDate(in.nextString()).getTime();
 		return new Date(utilDate);
     }
     
     @Override 
     public synchronized void write(JsonWriter out, Date value) throws IOException {
-        out.value(value == null ? null : convertDateToTwDate(value));
-    }
-    
-    /**
-     * 日期物件轉為民國年格式yyy/MM/dd
-     * 
-     * @param date
-     * @return
-     */
-    private String convertDateToTwDate(Date date) {
-        if (null == date) {
-            return null;
-        }
-        Chronology chrono = MinguoChronology.INSTANCE;
-        DateTimeFormatter df = new DateTimeFormatterBuilder().parseLenient().appendPattern("yyy/MM/dd").toFormatter().withChronology(chrono).withDecimalStyle(DecimalStyle.of(Locale.getDefault()));
-        Timestamp ts = new Timestamp(date.getTime());
-        LocalDate localDate = ts.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        return df.format(localDate);
+        out.value(value == null ? null : CapDate.convertDateToTwDateStr(value));
     }
     
 
-	/**
-	 * 將民國年月日轉為 Timestamp，
-	 * 傳入日期為回傳null
-	 * 無法轉換時拋Exception
-	 * 預設處理"yyy/mm/dd"與"yyy-mm-dd"，有特別分隔符號需傳入
-	 *
-	 * @param twDate yyy/MM/dd 3 位民國年、2 位月份、2 位日期
-	 * @return
-	 */
-	private Date convertTwDateToTimestamp(String twDate, String format) {
-		Date result = null;
-		if (StringUtils.isNotBlank(twDate)) {
-
-			if (StringUtils.isBlank(format)) {
-				format = "yyy/MM/dd";
-			}
-
-	        Chronology chrono = MinguoChronology.INSTANCE;
-	        DateTimeFormatter df = new DateTimeFormatterBuilder().parseLenient().appendPattern(format).toFormatter().withChronology(chrono)
-	                .withDecimalStyle(DecimalStyle.of(Locale.getDefault()));
-	        
-	        LocalDate localDate = LocalDate.parse(twDate, df);
-	        result = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-		}
-		return result;
-	}
 }
