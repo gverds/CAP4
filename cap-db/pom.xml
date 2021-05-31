@@ -3,7 +3,7 @@
     <parent>
         <artifactId>cap</artifactId>
         <groupId>com.iisigroup.cap</groupId>
-        <version>5.0.1-tcb-202105051800</version>
+        <version>5.0.1-tcb-202105261100</version>
     </parent>
     <artifactId>cap-db</artifactId>
     <dependencies>
