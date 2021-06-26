@@ -125,17 +125,18 @@ public abstract class MFormHandler extends HandlerPlugin {
                 }
             } catch (Throwable t) {
                 throw new CapException(t, executeHandler.getClass());
+            } finally {
+                // handler method 結束後，強制進行 flush
+                try {
+                    commonDao.clear();
+                } catch (Exception e) {
+                    // do nothing
+                    // 不一定每個 handler method 都會 bind SharedEntityManager
+                    logger.warn("clear persistenceContext fail.", e);
+                }
             }
             if (!hasMethod) {
                 throw new CapMessageException("action not found", getClass());
-            }
-            // handler method 結束後，強制進行 flush
-            try {
-                commonDao.clear();
-            } catch (Exception e) {
-                // do nothing
-                // 不一定每個 handler method 都會 bind SharedEntityManager
-                logger.warn("clear persistenceContext fail.", e);
             }
             return rtn;
         }

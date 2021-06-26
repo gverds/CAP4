@@ -157,7 +157,11 @@ public class CapHandlerServlet extends HttpServlet {
                         req.getRequestDispatcher("../../page/error").forward(req, resp);
                     } catch (Exception ex) {
                         logger.error("Download redirect to error page exception", ex);
+                    } finally {
+                        SimpleContextHolder.resetContext();
+                        ThreadContext.clearMap();
                     }
+                    return;
                 } else {
                     pluginlogger.error(result.getResult(), e.getCause());
                 }

@@ -12,7 +12,6 @@
 package com.iisigroup.cap.component.impl;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -25,6 +24,7 @@ import org.apache.commons.lang.StringUtils;
 
 import com.iisigroup.cap.component.Request;
 import com.iisigroup.cap.component.Result;
+import com.iisigroup.cap.exception.CapFileDownloadException;
 import com.iisigroup.cap.utils.CapWebUtil;
 
 /**
@@ -126,8 +126,8 @@ public class ByteArrayDownloadResult extends FileDownloadResult {
                 output.write(bbuf, 0, length);
             }
             output.flush();
-        } catch (IOException e) {
-            e.getMessage();
+        } catch (Exception e) {
+            throw new CapFileDownloadException(e.getMessage());
         } finally {
             IOUtils.closeQuietly(in);
             IOUtils.closeQuietly(output);
