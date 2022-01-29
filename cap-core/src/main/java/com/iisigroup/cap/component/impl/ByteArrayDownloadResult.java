@@ -110,9 +110,9 @@ public class ByteArrayDownloadResult extends FileDownloadResult {
                 HttpServletRequest req = (HttpServletRequest) _request.getServletRequest();
                 String userAgent = req.getHeader("USER-AGENT");
                 if (StringUtils.contains(userAgent, "MSIE")) {
-                    resp.setHeader("Content-Disposition", "attachment; filename=\"" + _outputName + "\"");
+                    resp.setHeader("Content-Disposition", "inline; filename=\"" + _outputName + "\"");
                 } else {
-                    resp.setHeader("Content-Disposition", "attachment; filename*=UTF-8''" + _outputName);
+                    resp.setHeader("Content-Disposition", "inline; filename*=UTF-8''" + _outputName);
                 }
                 resp.setHeader("Cache-Control", "public");
                 resp.setHeader("Pragma", "public");

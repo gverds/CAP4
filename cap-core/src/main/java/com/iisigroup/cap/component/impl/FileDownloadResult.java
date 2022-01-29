@@ -122,7 +122,7 @@ public class FileDownloadResult implements Result {
             response.setContentType(_contentType);
             if (_outputName != null && response instanceof HttpServletResponse) {
                 HttpServletResponse resp = (HttpServletResponse) response;
-                resp.setHeader("Content-Disposition", "attachment;filename=\"" + _outputName + "\"");
+                resp.setHeader("Content-Disposition", "inline;filename=\"" + _outputName + "\"");
                 resp.setHeader("Cache-Control", "public");
                 resp.setHeader("Pragma", "public");
             }
