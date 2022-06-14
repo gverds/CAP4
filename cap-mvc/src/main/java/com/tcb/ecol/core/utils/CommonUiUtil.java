@@ -11,11 +11,15 @@
  */
 package com.tcb.ecol.core.utils;
 
+import java.io.BufferedReader;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.iisigroup.cap.model.GenericBean;
 import com.iisigroup.cap.utils.CapString;
@@ -34,6 +38,8 @@ import com.iisigroup.cap.utils.GsonUtil;
  *          </ul>
  */
 public class CommonUiUtil {
+	
+    private static final Logger informer = LoggerFactory.getLogger(CommonUiUtil.class);
 
     // 住址
     public enum AddressKey {

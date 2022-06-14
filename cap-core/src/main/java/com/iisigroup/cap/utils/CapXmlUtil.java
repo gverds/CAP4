@@ -11,6 +11,7 @@
  */
 package com.iisigroup.cap.utils;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.HashMap;
@@ -166,5 +167,26 @@ public class CapXmlUtil {
         }
 
     }
+
+    /**
+     * getFileContentByBufferedReader
+     * @param reader
+     * @return
+     */
+	public static StringBuilder readStrByBufferedReader(BufferedReader reader) {
+		StringBuilder sbWord = new StringBuilder();
+		String line = null;
+		try {
+			while ((line = reader.readLine()) != null) {
+				sbWord.append(line);
+			}
+			return sbWord;
+		} catch (Exception e) {
+			LOGGER.error(e.toString());
+		} finally {
+			sbWord = null;
+		}
+		return sbWord;
+	}
 
 }

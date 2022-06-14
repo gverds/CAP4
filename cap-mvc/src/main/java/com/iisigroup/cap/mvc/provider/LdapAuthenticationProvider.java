@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,7 +38,6 @@ import javax.naming.ldap.InitialLdapContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
-import org.springframework.ldap.CommunicationException;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.support.DefaultDirObjectFactory;
 import org.springframework.ldap.support.LdapUtils;
@@ -51,9 +51,9 @@ import org.springframework.security.ldap.authentication.AbstractLdapAuthenticati
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
-import com.iisigroup.cap.mvc.model.DefUser;
 import com.iisigroup.cap.exception.CapMessageException;
 import com.iisigroup.cap.mvc.auth.exception.CapAuthenticationException;
+import com.iisigroup.cap.mvc.model.DefUser;
 import com.iisigroup.cap.mvc.token.LdapAuthenticationToken;
 import com.iisigroup.cap.security.model.CapUserDetails;
 import com.iisigroup.cap.utils.CapString;
@@ -214,7 +214,7 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
     private SearchControls getSimpleSearchControls() {
         SearchControls searchControls = new SearchControls();
         searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-        searchControls.setTimeLimit(30000);
+        searchControls.setTimeLimit(10000);
         //for test
         //String[] attrIDs = {"objectGUID"};
         //searchControls.setReturningAttributes(attrIDs);
@@ -309,6 +309,20 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
     public DirContext bindAsUser(String username, String password) {
     	return bindAsUser(username, password, false);
     }
+    
+    /**
+     * For getRandomNumberInRange(5, 10), this will generates a random integer between 5 (inclusive) and 10 (inclusive).
+     * @param min
+     * @param max
+     * @return
+     */
+    private static int getRandomNumberInRange(int min, int max) {
+		if (min >= max) {
+			throw new IllegalArgumentException("max must be greater than min");
+		}
+		Random r = new Random();
+		return r.nextInt((max - min) + 1) + min;
+	}
 
     private DirContext bindAsUser(String username, String password, boolean isSSL) {
         //TODOed add DNS lookup based on domain
@@ -333,6 +347,9 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
         env.put(Context.PROVIDER_URL, bindUrl);
         env.put(Context.SECURITY_CREDENTIALS, password);
         env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
+        env.put("com.sun.jndi.ldap.read.timeout", "5000");
+        // Specify timeout to be 5 seconds
+        env.put("com.sun.jndi.ldap.connect.timeout", "5000");
         env.put(Context.OBJECT_FACTORIES, DefaultDirObjectFactory.class.getName());
         
         if(isSSL) {
@@ -348,17 +365,62 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
         }
         try {
             return contextFactory.createContext(env);
-        } catch (CommunicationException connExcetion) {
-            throw new CapMessageException("Connection timed out", connExcetion, this.getClass());
-        } catch (NamingException namingException) {
+//        } catch (NamingException namingException) {
+//            logger.error("LDAP auth fail >> "+bindPrincipal, namingException);
+//            if ((namingException instanceof AuthenticationException) || (namingException instanceof OperationNotSupportedException)) {
+//                handleBindException(bindPrincipal, namingException);
+//                throw new CapMessageException("Failed to locate directory entry for authenticated user: " + username, namingException, this.getClass());
+//            } else {
+//                throw new CapMessageException(LdapUtils.convertLdapException(namingException).getMessage(), namingException, this.getClass());
+//            }
+        }  catch (Exception namingException) {
+
             logger.error("LDAP auth fail >> "+bindPrincipal, namingException);
             if ((namingException instanceof AuthenticationException) || (namingException instanceof OperationNotSupportedException)) {
-                handleBindException(bindPrincipal, namingException);
-                throw new CapMessageException("Failed to locate directory entry for authenticated user: " + username, namingException, this.getClass());
+                handleBindException(bindPrincipal, (NamingException) namingException);
+                logger.error("Failed to locate directory entry for authenticated user: " + username, namingException, this.getClass());
+                //throw new CapMessageException("Failed to locate directory entry for authenticated user: " + username, namingException, this.getClass());
             } else {
-                throw new CapMessageException(LdapUtils.convertLdapException(namingException).getMessage(), namingException, this.getClass());
+                logger.error(LdapUtils.convertLdapException((NamingException) namingException).getMessage(), namingException, this.getClass());
+                //throw new CapMessageException(LdapUtils.convertLdapException((NamingException) namingException).getMessage(), namingException, this.getClass());
             }
-        }
+            // throw new CapMessageException("Connection timed out", connExcetion, this.getClass());
+            // 2022/6/14,連不到AD server1,嘗試連另一組url
+            try {
+                int i = getRandomNumberInRange(2, 4);
+                if(isSSL) {
+                    bindUrl = config.getProperty("ldap"+i+"UrlSSL");
+                }else {
+                    bindUrl = config.getProperty("ldap"+i+"Url");
+                }
+                env.clear();
+                env.put(Context.SECURITY_AUTHENTICATION, "simple");
+                bindPrincipal = createBindPrincipal(username);
+                //for TCB test bindPrincipal : ELOANAD@tcbt.com
+                env.put(Context.SECURITY_PRINCIPAL, bindPrincipal);
+                env.put(Context.PROVIDER_URL, bindUrl);
+                env.put(Context.SECURITY_CREDENTIALS, password);
+                env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
+                env.put("com.sun.jndi.ldap.read.timeout", "5000");
+                // Specify timeout to be 5 seconds
+                env.put("com.sun.jndi.ldap.connect.timeout", "5000");
+                env.put(Context.OBJECT_FACTORIES, DefaultDirObjectFactory.class.getName());
+                if(isSSL) {
+                    try {
+                        env.put("java.naming.ldap.factory.socket", "com.tcb.ecol.adm.auth.service.UnsecuredSSLSocketFactory");
+                        //2021/04/21,Tim,for No subject alternative DNS name matching (ldap server ip access) found
+                        System.setProperty("com.sun.jndi.ldap.object.disableEndpointIdentification", "true");
+                    } catch (Exception e) {
+                        logger.error("LDAPS create sslsocketfactory fail", e);
+                    }
+                }else {
+                    System.setProperty("com.sun.jndi.ldap.object.disableEndpointIdentification", "false");
+                }
+                return contextFactory.createContext(env);
+            }catch(Exception e) {
+                throw new CapMessageException("Connection fail, try 2nd ldapUrl is ["+bindUrl+"]", e, this.getClass());
+            }
+        } 
     }
 
     private void handleBindException(String bindPrincipal, NamingException exception) {
