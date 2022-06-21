@@ -354,7 +354,7 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
         
         if(isSSL) {
             try {
-                env.put("java.naming.ldap.factory.socket", "com.tcb.ecol.adm.auth.service.UnsecuredSSLSocketFactory");
+                env.put("java.naming.ldap.factory.socket", "com.iisigroup.cap.mvc.auth.service.UnsecuredSSLSocketFactory");
                 //2021/04/21,Tim,for No subject alternative DNS name matching (ldap server ip access) found
                 System.setProperty("com.sun.jndi.ldap.object.disableEndpointIdentification", "true");
             } catch (Exception e) {
@@ -407,7 +407,7 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
                 env.put(Context.OBJECT_FACTORIES, DefaultDirObjectFactory.class.getName());
                 if(isSSL) {
                     try {
-                        env.put("java.naming.ldap.factory.socket", "com.tcb.ecol.adm.auth.service.UnsecuredSSLSocketFactory");
+                        env.put("java.naming.ldap.factory.socket", "com.iisigroup.cap.mvc.auth.service.UnsecuredSSLSocketFactory");
                         //2021/04/21,Tim,for No subject alternative DNS name matching (ldap server ip access) found
                         System.setProperty("com.sun.jndi.ldap.object.disableEndpointIdentification", "true");
                     } catch (Exception e) {
