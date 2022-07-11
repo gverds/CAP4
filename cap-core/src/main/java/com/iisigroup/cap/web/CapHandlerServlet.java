@@ -104,10 +104,20 @@ public class CapHandlerServlet extends HttpServlet {
         // User相關資訊
         String userId = (String) session.getAttribute("LOGIN_USERNAME");
         userId = CapString.isEmpty(userId) ? (String) req.getParameter("j_username") : userId;
+        String userName = (String) session.getAttribute("LOGIN_EMPNAME");
+        userName = CapString.isEmpty(userName) ? (String) req.getParameter("j_username") : userName;
         if (CapString.isEmpty(userId)) {
             ThreadContext.put("login", "------");
         } else {
             ThreadContext.put("login", userId);
+        }
+        // User相關資訊
+        if (CapString.isEmpty(userName)) {
+            // LogContext.setLogin(DEFAULT_LOGIN);
+            ThreadContext.put("uname", "------");
+        } else {
+            // LogContext.setLogin(userId);
+            ThreadContext.put("uname", userName);
         }
     }
 

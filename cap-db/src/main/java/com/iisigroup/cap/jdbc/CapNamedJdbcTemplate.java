@@ -65,6 +65,8 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
     // default
     private final Logger logger = LoggerFactory.getLogger(CapNamedJdbcTemplate.class);
 
+    private final Logger piiLogger = LoggerFactory.getLogger(CapNamedJdbcTemplate.class.getName()+".piiLogger");
+
     private CapSqlStatement sqlp;
     private CapSqlStatement sqltemp;
 

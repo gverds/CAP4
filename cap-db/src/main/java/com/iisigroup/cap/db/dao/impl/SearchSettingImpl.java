@@ -206,4 +206,24 @@ public class SearchSettingImpl implements SearchSetting {
         return this;
     }
 
+    // -----------------------------------
+    // FCB PII logger?
+    // -----------------------------------
+    private boolean isPII = false;
+
+    /**
+     * 是否要紀錄PII logger
+     * @return
+     */
+    public boolean getPIIFlag() {
+    	return this.isPII;
+    }
+    
+    /**
+     * 設定要紀錄PII logger
+     * @param needPII
+     */
+    public void setPIIFlag(boolean needPII) {
+    	this.isPII = needPII;
+    }
 }
