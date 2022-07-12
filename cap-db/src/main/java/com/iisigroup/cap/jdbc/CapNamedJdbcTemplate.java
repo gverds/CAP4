@@ -65,10 +65,12 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
     // default
     private final Logger logger = LoggerFactory.getLogger(CapNamedJdbcTemplate.class);
 
-    private final Logger piiLogger = LoggerFactory.getLogger(CapNamedJdbcTemplate.class.getName()+".piiLogger");
+    private final Logger piiLogger = LoggerFactory.getLogger(CapNamedJdbcTemplate.class.getName() + ".piiLogger");
 
     private CapSqlStatement sqlp;
     private CapSqlStatement sqltemp;
+
+    private boolean isPII;
 
     DataSource dataSource;
 
@@ -497,6 +499,9 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
         if (logger.isTraceEnabled()) {
             logger.trace(new StringBuffer("\n\t").append(CapDbUtil.convertToSQLCommand(sql.toString(), provider.getParams())).toString());
         }
+        if (getPIIFlag() || search.getPIIFlag()) {
+            piiLogger.info(new StringBuffer("\n\t").append(CapDbUtil.convertToSQLCommand(sql.toString(), provider.getParams())).toString());
+        }
         long cur = System.currentTimeMillis();
         try {
             int totalRows = super.queryForObject(sqlRow, provider.getParams(), Integer.class);
@@ -536,6 +541,9 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
         if (logger.isTraceEnabled()) {
             logger.trace(new StringBuffer("\n\t").append(CapDbUtil.convertToSQLCommand(sql.toString(), provider.getParams())).toString());
         }
+        if (getPIIFlag() || search.getPIIFlag()) {
+            piiLogger.info(new StringBuffer("\n\t").append(CapDbUtil.convertToSQLCommand(sql.toString(), provider.getParams())).toString());
+        }
         long cur = System.currentTimeMillis();
         try {
             int totalRows = super.queryForObject(sqlRow, provider.getParams(), Integer.class);
@@ -563,6 +571,9 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
         sql.append(' ').append(sqltemp.getValue(CapJdbcConstants.SQL_QUERY_SUFFIX, ""));
         if (logger.isTraceEnabled()) {
             logger.trace(new StringBuffer("\n\t").append(CapDbUtil.convertToSQLCommand(sql.toString(), param)).toString());
+        }
+        if (getPIIFlag() || search.getPIIFlag()) {
+            piiLogger.info(new StringBuffer("\n\t").append(CapDbUtil.convertToSQLCommand(sql.toString(), param)).toString());
         }
         String sqlRow = sql.toString();
         // 準備查詢list sql
@@ -601,6 +612,9 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
         if (logger.isTraceEnabled()) {
             logger.trace(new StringBuffer("\n\t").append(CapDbUtil.convertToSQLCommand(sourceSql.toString(), param)).toString());
         }
+        if (getPIIFlag() || search.getPIIFlag()) {
+            piiLogger.info(new StringBuffer("\n\t").append(CapDbUtil.convertToSQLCommand(sourceSql.toString(), param)).toString());
+        }
         long cur = System.currentTimeMillis();
         try {
             return super.query(sourceSql.toString(), param, rm);
@@ -622,5 +636,14 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
             result = sourceSql.toString();
         }
         return result;
+    }
+
+    public boolean getPIIFlag() {
+        return isPII;
+    }
+
+    public CapNamedJdbcTemplate setPIIFlag(boolean needPII) {
+        this.isPII = needPII;
+        return this;
     }
 }// ~

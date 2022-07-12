@@ -112,6 +112,8 @@ public interface SearchSetting extends Serializable {
     SearchSetting addSearchModeParameters(SearchSetting search);
 
     public boolean getPIIFlag();
-    
+
     public void setPIIFlag(boolean needPII);
+
+    public String getParameterstoJson();
 }

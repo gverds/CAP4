@@ -70,6 +70,7 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
 
     protected Class<T> type;
     protected Logger logger;
+    protected Logger piilogger;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -86,6 +87,7 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
             type = (Class<T>) ((ParameterizedType) clazz.getGenericSuperclass()).getActualTypeArguments()[0];
         }
         logger = LoggerFactory.getLogger(getClass());
+        piilogger = LoggerFactory.getLogger("piiLogger." + getClass().getName());
     }
 
     /**
@@ -268,6 +270,9 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
 
         query = applySpecificationToCriteria(root, query, builder, thisSearch);
         TypedQuery<S> tquery = applyPaginationAndOrderToCriteria(root, query, builder, thisSearch);
+        if (search.getPIIFlag()) {
+            piilogger.info(tquery.unwrap(org.hibernate.Query.class).getQueryString());
+        }
         return tquery;
     }
 
@@ -279,6 +284,9 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
 
         query = applySpecificationToCriteria(root, query, builder, thisSearch);
         TypedQuery<T> tquery = applyPaginationAndOrderToCriteria(root, query, builder, thisSearch);
+        if (search.getPIIFlag()) {
+            piilogger.info(tquery.unwrap(org.hibernate.Query.class).getQueryString());
+        }
         return tquery;
     }
 

@@ -22,6 +22,7 @@ import org.springframework.util.Assert;
 import com.iisigroup.cap.db.constants.SearchMode;
 import com.iisigroup.cap.db.dao.SearchSetting;
 import com.iisigroup.cap.db.model.SearchModeParameter;
+import com.iisigroup.cap.utils.GsonUtil;
 
 /**
  * <p>
@@ -213,17 +214,31 @@ public class SearchSettingImpl implements SearchSetting {
 
     /**
      * 是否要紀錄PII logger
+     * 
      * @return
      */
     public boolean getPIIFlag() {
-    	return this.isPII;
+        return this.isPII;
     }
-    
+
     /**
      * 設定要紀錄PII logger
+     * 
      * @param needPII
      */
     public void setPIIFlag(boolean needPII) {
-    	this.isPII = needPII;
+        this.isPII = needPII;
+    }
+
+    public String getParameterstoJson() {
+        List<SearchModeParameter> paras = getSearchModeParameters();
+        if (paras != null) {
+            LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
+            for (SearchModeParameter para : paras) {
+                map.put(para.getKey().toString(), para.getValue());
+            }
+            return GsonUtil.mapToJson(map);
+        }
+        return "";
     }
 }
