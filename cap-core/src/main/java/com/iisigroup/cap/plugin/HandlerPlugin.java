@@ -36,6 +36,8 @@ import com.iisigroup.cap.handler.Handler;
 public abstract class HandlerPlugin implements Plugin, Handler {
 
     protected final Logger logger = LoggerFactory.getLogger(getClass());
+    
+    protected final Logger piiLogger = LoggerFactory.getLogger("piiLogger." + getClass().getName());
 
     /**
      * execute
