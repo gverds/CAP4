@@ -11,14 +11,16 @@
  */
 package com.iisigroup.cap.mvc.provider;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
-import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,6 +37,7 @@ import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 import javax.naming.ldap.InitialLdapContext;
 
+import org.apache.commons.lang3.LocaleUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -77,10 +80,10 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
 
     @Resource
     private CapSystemConfig config;
-    
+
     private static final Pattern SUB_ERROR_CODE = Pattern.compile(".*data\\s([0-9a-f]{3,4}).*");
     protected final Logger logger = LoggerFactory.getLogger(getClass());
-    
+
     // Error codes
     private static final int USERNAME_NOT_FOUND = 0x525;
     private static final int INVALID_PASSWORD = 0x52e;
@@ -90,21 +93,20 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
     private static final int ACCOUNT_EXPIRED = 0x701;
     private static final int PASSWORD_NEEDS_RESET = 0x773;
     private static final int ACCOUNT_LOCKED = 0x775;
-    
-    //TODOed after ldap test done, change to final string.
+
+    // TODOed after ldap test done, change to final string.
     /**
-     * (測試)tcbt.com (10.0.6.1, 10.0.6.2)
-     * (正式)tcb.com (10.0.31.1, 10.0.31.2)但實際ping到的是10.0.31.2
+     * (測試)tcbt.com (10.0.6.1, 10.0.6.2) (正式)tcb.com (10.0.31.1, 10.0.31.2)但實際ping到的是10.0.31.2
      */
     private String domain;
-	private String rootDn;
-	private String url;
+    private String rootDn;
+    private String url;
     private String urlSSL;
-	private String qryAcct;
-	private String qryXxd;
-	private String qryDn;
+    private String qryAcct;
+    private String qryXxd;
+    private String qryDn;
     private String searchFilter = "(&(objectClass=user)(userPrincipalName={0}))";
-    //TODOed after ladp test done, you can close debugger flag
+    // TODOed after ladp test done, you can close debugger flag
     private boolean isDebugger = true;
     /**
      * is use self SSL certificate control(trust all certs)
@@ -163,8 +165,8 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
     protected DirContextOperations doAuthentication(UsernamePasswordAuthenticationToken auth) {
         String username = auth.getName();
         String password = (String) auth.getCredentials();
-        //LdapContext lctx
-        DirContext ctx = bindAsUser(username, password , getIsSSL());
+        // LdapContext lctx
+        DirContext ctx = bindAsUser(username, password, getIsSSL());
         try {
             return searchForUser(ctx, username);
         } catch (NamingException e) {
@@ -173,20 +175,20 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
             LdapUtils.closeContext(ctx);
         }
     }
-    
+
     public List<String[]> queryDepartmentUserList(String department) {
         String username = config.getProperty("qryAcct");
         String password = config.getProperty("qryXxd");
-        logger.debug("department = ["+department+"]");
+        logger.debug("department = [" + department + "]");
         // LdapContext lctx
         DirContext ctx = bindAsUser(username, password, getIsSSL());
         try {
             // String depDn = ",OU=IISI,DC=iead,DC=local";
-            //TCB test
-            //String searchRoot = "OU={DEP},OU=TCBUsers,DC=tcbt,DC=com";
-            String depDn = this.qryDn==null ? config.getProperty("qryDn") : this.qryDn;
+            // TCB test
+            // String searchRoot = "OU={DEP},OU=TCBUsers,DC=tcbt,DC=com";
+            String depDn = this.qryDn == null ? config.getProperty("qryDn") : this.qryDn;
             department = "OU=" + department;
-            //depDn={DEP},OU=TCBUsers,DC=tcbt,DC=com
+            // depDn={DEP},OU=TCBUsers,DC=tcbt,DC=com
             String depNumber = depDn.replace("{DEP}", department);
             return listDepartmentUsers(ctx, username, depNumber);
         } catch (NamingException e) {
@@ -195,12 +197,12 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
             LdapUtils.closeContext(ctx);
         }
     }
-    
+
     public List<String[]> queryDepartmentUserList(UsernamePasswordAuthenticationToken auth) {
         String username = auth.getName();
         String password = (String) auth.getCredentials();
-        //LdapContext lctx
-        DirContext ctx = bindAsUser(username, password , getIsSSL());
+        // LdapContext lctx
+        DirContext ctx = bindAsUser(username, password, getIsSSL());
         try {
             String depNumber = queryDepartment(ctx, username);
             return listDepartmentUsers(ctx, username, depNumber);
@@ -210,15 +212,15 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
             LdapUtils.closeContext(ctx);
         }
     }
-    
+
     private SearchControls getSimpleSearchControls() {
         SearchControls searchControls = new SearchControls();
         searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
         searchControls.setTimeLimit(10000);
-        //for test
-        //String[] attrIDs = {"objectGUID"};
-        //searchControls.setReturningAttributes(attrIDs);
-        //searchControls.setSearchScope(SearchControls.OBJECT_SCOPE );
+        // for test
+        // String[] attrIDs = {"objectGUID"};
+        // searchControls.setReturningAttributes(attrIDs);
+        // searchControls.setSearchScope(SearchControls.OBJECT_SCOPE );
         return searchControls;
     }
 
@@ -234,31 +236,42 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
     protected Collection<? extends GrantedAuthority> loadUserAuthorities(DirContextOperations userData, String username, String password) {
 
         CapUserDetails capUser = getUserWithDefaultRole(username, password);
-        //TODO remove under block after test ldap done.
+        // TODO remove under block after test ldap done.
         Attributes attributes = userData.getAttributes();
         NamingEnumeration<?> namingEnum = attributes.getIDs();
         Map<String, Object> extraAttr = new HashMap<String, Object>();
-        //清空前一次資料
+        // 清空前一次資料
         this.setCtxAttrs(null);
         try {
-    		logger.debug("**********************");
-			while (namingEnum.hasMore ()) {
-				Object objId = namingEnum.next();
-				if(objId instanceof String) {
-					Attribute attr = attributes.get((String)objId);
-					String id = (String)objId;
-					logger.debug(id+" : {}", attr);
-					extraAttr.put(id, attr.toString());
-				}
-			}
-			logger.debug("**********************");
-			namingEnum.close();
-			this.setCtxAttrs(extraAttr);
-		} catch (NamingException e) {
-			logger.error(e.getLocalizedMessage(), e);
-		} finally {
-		}
-        //TODO remove upper block after test ldap done.
+            logger.debug("**********************");
+            while (namingEnum.hasMore()) {
+                Object objId = namingEnum.next();
+                if (objId instanceof String) {
+                    Attribute attr = attributes.get((String) objId);
+                    String id = (String) objId;
+                    logger.debug(id + " : {}", attr);
+                    extraAttr.put(id, attr.toString());
+                    try {
+                        // Ldap Context查詢回來的結果，哪一個namingEnum欄位是locale???
+                        if ("countryCode".equals(attr.getID()) && attr.size() > 0) {
+                            if (attr.get(0) != null) {
+                                logger.debug("countryCode : {}", attr.get(0));
+                                capUser.setLocale(LocaleUtils.toLocale(attr.get(0).toString()));
+                            }
+                        }
+                    } catch (Exception e) {
+                        logger.error(e.getLocalizedMessage(), e);
+                    }
+                }
+            }
+            logger.debug("**********************");
+            namingEnum.close();
+            this.setCtxAttrs(extraAttr);
+        } catch (NamingException e) {
+            logger.error(e.getLocalizedMessage(), e);
+        } finally {
+        }
+        // TODO remove upper block after test ldap done.
         return capUser.getAuthorities();
 
     }
@@ -273,16 +286,16 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
     @Override
     protected Authentication createSuccessfulAuthentication(UsernamePasswordAuthenticationToken authentication, UserDetails user) {
         CapUserDetails capUser = getUserWithDefaultRole(user.getUsername(), user.getPassword());
-        if(capUser.getAuthorities()!=null) {
-        	try {	//TODO remove after test ldap done.
-	        	for(GrantedAuthority sga : capUser.getAuthorities()) {
-	        		if(sga instanceof SimpleGrantedAuthority) {
-	        			logger.debug("SIT LDAP >> authorities : {}", ((SimpleGrantedAuthority)sga).getAuthority());
-	        		}
-	        	}
-        	}catch(Exception e) {
-        		logger.error("LDAP error >> "+e.getLocalizedMessage(), e);
-        	}
+        if (capUser.getAuthorities() != null) {
+            try { // TODO remove after test ldap done.
+                for (GrantedAuthority sga : capUser.getAuthorities()) {
+                    if (sga instanceof SimpleGrantedAuthority) {
+                        logger.debug("SIT LDAP >> authorities : {}", ((SimpleGrantedAuthority) sga).getAuthority());
+                    }
+                }
+            } catch (Exception e) {
+                logger.error("LDAP error >> " + e.getLocalizedMessage(), e);
+            }
         }
         UsernamePasswordAuthenticationToken result = new UsernamePasswordAuthenticationToken(capUser, user.getPassword(), user.getAuthorities());
         return result;
@@ -299,50 +312,54 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
     public boolean supports(Class<?> authentication) {
         return LdapAuthenticationToken.class.isAssignableFrom(authentication);
     }
-    
+
     /**
      * 提供部分呼叫，並且使用LDAP（非SSL LDAP）
+     * 
      * @param username
      * @param password
      * @return
      */
     public DirContext bindAsUser(String username, String password) {
-    	return bindAsUser(username, password, false);
+        return bindAsUser(username, password, false);
     }
-    
+
     /**
      * For getRandomNumberInRange(5, 10), this will generates a random integer between 5 (inclusive) and 10 (inclusive).
+     * 
      * @param min
      * @param max
      * @return
      */
     private static int getRandomNumberInRange(int min, int max) {
-		if (min >= max) {
-			throw new IllegalArgumentException("max must be greater than min");
-		}
-		Random r = new Random();
-		return r.nextInt((max - min) + 1) + min;
-	}
+        if (min >= max) {
+            throw new IllegalArgumentException("max must be greater than min");
+        }
+        // 弱掃修復
+        SecureRandom rand = new SecureRandom();
+        rand.setSeed((new Date()).getTime());
+        return rand.nextInt((max - min) + 1) + min;
+    }
 
     private DirContext bindAsUser(String username, String password, boolean isSSL) {
-        //TODOed add DNS lookup based on domain
-        //final String bindUrl = getUrl();
+        // TODOed add DNS lookup based on domain
+        // final String bindUrl = getUrl();
         String bindUrl = "";
         bindUrl = getUrl();
-        if(CapString.isEmpty(bindUrl)) {
+        if (CapString.isEmpty(bindUrl)) {
             bindUrl = config.getProperty("ldapUrl");
         }
-        if(isSSL) {
-            if(!CapString.isEmpty(getUrlSSL())) {
+        if (isSSL) {
+            if (!CapString.isEmpty(getUrlSSL())) {
                 bindUrl = getUrlSSL();
-            }else {
+            } else {
                 bindUrl = config.getProperty("ldapUrlSSL");
             }
         }
         Hashtable<String, String> env = new Hashtable<String, String>();
         env.put(Context.SECURITY_AUTHENTICATION, "simple");
         String bindPrincipal = createBindPrincipal(username);
-        //for TCB test bindPrincipal : ELOANAD@tcbt.com
+        // for TCB test bindPrincipal : ELOANAD@tcbt.com
         env.put(Context.SECURITY_PRINCIPAL, bindPrincipal);
         env.put(Context.PROVIDER_URL, bindUrl);
         env.put(Context.SECURITY_CREDENTIALS, password);
@@ -351,52 +368,52 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
         // Specify timeout to be 5 seconds
         env.put("com.sun.jndi.ldap.connect.timeout", "5000");
         env.put(Context.OBJECT_FACTORIES, DefaultDirObjectFactory.class.getName());
-        
-        if(isSSL) {
+
+        if (isSSL) {
             try {
                 env.put("java.naming.ldap.factory.socket", "com.iisigroup.cap.mvc.auth.service.UnsecuredSSLSocketFactory");
-                //2021/04/21,Tim,for No subject alternative DNS name matching (ldap server ip access) found
+                // 2021/04/21,Tim,for No subject alternative DNS name matching (ldap server ip access) found
                 System.setProperty("com.sun.jndi.ldap.object.disableEndpointIdentification", "true");
             } catch (Exception e) {
                 logger.error("LDAPS create sslsocketfactory fail", e);
             }
-        }else {
+        } else {
             System.setProperty("com.sun.jndi.ldap.object.disableEndpointIdentification", "false");
         }
         try {
             return contextFactory.createContext(env);
-//        } catch (NamingException namingException) {
-//            logger.error("LDAP auth fail >> "+bindPrincipal, namingException);
-//            if ((namingException instanceof AuthenticationException) || (namingException instanceof OperationNotSupportedException)) {
-//                handleBindException(bindPrincipal, namingException);
-//                throw new CapMessageException("Failed to locate directory entry for authenticated user: " + username, namingException, this.getClass());
-//            } else {
-//                throw new CapMessageException(LdapUtils.convertLdapException(namingException).getMessage(), namingException, this.getClass());
-//            }
-        }  catch (Exception namingException) {
+            // } catch (NamingException namingException) {
+            // logger.error("LDAP auth fail >> "+bindPrincipal, namingException);
+            // if ((namingException instanceof AuthenticationException) || (namingException instanceof OperationNotSupportedException)) {
+            // handleBindException(bindPrincipal, namingException);
+            // throw new CapMessageException("Failed to locate directory entry for authenticated user: " + username, namingException, this.getClass());
+            // } else {
+            // throw new CapMessageException(LdapUtils.convertLdapException(namingException).getMessage(), namingException, this.getClass());
+            // }
+        } catch (Exception namingException) {
 
-            logger.error("LDAP auth fail >> "+bindPrincipal, namingException);
+            logger.error("LDAP auth fail >> " + bindPrincipal, namingException);
             if ((namingException instanceof AuthenticationException) || (namingException instanceof OperationNotSupportedException)) {
                 handleBindException(bindPrincipal, (NamingException) namingException);
                 logger.error("Failed to locate directory entry for authenticated user: " + username, namingException, this.getClass());
-                //throw new CapMessageException("Failed to locate directory entry for authenticated user: " + username, namingException, this.getClass());
+                // throw new CapMessageException("Failed to locate directory entry for authenticated user: " + username, namingException, this.getClass());
             } else {
                 logger.error(LdapUtils.convertLdapException((NamingException) namingException).getMessage(), namingException, this.getClass());
-                //throw new CapMessageException(LdapUtils.convertLdapException((NamingException) namingException).getMessage(), namingException, this.getClass());
+                // throw new CapMessageException(LdapUtils.convertLdapException((NamingException) namingException).getMessage(), namingException, this.getClass());
             }
             // throw new CapMessageException("Connection timed out", connExcetion, this.getClass());
             // 2022/6/14,連不到AD server1,嘗試連另一組url
             try {
                 int i = getRandomNumberInRange(2, 4);
-                if(isSSL) {
-                    bindUrl = config.getProperty("ldap"+i+"UrlSSL");
-                }else {
-                    bindUrl = config.getProperty("ldap"+i+"Url");
+                if (isSSL) {
+                    bindUrl = config.getProperty("ldap" + i + "UrlSSL");
+                } else {
+                    bindUrl = config.getProperty("ldap" + i + "Url");
                 }
                 env.clear();
                 env.put(Context.SECURITY_AUTHENTICATION, "simple");
                 bindPrincipal = createBindPrincipal(username);
-                //for TCB test bindPrincipal : ELOANAD@tcbt.com
+                // for TCB test bindPrincipal : ELOANAD@tcbt.com
                 env.put(Context.SECURITY_PRINCIPAL, bindPrincipal);
                 env.put(Context.PROVIDER_URL, bindUrl);
                 env.put(Context.SECURITY_CREDENTIALS, password);
@@ -405,22 +422,22 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
                 // Specify timeout to be 5 seconds
                 env.put("com.sun.jndi.ldap.connect.timeout", "5000");
                 env.put(Context.OBJECT_FACTORIES, DefaultDirObjectFactory.class.getName());
-                if(isSSL) {
+                if (isSSL) {
                     try {
                         env.put("java.naming.ldap.factory.socket", "com.iisigroup.cap.mvc.auth.service.UnsecuredSSLSocketFactory");
-                        //2021/04/21,Tim,for No subject alternative DNS name matching (ldap server ip access) found
+                        // 2021/04/21,Tim,for No subject alternative DNS name matching (ldap server ip access) found
                         System.setProperty("com.sun.jndi.ldap.object.disableEndpointIdentification", "true");
                     } catch (Exception e) {
                         logger.error("LDAPS create sslsocketfactory fail", e);
                     }
-                }else {
+                } else {
                     System.setProperty("com.sun.jndi.ldap.object.disableEndpointIdentification", "false");
                 }
                 return contextFactory.createContext(env);
-            }catch(Exception e) {
-                throw new CapMessageException("Connection fail, try 2nd ldapUrl is ["+bindUrl+"]", e, this.getClass());
+            } catch (Exception e) {
+                throw new CapMessageException("Connection fail, try 2nd ldapUrl is [" + bindUrl + "]", e, this.getClass());
             }
-        } 
+        }
     }
 
     private void handleBindException(String bindPrincipal, NamingException exception) {
@@ -489,22 +506,22 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
         logger.debug("LDAP searchForUser >> principal : {}", bindPrincipal);
         logger.debug("LDAP searchForUser >> searchRoot : {}", searchRoot);
         try {
-            //2021/04/20,Tim,要查詢某分行所有使用者清單故改由參數決定searchfilter條件
-        	if(CapString.isEmpty(searchFilter)) {
-        	    //如果只用objectclass=user作為searchFilter,會查到多筆result..發生incorrectResults Exception
-        		searchFilter = "(&(objectclass=user)(userPrincipalName={0}))";
-        	}
-        	//登入頁面,沒帶查詢條件,有可能變成(&(objectCategory=Person))查資料
-        	if(searchFilter.indexOf("userPrincipalName") == -1) {
-        	    searchFilter = "(&(objectclass=user)(userPrincipalName={0}))";
-        	}
-        	logger.debug("LDAP searchForUser >> searchFilter : {}", searchFilter);
-        	//驗證登入者
+            // 2021/04/20,Tim,要查詢某分行所有使用者清單故改由參數決定searchfilter條件
+            if (CapString.isEmpty(searchFilter)) {
+                // 如果只用objectclass=user作為searchFilter,會查到多筆result..發生incorrectResults Exception
+                searchFilter = "(&(objectclass=user)(userPrincipalName={0}))";
+            }
+            // 登入頁面,沒帶查詢條件,有可能變成(&(objectCategory=Person))查資料
+            if (searchFilter.indexOf("userPrincipalName") == -1) {
+                searchFilter = "(&(objectclass=user)(userPrincipalName={0}))";
+            }
+            logger.debug("LDAP searchForUser >> searchFilter : {}", searchFilter);
+            // 驗證登入者
             return SpringSecurityLdapTemplate.searchForSingleEntryInternal(context, searchControls, searchRoot, searchFilter, new Object[] { bindPrincipal });
         } catch (IncorrectResultSizeDataAccessException incorrectResults) {
             // Search should never return multiple results if properly configured - just
             // rethrow
-            logger.error("Exception>>"+incorrectResults.getLocalizedMessage(), incorrectResults);
+            logger.error("Exception>>" + incorrectResults.getLocalizedMessage(), incorrectResults);
             incorrectResults.printStackTrace();
             if (incorrectResults.getActualSize() != 0) {
                 throw new CapMessageException("Incorrect result size: expected " + incorrectResults.getActualSize(), incorrectResults, this.getClass());
@@ -519,16 +536,16 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
         searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
 
         String bindPrincipal = createBindPrincipal(username);
-        //TCB test
-        //String searchRoot = "OU={DEP},OU=TCBUsers,DC=tcbt,DC=com";
-        //LOCAL test
+        // TCB test
+        // String searchRoot = "OU={DEP},OU=TCBUsers,DC=tcbt,DC=com";
+        // LOCAL test
         String searchRoot = getRootDn() != null ? getRootDn() : searchRootFromPrincipal(bindPrincipal);
         logger.debug("LDAP searchForUser >> principal : {}", bindPrincipal);
         logger.debug("LDAP searchForUser >> searchRoot : {}", searchRoot);
-        searchControls.setReturningAttributes(new String[] {"distinguishedName","departmentNumber", "department"});
+        searchControls.setReturningAttributes(new String[] { "distinguishedName", "departmentNumber", "department" });
         searchFilter = "(&(objectclass=user)(objectcategory=user)(sAMAccountName={0}))";
         searchFilter = searchFilter.replace("{0}", username);
-        //searchRoot = "OU=FBD22,OU=FBD00,OU=IISI,DC=iead,DC=local";
+        // searchRoot = "OU=FBD22,OU=FBD00,OU=IISI,DC=iead,DC=local";
         NamingEnumeration<SearchResult> en = context.search(searchRoot, searchFilter, searchControls);
         String departmentNumber = "";
         if (en == null) {
@@ -548,75 +565,75 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
                         if (manArr.length > 0) {
                             if (manArr.length > 1) {
                                 String[] modifiedArray = Arrays.copyOfRange(manArr, 1, manArr.length);
-                                for(String s: modifiedArray) {
-                                    departmentNumber += s+",";
+                                for (String s : modifiedArray) {
+                                    departmentNumber += s + ",";
                                 }
                                 departmentNumber = departmentNumber.substring(0, departmentNumber.lastIndexOf(","));
-                            }else {
+                            } else {
                                 departmentNumber = manArr[0];
                             }
                         }
                     }
-                    System.out.println("attr.["+attr.getID()+"]=["+attr.get()+"]");
+                    System.out.println("attr.[" + attr.getID() + "]=[" + attr.get() + "]");
                 }
             }
         }
         return departmentNumber;
     }
-    
+
     private List<String[]> listDepartmentUsers(DirContext context, String username, String departmentNumber) throws NamingException {
         SearchControls searchControls = new SearchControls();
         searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
 
         String bindPrincipal = createBindPrincipal(username);
-        //LOCAL test
+        // LOCAL test
         String searchRoot = "{DEP}";
         logger.debug("LDAP searchForUser >> principal : {}", bindPrincipal);
         logger.debug("LDAP searchForUser >> searchRoot : {}", searchRoot);
-        if(!CapString.isEmpty(departmentNumber)) {
+        if (!CapString.isEmpty(departmentNumber)) {
             searchRoot = searchRoot.replace("{DEP}", departmentNumber);
         }
         logger.debug("LDAP searchForUser >> searchDepartRoot : {}", searchRoot);
         List<String[]> result = new ArrayList<String[]>();
         try {
-            //2021/04/20,Tim,要查詢某分行所有使用者清單故改由參數決定searchfilter條件
-            //如果只用objectclass=user作為searchFilter,會查到多筆result
-            //searchFilter = "(&(objectclass=user))";
+            // 2021/04/20,Tim,要查詢某分行所有使用者清單故改由參數決定searchfilter條件
+            // 如果只用objectclass=user作為searchFilter,會查到多筆result
+            // searchFilter = "(&(objectclass=user))";
             searchFilter = "(&(objectCategory=Person))";
-          
+
             logger.debug("LDAP searchForUser >> searchFilter : {}", searchFilter);
-            //query all department user
-            searchControls.setReturningAttributes(new String[]{"cn", "sAMAccountName", "displayName", "telephoneNumber", "extensionAttribute1","ROCID"});
+            // query all department user
+            searchControls.setReturningAttributes(new String[] { "cn", "sAMAccountName", "displayName", "telephoneNumber", "extensionAttribute1", "ROCID" });
             try {
                 NamingEnumeration<?> answer = context.search(searchRoot, searchFilter, searchControls);
-                Object obj = context.lookup(this.rootDn);
+                // Object obj = context.lookup(this.rootDn);
                 logger.debug("DepartUser>> Out while loop");
                 while (answer.hasMore()) {
                     logger.debug("DepartUser>> while looping");
                     SearchResult rslt = (SearchResult) answer.next();
                     Attributes attrs = rslt.getAttributes();
                     String[] ss = new String[6];
-                    ss[0] = attrs.get("cn")!=null?attrs.get("cn").toString().replace("cn:", "").trim().toUpperCase():"";
-                    ss[1] = attrs.get("sAMAccountName")!=null?attrs.get("sAMAccountName").toString().replace("sAMAccountName:", "").trim().toUpperCase():"";
-                    ss[2] = attrs.get("displayName")!=null?attrs.get("displayName").toString().replace("displayName:", "").trim():"";
-                    ss[3] = attrs.get("telephoneNumber")!=null?attrs.get("telephoneNumber").toString().replace("telephoneNumber:", "").trim():"";
-                    ss[4] = attrs.get("extensionAttribute1")!=null?attrs.get("extensionAttribute1").toString().replace("extensionAttribute1:", "").trim():"";
-                    ss[5] = attrs.get("ROCID")!=null?attrs.get("ROCID").toString():"";
-                    if(!ss[5].equals("")) {
+                    ss[0] = attrs.get("cn") != null ? attrs.get("cn").toString().replace("cn:", "").trim().toUpperCase() : "";
+                    ss[1] = attrs.get("sAMAccountName") != null ? attrs.get("sAMAccountName").toString().replace("sAMAccountName:", "").trim().toUpperCase() : "";
+                    ss[2] = attrs.get("displayName") != null ? attrs.get("displayName").toString().replace("displayName:", "").trim() : "";
+                    ss[3] = attrs.get("telephoneNumber") != null ? attrs.get("telephoneNumber").toString().replace("telephoneNumber:", "").trim() : "";
+                    ss[4] = attrs.get("extensionAttribute1") != null ? attrs.get("extensionAttribute1").toString().replace("extensionAttribute1:", "").trim() : "";
+                    ss[5] = attrs.get("ROCID") != null ? attrs.get("ROCID").toString() : "";
+                    if (!ss[5].equals("")) {
                         result.add(ss);
-                    }              
+                    }
                     logger.debug("DepartUser>>" + ss[0] + "/" + ss[1] + "/" + ss[2] + "/" + ss[3] + "/" + ss[4]);
                     logger.debug("DepartUser>> while nexttt");
                     context.close();
                 }
-            }catch(Exception e) {
+            } catch (Exception e) {
                 logger.error("listDepartmentUsers ERROR: " + e.getLocalizedMessage(), e);
             }
-            
+
         } catch (IncorrectResultSizeDataAccessException incorrectResults) {
             // Search should never return multiple results if properly configured - just
             // rethrow
-            logger.error("Exception>>"+incorrectResults.getLocalizedMessage(), incorrectResults);
+            logger.error("Exception>>" + incorrectResults.getLocalizedMessage(), incorrectResults);
             incorrectResults.printStackTrace();
             if (incorrectResults.getActualSize() != 0) {
                 throw new CapMessageException("Incorrect result size: expected " + incorrectResults.getActualSize(), incorrectResults, this.getClass());
@@ -627,7 +644,6 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
 
         return result;
     }
-    
 
     private String searchRootFromPrincipal(String bindPrincipal) {
         int atChar = bindPrincipal.lastIndexOf('@');
@@ -639,7 +655,7 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
         return rootDnFromDomain(bindPrincipal.substring(atChar + 1, bindPrincipal.length()));
     }
 
-    //TCB test domain 待確認：tcbt.com
+    // TCB test domain 待確認：tcbt.com
     private String rootDnFromDomain(String domain) {
         String[] tokens = StringUtils.tokenizeToStringArray(domain, ".");
         StringBuilder root = new StringBuilder();
@@ -655,10 +671,14 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
     }
 
     String createBindPrincipal(String username) {
-        if (getDomain() == null || username.toLowerCase().endsWith(getDomain())) {
+        if (username.toUpperCase(Locale.ENGLISH).equals("SCRIPT")) {
+            // 弱掃修復
+            return null;
+        }
+        if (getDomain() == null || username.toLowerCase(Locale.ENGLISH).endsWith(getDomain())) {
             return username;
         }
-        //TODO "domainName\\administrator"; //注意用戶名的寫法：domain\User 或// User@domain.com
+        // TODO "domainName\\administrator"; //注意用戶名的寫法：domain\User 或// User@domain.com
         return username + "@" + getDomain();
     }
 
@@ -701,51 +721,51 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
         return capUser;
     }
 
-	public String getDomain() {
-		return domain;
-	}
+    public String getDomain() {
+        return domain;
+    }
 
-	public void setDomain(String domain) {
-		this.domain = domain;
-	}
+    public void setDomain(String domain) {
+        this.domain = domain;
+    }
 
-	public String getRootDn() {
-		return rootDn;
-	}
+    public String getRootDn() {
+        return rootDn;
+    }
 
-	public void setRootDn(String rootDn) {
-		this.rootDn = rootDn;
-	}
+    public void setRootDn(String rootDn) {
+        this.rootDn = rootDn;
+    }
 
-	public String getUrl() {
-		return url;
-	}
+    public String getUrl() {
+        return url;
+    }
 
-	public void setUrl(String url) {
-		this.url = url;
-	}
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
     public boolean getIsSSL() {
         this.isSSL = "true".equals(this.enableSSL);
         return this.isSSL;
     }
-    
-	public String getEnableSSL() {
-		return this.enableSSL;
-	}
 
-	public void setEnableSSL(String enableSSL) {
-		this.enableSSL = enableSSL;
-		this.isSSL = "true".equals(this.enableSSL);
-	}
+    public String getEnableSSL() {
+        return this.enableSSL;
+    }
+
+    public void setEnableSSL(String enableSSL) {
+        this.enableSSL = enableSSL;
+        this.isSSL = "true".equals(this.enableSSL);
+    }
 
     public Map<String, Object> getCtxAttrs() {
-		return CtxAttrs;
-	}
+        return CtxAttrs;
+    }
 
-	public void setCtxAttrs(Map<String, Object> ctxAttrs) {
-		CtxAttrs = ctxAttrs;
-	}
+    public void setCtxAttrs(Map<String, Object> ctxAttrs) {
+        CtxAttrs = ctxAttrs;
+    }
 
     /**
      * @return the 查詢部門ListAcct
@@ -755,7 +775,8 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
     }
 
     /**
-     * @param qryAcct the 查詢部門ListAcct to set
+     * @param qryAcct
+     *            the 查詢部門ListAcct to set
      */
     public void setQryAcct(String qryAcct) {
         this.qryAcct = qryAcct;
@@ -769,7 +790,8 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
     }
 
     /**
-     * @param qryXxd the qryXxd to set
+     * @param qryXxd
+     *            the qryXxd to set
      */
     public void setQryXxd(String qryXxd) {
         this.qryXxd = qryXxd;
@@ -783,7 +805,8 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
     }
 
     /**
-     * @param qryDn the 查詢部門List條件({DEP},OU=TCBUsers,DC=tcb,DC=com) to set
+     * @param qryDn
+     *            the 查詢部門List條件({DEP},OU=TCBUsers,DC=tcb,DC=com) to set
      */
     public void setQryDn(String qryDn) {
         this.qryDn = qryDn;
@@ -797,7 +820,8 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
     }
 
     /**
-     * @param urlSSL the 加密AD server url to set
+     * @param urlSSL
+     *            the 加密AD server url to set
      */
     public void setUrlSSL(String urlSSL) {
         this.urlSSL = urlSSL;
