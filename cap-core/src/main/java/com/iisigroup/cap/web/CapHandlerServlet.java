@@ -31,6 +31,7 @@ import com.iisigroup.cap.component.impl.AjaxFormResult;
 import com.iisigroup.cap.component.impl.DefaultErrorResult;
 import com.iisigroup.cap.exception.CapException;
 import com.iisigroup.cap.exception.CapFileDownloadException;
+import com.iisigroup.cap.exception.CapFlowException;
 import com.iisigroup.cap.exception.CapMessageException;
 import com.iisigroup.cap.handler.Handler;
 import com.iisigroup.cap.operation.simple.SimpleContextHolder;
@@ -61,6 +62,7 @@ public class CapHandlerServlet extends HttpServlet {
     protected final Logger logger = LoggerFactory.getLogger(CapHandlerServlet.class);
     public static final String HANDLER = "_handler";
     public static final String ACTION = "_action";
+    private static final String FLOWSCHED_KEY = "flowSched-";
 
     protected String defaultErrorResult;
     protected String defaultRequest;
@@ -152,6 +154,15 @@ public class CapHandlerServlet extends HttpServlet {
                 result = new AjaxFormResult();
             }
         } catch (Exception e) {
+        	HttpSession session = req.getSession(false);
+        	try {
+        		if(e instanceof CapFlowException) {
+        			req.getRequestDispatcher("../../page/errorFlow").forward(req, resp);
+        		}
+        	}catch(Exception ex) {
+                logger.error("FlowError redirect to error page exception", ex);
+        		
+        	}
             ErrorResult errorResult = getDefaultErrorResult();
             if (errorResult == null) {
                 result = new DefaultErrorResult(request, e);
@@ -177,6 +188,9 @@ public class CapHandlerServlet extends HttpServlet {
                 }
             } else {
                 pluginlogger.error(result.getResult(), e);
+            }
+            if(session.getAttribute(FLOWSCHED_KEY + uuidTx) != null) {
+            	session.removeAttribute(FLOWSCHED_KEY + uuidTx);
             }
             if (!"true".equals(request.get("iframe"))) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
