@@ -45,6 +45,8 @@ import com.iisigroup.cap.jdbc.support.CapColumnMapRowMapper;
 import com.iisigroup.cap.jdbc.support.CapRowMapperResultSetExtractor;
 import com.iisigroup.cap.jdbc.support.CapSqlSearchQueryProvider;
 import com.iisigroup.cap.jdbc.support.CapSqlStatement;
+import com.iisigroup.cap.operation.simple.SimpleContextHolder;
+import com.iisigroup.cap.utils.CapString;
 import com.iisigroup.cap.utils.SpelUtil;
 
 /**
@@ -409,10 +411,25 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
     }
 
     public List<Map<String, Object>> queryPaging(String sqlId, Map<String, Object> args, int startRow, int fetchSize) {
+        return queryPaging(sqlId, args, startRow, fetchSize, "");
+    }
+
+    /**
+     * Grid查詢Paging資料時，加入searchSetting中，order by欄位
+     * <H1>注意：如果前端JS定義的order by欄位，不存在於UserDefineSQL的SQL內容中，會發生Exception</H1>
+     * 
+     * @param sqlId
+     * @param args
+     * @param startRow
+     * @param fetchSize
+     * @param orderBy
+     * @return
+     */
+    public List<Map<String, Object>> queryPaging(String sqlId, Map<String, Object> args, int startRow, int fetchSize, String orderBy) {
 
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(CapJdbcConstants.SQL_PAGING_SOURCE_SQL, getSourceSql(sqlId, args, startRow, fetchSize));
-        params.put(CapJdbcConstants.SQL_PAGING_SOURCE_ORDER, sqltemp.getValue(CapJdbcConstants.SQL_PAGING_DUMMY_ORDER_BY, ""));
+        params.put(CapJdbcConstants.SQL_PAGING_SOURCE_ORDER, CapString.isEmpty(orderBy) ? (sqltemp.getValue(CapJdbcConstants.SQL_PAGING_DUMMY_ORDER_BY, "")) : orderBy);
         StringBuffer sql = new StringBuffer().append(SpelUtil.spelParser((String) sqltemp.getValue(CapJdbcConstants.SQL_PAGING_QUERY), params, sqltemp.getParserContext()));
         sql.append(' ').append(sqltemp.getValue(CapJdbcConstants.SQL_QUERY_SUFFIX, ""));
         if (args == null) {
@@ -426,6 +443,47 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
         long cur = System.currentTimeMillis();
         try {
             return super.queryForList(sql.toString(), args);
+        } catch (Exception e) {
+            throw new CapDBException(sqlId, e, getClass());
+        } finally {
+            logger.info("CapNamedJdbcTemplate spend {} ms", (System.currentTimeMillis() - cur));
+        }
+    }
+
+    /**
+     * <dl>
+     * <li>Grid查詢Paging資料時，加入searchSetting中，order by欄位做排序查詢</li>
+     * <H1>注意：如果前端JS定義的order by欄位，不存在於UserDefineSQL的SQL內容中，會發生Exception</H1>
+     * </dl>
+     * 
+     * @param sqlId
+     * @param args
+     * @param search
+     *            只拿OrderBy資料來用
+     * @param startRow
+     * @param fetchSize
+     * @return
+     */
+    public Page<Map<String, Object>> queryForPage(String sqlId, Map<String, Object> args, SearchSetting search, int startRow, int fetchSize) {
+        CapSqlSearchQueryProvider provider = new CapSqlSearchQueryProvider(search);
+
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put(CapJdbcConstants.SQL_PAGING_SOURCE_SQL, getSourceSql(sqlId, args, startRow, fetchSize));
+
+        String orderBy = search.hasOrderBy() ? provider.generateOrderClause() : sqltemp.getValue(CapJdbcConstants.SQL_PAGING_DUMMY_ORDER_BY, "");
+        params.put(CapJdbcConstants.SQL_PAGING_SOURCE_ORDER, orderBy);
+
+        StringBuffer sql = new StringBuffer().append(SpelUtil.spelParser((String) sqltemp.getValue(CapJdbcConstants.SQL_PAGING_TOTAL_PAGE), params, sqlp.getParserContext()));
+        sql.append(' ').append(sqltemp.getValue(CapJdbcConstants.SQL_QUERY_SUFFIX, ""));
+        sql.append(' ').append(orderBy);
+        if (logger.isTraceEnabled()) {
+            logger.trace(new StringBuffer("\n\t").append(CapDbUtil.convertToSQLCommand(sql.toString(), args)).toString());
+        }
+        // find list
+        List<Map<String, Object>> list = this.queryPaging(sqlId, args, startRow, fetchSize, orderBy);
+        long cur = System.currentTimeMillis();
+        try {
+            return new Page<Map<String, Object>>(list, super.queryForObject(sql.toString(), args, Integer.class), fetchSize, startRow);
         } catch (Exception e) {
             throw new CapDBException(sqlId, e, getClass());
         } finally {
@@ -599,7 +657,7 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
             logger.info("CapNamedJdbcTemplate spend {} ms", (System.currentTimeMillis() - cur));
         }
     }
-    
+
     public <T> List<T> query(String sqlId, SearchSetting search, RowMapper<T> rm, Map<String, Object> inSqlParam) {
         CapSqlSearchQueryProvider provider = new CapSqlSearchQueryProvider(search);
         String _sql = sqlp.getValue(sqlId, sqlId);
@@ -638,10 +696,12 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
         return result;
     }
 
+    // #21980
     public boolean getPIIFlag() {
         return isPII;
     }
 
+    // #21980
     public CapNamedJdbcTemplate setPIIFlag(boolean needPII) {
         this.isPII = needPII;
         return this;
