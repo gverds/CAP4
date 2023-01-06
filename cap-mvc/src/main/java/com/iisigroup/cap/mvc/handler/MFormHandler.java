@@ -35,7 +35,6 @@ import com.iisigroup.cap.db.dao.CommonDao;
 import com.iisigroup.cap.db.dao.SearchSetting;
 import com.iisigroup.cap.db.dao.impl.SearchSettingImpl;
 import com.iisigroup.cap.exception.CapException;
-import com.iisigroup.cap.exception.CapFileDownloadException;
 import com.iisigroup.cap.exception.CapFlowException;
 import com.iisigroup.cap.exception.CapMessageException;
 import com.iisigroup.cap.model.GenericBean;
@@ -125,7 +124,7 @@ public abstract class MFormHandler extends HandlerPlugin {
                                 GenericBean flowmstr = (GenericBean) flowMethod.invoke(flowDao, checkFlow.name());
                                 if (flowmstr != null) {
                                     if (!((Integer) flowmstr.get("flowSched")).equals(Integer.parseInt(params.get("flowSched")))) {
-                                        throw new CapFileDownloadException("流程節點已異動，請重新開啟案件。");
+                                        throw new CapFlowException("流程節點已異動，請重新開啟案件。");
                                     }
                                 }
                             }
