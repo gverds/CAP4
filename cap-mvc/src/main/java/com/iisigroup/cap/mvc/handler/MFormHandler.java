@@ -19,7 +19,10 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.util.StringUtils;
+
 import com.iisigroup.cap.action.Action;
+import com.iisigroup.cap.annotation.CheckFlow;
 import com.iisigroup.cap.annotation.HandlerType;
 import com.iisigroup.cap.annotation.HandlerType.HandlerTypeEnum;
 import com.iisigroup.cap.component.GridResult;
@@ -32,7 +35,10 @@ import com.iisigroup.cap.db.dao.CommonDao;
 import com.iisigroup.cap.db.dao.SearchSetting;
 import com.iisigroup.cap.db.dao.impl.SearchSettingImpl;
 import com.iisigroup.cap.exception.CapException;
+import com.iisigroup.cap.exception.CapFileDownloadException;
+import com.iisigroup.cap.exception.CapFlowException;
 import com.iisigroup.cap.exception.CapMessageException;
+import com.iisigroup.cap.model.GenericBean;
 import com.iisigroup.cap.model.OpStepContext;
 import com.iisigroup.cap.operation.Operation;
 import com.iisigroup.cap.operation.OperationStep;
@@ -111,6 +117,19 @@ public abstract class MFormHandler extends HandlerPlugin {
                     if (type != null && HandlerTypeEnum.GRID.equals(type.value())) {
                         rtn = getGridData(method, params);
                     } else {
+                        CheckFlow checkFlow = method.getAnnotation(CheckFlow.class);
+                        if (checkFlow != null && !StringUtils.isEmpty(checkFlow.name())) {
+                            Object flowDao = CapAppContext.getApplicationContext().getBean("lmcmFlowmstrDaoImpl");
+                            Method flowMethod = CapBeanUtil.findMethod(flowDao.getClass(), "findByMid", (Class<?>) null);
+                            if (flowMethod != null) {
+                                GenericBean flowmstr = (GenericBean) flowMethod.invoke(flowDao, checkFlow.name());
+                                if (flowmstr != null) {
+                                    if (!((Integer) flowmstr.get("flowSched")).equals(Integer.parseInt(params.get("flowSched")))) {
+                                        throw new CapFileDownloadException("流程節點已異動，請重新開啟案件。");
+                                    }
+                                }
+                            }
+                        }
                         rtn = (Result) method.invoke(executeHandler, params);
                     }
                     hasMethod = true;
@@ -123,6 +142,8 @@ public abstract class MFormHandler extends HandlerPlugin {
                 } else {
                     throw new CapException(e.getCause(), executeHandler.getClass());
                 }
+            } catch (CapFlowException e) {
+                throw new CapFlowException(e.getMessage());
             } catch (Throwable t) {
                 throw new CapException(t, executeHandler.getClass());
             } finally {
