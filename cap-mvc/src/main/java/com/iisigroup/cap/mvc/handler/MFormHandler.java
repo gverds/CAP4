@@ -121,7 +121,7 @@ public abstract class MFormHandler extends HandlerPlugin {
                             Object flowDao = CapAppContext.getApplicationContext().getBean("lmcmFlowmstrDaoImpl");
                             Method flowMethod = CapBeanUtil.findMethod(flowDao.getClass(), "findByMid", (Class<?>) null);
                             if (flowMethod != null) {
-                                GenericBean flowmstr = (GenericBean) flowMethod.invoke(flowDao, checkFlow.name());
+                                GenericBean flowmstr = (GenericBean) flowMethod.invoke(flowDao, params.get(checkFlow.name()));
                                 if (flowmstr != null) {
                                     if (!((Integer) flowmstr.get("flowSched")).equals(Integer.parseInt(params.get("flowSched")))) {
                                         throw new CapFlowException("流程節點已異動，請重新開啟案件。");
