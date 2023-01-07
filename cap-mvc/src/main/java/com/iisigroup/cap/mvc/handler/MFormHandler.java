@@ -126,6 +126,8 @@ public abstract class MFormHandler extends HandlerPlugin {
                                     if (!((Integer) flowmstr.get("flowSched")).equals(Integer.parseInt(params.get("flowSched")))) {
                                         throw new CapFlowException("流程節點已異動，請重新開啟案件。");
                                     }
+                                } else {
+                                    throw new CapFlowException("流程節點已異動，請重新開啟案件。"); // 流程已被刪除
                                 }
                             }
                         }
