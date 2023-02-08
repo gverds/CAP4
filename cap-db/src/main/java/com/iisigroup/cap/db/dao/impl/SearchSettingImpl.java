@@ -146,7 +146,8 @@ public class SearchSettingImpl implements SearchSetting {
     // Pagination support
     // -----------------------------------
     // private int maxResultsLimit = 2000;
-    private int maxResults = 100;
+    // #24184,批次019簽單申請核准,如果只撈100筆，會漏掉..系統預設放大為1000
+    private int maxResults = 1000;
 
     /**
      * 設定查詢的筆數
