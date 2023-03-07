@@ -15,10 +15,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import com.iisigroup.cap.action.Action;
@@ -44,6 +46,7 @@ import com.iisigroup.cap.operation.OperationStep;
 import com.iisigroup.cap.plugin.HandlerPlugin;
 import com.iisigroup.cap.utils.CapAppContext;
 import com.iisigroup.cap.utils.CapBeanUtil;
+import com.iisigroup.cap.utils.CapDate;
 import com.iisigroup.cap.utils.CapString;
 import com.iisigroup.cap.utils.GsonUtil;
 
@@ -126,8 +129,14 @@ public abstract class MFormHandler extends HandlerPlugin {
                                     if (!((Integer) flowmstr.get("flowSched")).equals(Integer.parseInt(params.get("flowSched")))) {
                                         throw new CapFlowException("流程節點已異動，請重新開啟案件。");
                                     }
-                                } else {
-                                    throw new CapFlowException("流程節點已異動，請重新開啟案件。"); // 流程已被刪除
+                                    if (!Objects.equals(flowmstr.get("workEmp"), params.get("userId"))) {
+                                        Object proxyDao = CapAppContext.getApplicationContext().getBean("lmcmProxyDaoImpl");
+                                        Method proxyMeth = CapBeanUtil.findMethod(proxyDao.getClass(), "findProxyByEmpIdProxyEmpAndProxyDate", (Class<?>) null);
+                                        Object proxys = proxyMeth.invoke(proxyDao, new String[] { (String) flowmstr.get("workEmp"), params.get("userId"), CapDate.getCurrentDate("yyyy/MM/dd") });
+                                        if (ObjectUtils.isEmpty(proxys)) {
+                                            throw new CapFlowException("使用者無操作、代理權限，請重新開啟案件。");
+                                        }
+                                    }
                                 }
                             }
                         }
