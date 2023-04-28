@@ -282,7 +282,8 @@ public class DateUtils {
                 String format = "yyy/MM/dd";
                 Chronology chrono = MinguoChronology.INSTANCE;
                 DateTimeFormatter df = new DateTimeFormatterBuilder().parseLenient().appendPattern(format).toFormatter().withChronology(chrono).withDecimalStyle(DecimalStyle.of(Locale.getDefault()));
-                LocalDate localDate = LocalDate.parse(twDate, df);
+                // 避免timestamp轉換成data有問題
+                LocalDate localDate = LocalDate.parse(twDate.split(" ")[0], df);
                 result = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
             }
         }
