@@ -10,7 +10,9 @@
 package com.iisigroup.cap.web;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.ServletConfig;
@@ -131,6 +133,18 @@ public class CapHandlerServlet extends HttpServlet {
         addInformationInLogger(req, uuidTx);
         if (logger.isTraceEnabled()) {
             logger.trace("{} Request Data: {}", uuidTx, GsonUtil.objToJson(req.getParameterMap()));
+        } else {
+            String ipAddress = req.getHeader("X-FORWARDED-FOR");
+            if (ipAddress == null) {
+                ipAddress = req.getRemoteAddr();
+            }
+            Map<String, String> mm = new HashMap<String, String>();
+            mm.put("formAction", req.getParameter("formAction"));
+            mm.put("mid", req.getParameter("mid"));
+            mm.put("flowSched", req.getParameter("flowSched"));
+            mm.put("idForWorkEmpChk", req.getParameter("idForWorkEmpChk"));
+            mm.put("ip", ipAddress);
+            logger.info("{} Request Data: {}", uuidTx, GsonUtil.objToJson(mm));
         }
         Object locale = req.getSession().getAttribute(CapWebUtil.localeKey);
         if (locale != null) {
@@ -186,6 +200,8 @@ public class CapHandlerServlet extends HttpServlet {
         logger.debug("{} total spend time : {} ms", uuidTx, (System.currentTimeMillis() - st));
         if (logger.isTraceEnabled()) {
             logger.trace("{} Response Data : {}", uuidTx, result.getLogMessage());
+        } else {
+            logger.info("{} Response Data : {}", uuidTx, "result datas....");
         }
         SimpleContextHolder.resetContext();
         ThreadContext.clearMap();
