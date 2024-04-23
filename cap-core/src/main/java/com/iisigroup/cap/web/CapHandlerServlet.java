@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.logging.log4j.ThreadContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,6 +62,7 @@ import com.iisigroup.cap.utils.GsonUtil;
 public class CapHandlerServlet extends HttpServlet {
 
     protected final Logger logger = LoggerFactory.getLogger(CapHandlerServlet.class);
+    protected final Logger violatedUniqueLogger = LoggerFactory.getLogger(CapHandlerServlet.class.getName() + ".uniqueIXLogger");
     public static final String HANDLER = "_handler";
     public static final String ACTION = "_action";
 
@@ -131,6 +133,7 @@ public class CapHandlerServlet extends HttpServlet {
         long st = System.currentTimeMillis();
         String uuidTx = UUID.randomUUID().toString().replace("-", "").substring(0, 8);
         addInformationInLogger(req, uuidTx);
+        Map<String, String[]> mm = new HashMap<String, String[]>();
         if (logger.isTraceEnabled()) {
             logger.trace("{} Request Data: {}", uuidTx, GsonUtil.objToJson(req.getParameterMap()));
         } else {
@@ -138,12 +141,15 @@ public class CapHandlerServlet extends HttpServlet {
             if (ipAddress == null) {
                 ipAddress = req.getRemoteAddr();
             }
-            Map<String, String> mm = new HashMap<String, String>();
-            mm.put("formAction", req.getParameter("formAction"));
-            mm.put("mid", req.getParameter("mid"));
-            mm.put("flowSched", req.getParameter("flowSched"));
-            mm.put("idForWorkEmpChk", req.getParameter("idForWorkEmpChk"));
-            mm.put("ip", ipAddress);
+            mm.put("action", new String[] { action });
+            mm.put("mid", new String[] { req.getParameter("mid") });
+            mm.put("flowSched", new String[] { req.getParameter("flowSched") });
+            mm.put("idForWorkEmpChk", new String[] { req.getParameter("idForWorkEmpChk") });
+            mm.put("ip", new String[] { ipAddress });
+            if (req.getHeader("user-agent") != null) {
+                mm.put("user-agent", new String[] { req.getHeader("user-agent") });
+            }
+
             logger.info("{} Request Data: {}", uuidTx, GsonUtil.objToJson(mm));
         }
         Object locale = req.getSession().getAttribute(CapWebUtil.localeKey);
@@ -167,6 +173,7 @@ public class CapHandlerServlet extends HttpServlet {
             }
         } catch (Exception e) {
             ErrorResult errorResult = getDefaultErrorResult();
+            boolean isORA00001 = false;
             if (errorResult == null) {
                 result = new DefaultErrorResult(request, e);
             } else {
@@ -176,6 +183,9 @@ public class CapHandlerServlet extends HttpServlet {
             if (e instanceof CapMessageException) {
                 pluginlogger.error(result.getResult());
             } else if (e instanceof CapException && e.getCause() != null) {
+                if (isORA00001 = getSQLIntegrityConstraintViolationExceptionCause((CapException) e, uuidTx, logger.isTraceEnabled() ? req.getParameterMap() : mm)) {
+                    result = new AjaxFormResult();
+                }
                 if (e.getCause() instanceof CapFileDownloadException) {
                     try {
                         req.getRequestDispatcher("../../page/error").forward(req, resp);
@@ -190,9 +200,12 @@ public class CapHandlerServlet extends HttpServlet {
                     pluginlogger.error(result.getResult(), e.getCause());
                 }
             } else {
+                if (isORA00001 = getSQLIntegrityConstraintViolationExceptionCause(e, uuidTx, logger.isTraceEnabled() ? req.getParameterMap() : mm)) {
+                    result = new AjaxFormResult();
+                }
                 pluginlogger.error(result.getResult(), e);
             }
-            if (!"true".equals(request.get("iframe"))) {
+            if (!"true".equals(request.get("iframe")) && !isORA00001) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             }
         }
@@ -205,6 +218,29 @@ public class CapHandlerServlet extends HttpServlet {
         }
         SimpleContextHolder.resetContext();
         ThreadContext.clearMap();
+    }
+
+    /**
+     * Check root cause(is SQLConstraintViolation?)
+     * 
+     * @param e
+     * @param uuidTx
+     * @param mm
+     * @return
+     */
+    private boolean getSQLIntegrityConstraintViolationExceptionCause(Throwable e, String uuidTx, Map<String, String[]> mm) {
+        Throwable rootException = ExceptionUtils.getRootCause(e);
+        if (rootException == null) {
+            rootException = e;
+        }
+        String exceptionMessage = rootException.getLocalizedMessage();
+        logger.debug("[recursiveGetCause]=========> " + rootException.toString());
+        if (exceptionMessage.indexOf("ORA-00001:") != -1) {
+            violatedUniqueLogger.error(rootException.getClass().getName() + " : " + exceptionMessage);
+            violatedUniqueLogger.error("{} Request Data: {}", uuidTx, GsonUtil.objToJson(mm));
+            return true;
+        }
+        return false;
     }
 
     protected ErrorResult getDefaultErrorResult() {
