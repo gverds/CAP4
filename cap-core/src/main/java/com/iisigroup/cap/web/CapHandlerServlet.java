@@ -184,7 +184,10 @@ public class CapHandlerServlet extends HttpServlet {
                 pluginlogger.error(result.getResult());
             } else if (e instanceof CapException && e.getCause() != null) {
                 if (isORA00001 = getSQLIntegrityConstraintViolationExceptionCause((CapException) e, uuidTx, logger.isTraceEnabled() ? req.getParameterMap() : mm)) {
+                    // 清空AJAX_HANDLER_EXCEPTION或是AJAX_MESSAGE_HANDLER_EXCEPTION錯誤訊息
                     result = new AjaxFormResult();
+                    // 回給前端httpCode409,避免往下執行ajax.done(function())
+                    resp.setStatus(HttpServletResponse.SC_CONFLICT);
                 }
                 if (e.getCause() instanceof CapFileDownloadException) {
                     try {
@@ -202,6 +205,7 @@ public class CapHandlerServlet extends HttpServlet {
             } else {
                 if (isORA00001 = getSQLIntegrityConstraintViolationExceptionCause(e, uuidTx, logger.isTraceEnabled() ? req.getParameterMap() : mm)) {
                     result = new AjaxFormResult();
+                    resp.setStatus(HttpServletResponse.SC_CONFLICT);
                 }
                 pluginlogger.error(result.getResult(), e);
             }
