@@ -239,7 +239,7 @@ public class CapHandlerServlet extends HttpServlet {
         }
         String exceptionMessage = rootException.getLocalizedMessage();
         logger.debug("[recursiveGetCause]=========> " + rootException.toString());
-        if (exceptionMessage.indexOf("ORA-00001:") != -1) {
+        if (exceptionMessage!=null && exceptionMessage.indexOf("ORA-00001:") != -1) {
             violatedUniqueLogger.error(rootException.getClass().getName() + " : " + exceptionMessage);
             violatedUniqueLogger.error("{} Request Data: {}", uuidTx, GsonUtil.objToJson(mm));
             return true;
