@@ -149,7 +149,7 @@ public class CapHandlerServlet extends HttpServlet {
             if (req.getHeader("user-agent") != null) {
                 mm.put("user-agent", new String[] { req.getHeader("user-agent") });
             }
-
+            mm.put("reqRandom", new String[] { req.getHeader("reqRandom") });
             logger.info("{} Request Data: {}", uuidTx, GsonUtil.objToJson(mm));
         }
         Object locale = req.getSession().getAttribute(CapWebUtil.localeKey);
