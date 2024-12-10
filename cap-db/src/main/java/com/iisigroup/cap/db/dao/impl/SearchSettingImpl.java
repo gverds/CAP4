@@ -147,7 +147,7 @@ public class SearchSettingImpl implements SearchSetting {
     // Pagination support
     // -----------------------------------
     // private int maxResultsLimit = 2000;
-    private int maxResults = 200;
+    private int maxResults = Integer.MAX_VALUE;
 
     /**
      * 設定查詢的筆數
