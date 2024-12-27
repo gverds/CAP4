@@ -44,6 +44,7 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.support.DefaultDirObjectFactory;
 import org.springframework.ldap.support.LdapUtils;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -239,6 +240,10 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
         // TODO remove under block after test ldap done.
         Attributes attributes = userData.getAttributes();
         NamingEnumeration<?> namingEnum = attributes.getIDs();
+
+        Map<String, Object> map = this.getCtxAttrs();
+        String deptId = (String) map.get("deptId"); // 債管登入單位
+        String ouDeptId = "";
         Map<String, Object> extraAttr = new HashMap<String, Object>();
         // 清空前一次資料
         this.setCtxAttrs(null);
@@ -259,6 +264,10 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
                                 capUser.setLocale(LocaleUtils.toLocale(attr.get(0).toString()));
                             }
                         }
+                        if ("ou".equals(attr.getID())) {
+                            // AD deptId，確認是否與債管登入單位相同
+                            ouDeptId = (String) attr.get(0);
+                        }
                     } catch (Exception e) {
                         logger.error(e.getLocalizedMessage(), e);
                     }
@@ -272,6 +281,10 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
         } finally {
         }
         // TODO remove upper block after test ldap done.
+        // 確認 登入者AD單位與債管系統單位 是否一致
+        if (!CapString.isEmpty(deptId) && !deptId.equals(ouDeptId)) {
+            throw new BadCredentialsException("601");
+        }
         return capUser.getAuthorities();
 
     }

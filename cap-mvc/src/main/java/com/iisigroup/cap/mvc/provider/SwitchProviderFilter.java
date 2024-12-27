@@ -1,5 +1,8 @@
 package com.iisigroup.cap.mvc.provider;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -45,6 +48,7 @@ public class SwitchProviderFilter extends UsernamePasswordAuthenticationFilter {
         final String j_type = request.getParameter("j_type");
         final String j_username = request.getParameter("j_username");
         final String j_pxd = request.getParameter("j_pxd");
+        final String j_deptId = request.getParameter("deptId");
 
         UsernamePasswordAuthenticationToken authRequest;
         if ("LDAP".equals(j_type)) {
@@ -80,6 +84,12 @@ public class SwitchProviderFilter extends UsernamePasswordAuthenticationFilter {
 //                        final String j_username = request.getParameter("j_username");
 //                        final String j_pxd = request.getParameter("j_pxd");
                         //ex:userPrincipalName：ELOANAD@tcbt.com
+
+                        // 將登入分行往後傳，確認與AD分行是否一致
+                        Map<String, Object> map = new HashMap<String, Object>();
+                        map.put("deptId", j_deptId);
+                        lp.setCtxAttrs(map);
+                        
                         authRequest = new LdapAuthenticationToken(j_username +"@"+ lp.getDomain(), j_pxd);
                         Authentication auth = lp.authenticate(authRequest);
                         if(auth!=null) {
