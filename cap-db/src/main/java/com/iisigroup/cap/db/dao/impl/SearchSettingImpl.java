@@ -40,7 +40,7 @@ public class SearchSettingImpl implements SearchSetting {
 
     private static final long serialVersionUID = 1L;
 
-    protected SearchSettingImpl() {
+    public SearchSettingImpl() {
 
     }
 

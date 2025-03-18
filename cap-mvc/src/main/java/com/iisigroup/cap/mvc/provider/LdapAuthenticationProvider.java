@@ -157,6 +157,17 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
         setRootDn(this.getDomain() == null ? null : rootDnFromDomain(this.getDomain()));
     }
 
+    /**
+     * 
+     * @param auth
+     * @param isSSL
+     * @return
+     */
+    public DirContextOperations doAuthentication(UsernamePasswordAuthenticationToken auth, boolean isSSL) {
+    	this.setEnableSSL(isSSL? "true" : "false");
+    	return doAuthentication(auth);
+    }
+    
     /*
      * (non-Javadoc)
      * 
@@ -178,11 +189,26 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
     }
 
     public List<String[]> queryDepartmentUserList(String department) {
+    	return LdapAuthenticationProvider.queryDepartmentUserList(this, department, getIsSSL());
+    }
+    
+    public static List<String[]> queryDepartmentUserList(LdapAuthenticationProvider ldapAuthenticationProvider,
+    		String department, boolean isSSL) {
+    	return ldapAuthenticationProvider.queryDepartmentUserList(department, isSSL);
+    }
+    
+    /**
+     * 查詢部門使用者清單
+     * @param department 部門（DN）
+     * @param isSSL 是否要走Ldaps加密通道
+     * @return
+     */
+    public List<String[]> queryDepartmentUserList(String department, boolean isSSL) {
         String username = config.getProperty("qryAcct");
         String password = config.getProperty("qryXxd");
         logger.debug("department = [" + department + "]");
         // LdapContext lctx
-        DirContext ctx = bindAsUser(username, password, getIsSSL());
+        DirContext ctx = bindAsUser(username, password, isSSL);
         try {
             // String depDn = ",OU=IISI,DC=iead,DC=local";
             // TCB test
@@ -334,7 +360,7 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
      * @return
      */
     public DirContext bindAsUser(String username, String password) {
-        return bindAsUser(username, password, false);
+        return bindAsUser(username, password, getIsSSL());
     }
 
     /**
@@ -353,8 +379,8 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
         rand.setSeed((new Date()).getTime());
         return rand.nextInt((max - min) + 1) + min;
     }
-
-    private DirContext bindAsUser(String username, String password, boolean isSSL) {
+    
+	public DirContext bindAsUser(String username, String password, boolean isSSL) {
         // TODOed add DNS lookup based on domain
         // final String bindUrl = getUrl();
         String bindUrl = "";
@@ -378,12 +404,11 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
         env.put(Context.SECURITY_CREDENTIALS, password);
         env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
         env.put("com.sun.jndi.ldap.read.timeout", "5000");
-        // Specify timeout to be 5 seconds
-        env.put("com.sun.jndi.ldap.connect.timeout", "5000");
         env.put(Context.OBJECT_FACTORIES, DefaultDirObjectFactory.class.getName());
 
         if (isSSL) {
             try {
+            	env.put(Context.SECURITY_PROTOCOL, "ssl");
                 env.put("java.naming.ldap.factory.socket", "com.iisigroup.cap.mvc.auth.service.UnsecuredSSLSocketFactory");
                 // 2021/04/21,Tim,for No subject alternative DNS name matching (ldap server ip access) found
                 System.setProperty("com.sun.jndi.ldap.object.disableEndpointIdentification", "true");
@@ -391,6 +416,10 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
                 logger.error("LDAPS create sslsocketfactory fail", e);
             }
         } else {
+            // Specify timeout to be 5 seconds
+        	// 2025/03/06,測試ldaps時,不能帶入com.sun.jndi.ldap.connect.timeout
+        	// 會發生憑證信任問題（因為當天的config.properties指定的ldap server是寫IP,但是認證時是認server_name）
+            env.put("com.sun.jndi.ldap.connect.timeout", "5000");
             System.setProperty("com.sun.jndi.ldap.object.disableEndpointIdentification", "false");
         }
         try {
@@ -404,7 +433,7 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
             // throw new CapMessageException(LdapUtils.convertLdapException(namingException).getMessage(), namingException, this.getClass());
             // }
         } catch (Exception namingException) {
-
+        	logger.error("Connection fail, try 1st ldap-Url is [" + bindUrl + "]", namingException);
             logger.error("LDAP auth fail >> " + bindPrincipal, namingException);
             if ((namingException instanceof AuthenticationException) || (namingException instanceof OperationNotSupportedException)) {
                 handleBindException(bindPrincipal, (NamingException) namingException);
@@ -432,8 +461,6 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
                 env.put(Context.SECURITY_CREDENTIALS, password);
                 env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
                 env.put("com.sun.jndi.ldap.read.timeout", "5000");
-                // Specify timeout to be 5 seconds
-                env.put("com.sun.jndi.ldap.connect.timeout", "5000");
                 env.put(Context.OBJECT_FACTORIES, DefaultDirObjectFactory.class.getName());
                 if (isSSL) {
                     try {
@@ -444,6 +471,9 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
                         logger.error("LDAPS create sslsocketfactory fail", e);
                     }
                 } else {
+                	env.put(Context.SECURITY_PROTOCOL, "ssl");
+                    // Specify timeout to be 5 seconds
+                    env.put("com.sun.jndi.ldap.connect.timeout", "5000");
                     System.setProperty("com.sun.jndi.ldap.object.disableEndpointIdentification", "false");
                 }
                 return contextFactory.createContext(env);
@@ -510,7 +540,7 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
      * @return DirContextOperations
      * @throws NamingException
      */
-    private DirContextOperations searchForUser(DirContext context, String username) throws NamingException {
+    public DirContextOperations searchForUser(DirContext context, String username) throws NamingException {
         SearchControls searchControls = new SearchControls();
         searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
 
@@ -724,7 +754,7 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
      * @param password
      * @return CapUserDetails
      */
-    private CapUserDetails getUserWithDefaultRole(String username, String password) {
+    public CapUserDetails getUserWithDefaultRole(String username, String password) {
         Map<String, String> roles = new HashMap<String, String>();
         roles.put("AI1", "test");
         // 做假USER 要用建構子才set得進去Authorities()
