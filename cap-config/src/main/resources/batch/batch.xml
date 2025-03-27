@@ -57,7 +57,7 @@
     </bean>
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~ quartz listener ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <bean id="batchNofityListener" class="com.iisigroup.cap.batch.listener.CapBatchMailNotifyListener">
-        <property name="mailSender" ref="mailSender" />
+        <!-- <property name="mailSender" ref="mailSender" /> -->
         <property name="batchSerivce" ref="batchJobService" />
         <property name="fmConfg" ref="freemarkerConfig" />
         <property name="mailSubject" value="${batch.notifySubject}" />

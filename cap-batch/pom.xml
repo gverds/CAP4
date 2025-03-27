@@ -153,5 +153,11 @@
             <type>jar</type>
             <scope>compile</scope>
         </dependency>
+		<!-- https://mvnrepository.com/artifact/com.thoughtworks.xstream/xstream -->
+		<dependency>
+		    <groupId>com.thoughtworks.xstream</groupId>
+		    <artifactId>xstream</artifactId>
+		    <version>1.4.19</version>
+		</dependency>
     </dependencies>
 </project>
