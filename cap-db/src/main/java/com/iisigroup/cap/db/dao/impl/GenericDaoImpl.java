@@ -18,6 +18,7 @@ import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +37,7 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.apache.logging.log4j.ThreadContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
@@ -47,6 +49,8 @@ import com.iisigroup.cap.db.model.DataObject;
 import com.iisigroup.cap.db.model.Page;
 import com.iisigroup.cap.db.model.SearchModeParameter;
 import com.iisigroup.cap.jdbc.CapNamedJdbcTemplate;
+import com.iisigroup.cap.operation.simple.SimpleContextHolder;
+import com.iisigroup.cap.utils.CapWebUtil;
 
 /**
  * <pre>
@@ -189,7 +193,17 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
     }
 
     public List<T> find(final SearchSetting search) {
-        return createQuery(getType(), search).getResultList();
+        Map<String, String> map;
+        if(SimpleContextHolder.get("queryClass")!=null) {
+            map = SimpleContextHolder.get("queryClass");
+        }else {
+            map = new HashMap<String, String>();
+        }
+        map.put("QueryTableName", getType().getSimpleName());
+        SimpleContextHolder.put("queryClass", map);
+        List<T> result = createQuery(getType(), search).getResultList();
+        SimpleContextHolder.remove("queryClass");
+        return result;
     }
 
     public List<T> findAll() {
@@ -522,7 +536,19 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
     }
 
     public <S> S findById(Class<S> clazz, Serializable pk) {
-        return getEntityManager().find(clazz, pk);
+        String tableName = clazz.getSimpleName();
+        
+        Map<String, String> map;
+        if(SimpleContextHolder.get("queryClass")!=null) {
+            map = SimpleContextHolder.get("queryClass");
+        }else {
+            map = new HashMap<String, String>();
+        }
+        map.put("QueryTableName", tableName);
+        SimpleContextHolder.put("queryClass", map);
+        S result = getEntityManager().find(clazz, pk);
+        SimpleContextHolder.remove("queryClass");
+        return result;
     }
 
     protected EntityManager getEntityManager() {
