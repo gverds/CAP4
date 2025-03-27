@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn">
+    <Properties>
+        <Property name="basePath">/aphome/tcb/logs</Property>
+        <Property name="console-appender">console-${sys:eloan.env}</Property>
+    </Properties>
+    <Appenders>
+        <RollingFile name="fileLogger" fileName="${basePath}/ecol-log.log" filePattern="${basePath}/%d{yyyy-MM}/ecol-log-%d{yyyy-MM-dd}-%i.log.zip">
+            <!-- ${date:yyyy-MM} 改成 $d{yyyy-MM} 產出檔案時判斷當下日期，再判斷是否需要新增資料夾 -->
+            <PatternLayout pattern="%d [%t] [%X{sessionId}] | %X{login} | %X{reqURI} | %-40.40c{1} [%-5p] %m%n" />
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+                <SizeBasedTriggeringPolicy size="20 MB" />
+            </Policies>
+            <DefaultRolloverStrategy compressionLevel="9" max="1000" />
+        </RollingFile>
+        <!-- <RollingFile name="esbfileLogger" fileName="${basePath}/esblogs/${date:yyyyMMdd}/${date:HH}/esb.log" filePattern="${basePath}/${date:yyyy-MM}/esb-log-%d{yyyy-MM-dd}-%i.log.zip">
+            <PatternLayout pattern="%d [%t] | %-40.40c{1} [%-5p] %m%n" />
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+                <SizeBasedTriggeringPolicy size="2 MB" />
+            </Policies>
+            <DefaultRolloverStrategy compressionLevel="9" max="100" />
+        </RollingFile> -->
+        <Console name="console-local" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d [%t] [%X{sessionId}] | %X{login} | %X{reqURI} | %-40.40c{1} [%-5p] %m%n" />
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Root level="debug">
+            <!-- <AppenderRef ref="console-local"/> -->
+            <!-- 將來要關閉WAS System.out.log紀錄ccsap log -->
+            <AppenderRef ref="${console-appender}"/>
+            <AppenderRef ref="fileLogger" />
+        </Root>
+        <Logger name="org" level="debug" />
+        <Logger name="net" level="debug" />
+        <Logger name="com.iisigroup.cap.web.CapHandlerServlet" level="trace" />
+        <Logger name="com.iisigroup.cap.utils.CapBeanUtil" level="trace" />
+        <Logger name="com.iisigroup.cap.jdbc.CapNamedJdbcTemplate" level="trace" />
+        <!-- transaction -->
+        <Logger name="org.springframework.transaction" level="error" />
+        <Logger name="org.springframework.orm.hibernate5" level="error" />
+        <!-- hibernate & cache -->
+        <Logger name="org.hibernate" level="error" />
+        <Logger name="net.sf.ehcache" level="error" />
+        <Logger name="org.hibernate.SQL" level="info" />
+        <Logger name="org.hibernate.type" level="warn" />
+        <Logger name="org.hibernate.engine.jdbc.spi.SqlExceptionHelper" level="error" />
+        <!-- others -->
+        <Logger name="org.springframework.security" level="error" />
+        <Logger name="org.apache.commons" level="error" />
+        <Logger name="org.springframework" level="error" />
+        <Logger name="com.mchange.v2" level="error" />
+        <Logger name="springfox" level="error" />
+        <!-- user requirement: don't logger to much filter log -->
+        <Logger name="com.tcb.ecol.adm.auth.filter" level="error" />
+        <!-- sas -->
+        <Logger name="com.tcb.ecol.manager.command.sas.impl" level="debug" />
+        <!-- esb -->
+        <!-- <Logger name="com.iisigroup.cap.sample.handler.MqTestPageHandler" level="debug"  additivity="false">
+            <AppenderRef ref="${console-appender}" />
+        </Logger>
+        <Logger name="com.tcb.ecol.background.service.impl.EsbReciever" level="debug"  additivity="false">
+            <AppenderRef ref="${console-appender}" />
+        </Logger>
+        <Logger name="com.tcb.ecol.manager.command.esb.impl.EsbExecutionCmd" level="debug"  additivity="false">
+            <AppenderRef ref="${console-appender}" />
+        </Logger> -->
+        <Logger name="com.iisigroup.cap.base.handler.dev" level="FATAL" additivity="false"/>
+        <!-- eloan擔保品 WebService -->
+        <!-- <Logger name="org.apache.commons.logging.simplelog.log.httpclient.wire" level="debug"/>
+        <Logger name="org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient" level="debug"/> -->
+        <Logger name="org.apache.axis2.enterprise" level="debug"/>
+        <Logger name="httpclient.wire" level="debug"/>
+        <Logger name="org.apache.commons.httpclient" level="debug"/>
+        <Logger name="org.apache.axis2.transport.http.server.wire" level="debug"/>
+    </Loggers>
+</Configuration>
