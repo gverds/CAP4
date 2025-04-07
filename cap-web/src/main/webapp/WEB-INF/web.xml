@@ -149,6 +149,22 @@
             <param-value>classpath:spring/page.xml</param-value>
         </init-param>
     </servlet>
+    <!--2025/03/24 upload files-->
+    <servlet>
+        <servlet-name>dispatcher-file-upload</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath:spring/page.xml</param-value>
+        </init-param>
+	    <load-on-startup>1</load-on-startup>
+	    <multipart-config>
+	      <location>/var/tmp</location>
+	      <max-file-size>104857600</max-file-size>
+	      <max-request-size>104857600</max-request-size>
+	      <file-size-threshold>0</file-size-threshold>
+	    </multipart-config>
+    </servlet>
     <servlet>
         <servlet-name>handler</servlet-name>
         <servlet-class>com.iisigroup.cap.web.CapHandlerServlet</servlet-class>
@@ -168,6 +184,11 @@
     <servlet-mapping>
         <servlet-name>dispatcher-page</servlet-name>
         <url-pattern>/page/*</url-pattern>
+    </servlet-mapping>
+    <!--2025/03/24 file upload TODO try error-->
+    <servlet-mapping>
+        <servlet-name>dispatcher-file-upload</servlet-name>
+        <url-pattern>/handler/samplehandler/upload</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>handler</servlet-name>
