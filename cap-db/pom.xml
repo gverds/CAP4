@@ -3,7 +3,7 @@
     <parent>
         <artifactId>cap</artifactId>
         <groupId>com.iisigroup.cap</groupId>
-        <version>5.0.1-tcb-202205161400</version>
+        <version>5.0.1-tcb-202503241400</version>
     </parent>
     <artifactId>cap-db</artifactId>
     <dependencies>
@@ -32,22 +32,33 @@
             <artifactId>slf4j-api</artifactId>
         </dependency>
         <!-- PERSISTENCE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <dependency>
+        <!--<dependency>
             <groupId>org.hibernate.javax.persistence</groupId>
             <artifactId>hibernate-jpa-2.1-api</artifactId>
             <version>1.0.0.Final</version>
-        </dependency>
+        </dependency>-->
+    	<!--<dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+        </dependency>-->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>${hibernate.version}</version>
         </dependency>
         <!-- VALIDATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <dependency>
+        <!--<dependency>
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
             <version>${bean.validation.version}</version>
-        </dependency>
+        </dependency>-->
+        <!-- https://mvnrepository.com/artifact/jakarta.validation/jakarta.validation-api -->
+		<dependency>
+		    <groupId>jakarta.validation</groupId>
+		    <artifactId>jakarta.validation-api</artifactId>
+            <version>${bean.validation.version}</version>
+		</dependency>
+        
         <!-- Springframework ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -61,5 +72,9 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-orm</artifactId>
         </dependency>
+        <dependency>
+		    <groupId>jakarta.annotation</groupId>
+		    <artifactId>jakarta.annotation-api</artifactId>
+		</dependency>
     </dependencies>
 </project>

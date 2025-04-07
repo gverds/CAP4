@@ -11,12 +11,10 @@
  */
 package com.iisigroup.cap.operation.step;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 
 import com.iisigroup.cap.component.Request;
 import com.iisigroup.cap.exception.CapException;
@@ -24,6 +22,8 @@ import com.iisigroup.cap.exception.CapMessageException;
 import com.iisigroup.cap.handler.Handler;
 import com.iisigroup.cap.model.OpStepContext;
 import com.iisigroup.cap.utils.CapMath;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * <pre>
@@ -41,11 +41,11 @@ import com.iisigroup.cap.utils.CapMath;
  */
 public class CapFileUploadOpStep extends AbstractCustomizeOpStep {
 
-    private CommonsMultipartResolver multipartResolver;
+    private StandardServletMultipartResolver multipartResolver;
 
     String fileSizeLimitErrorCode;
 
-    public void setMultipartResolver(CommonsMultipartResolver multipartResolver) {
+    public void setMultipartResolver(StandardServletMultipartResolver multipartResolver) {
         this.multipartResolver = multipartResolver;
     }
 
@@ -54,12 +54,14 @@ public class CapFileUploadOpStep extends AbstractCustomizeOpStep {
     }
 
     protected MultipartHttpServletRequest uploadFile(Request params) {
-        if (params.containsKey("limitSize")) {
-            multipartResolver.setMaxUploadSize(params.getParamsAsInteger("limitSize"));
-        }
-        if (params.containsKey("fileEncoding")) {
-            multipartResolver.setDefaultEncoding(params.get("fileEncoding"));
-        }
+    	// 2025/03/24 TODO, 動態設定上傳檔案上限
+    	// spring mvc 5, org.springframework.web.multipart.commons.CommonsMultipartResolver
+//        if (params.containsKey("limitSize")) {
+//            multipartResolver.setMaxUploadSize(params.getParamsAsInteger("limitSize"));
+//        }
+//        if (params.containsKey("fileEncoding")) {
+//            multipartResolver.setDefaultEncoding(params.get("fileEncoding"));
+//        }
 
         try {
             return multipartResolver.resolveMultipart((HttpServletRequest) params.getServletRequest());

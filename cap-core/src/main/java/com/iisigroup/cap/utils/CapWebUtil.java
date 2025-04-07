@@ -17,7 +17,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import com.iisigroup.cap.component.Request;
 

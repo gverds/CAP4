@@ -14,11 +14,11 @@ package com.iisigroup.cap.base;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.annotation.Resource;
-
 import com.iisigroup.cap.base.model.SysParm;
 import com.iisigroup.cap.db.service.CapCommonService;
 import com.iisigroup.cap.utils.CapString;
+
+import jakarta.annotation.Resource;
 
 /**
  * <pre>

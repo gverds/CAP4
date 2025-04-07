@@ -13,8 +13,8 @@ package com.iisigroup.cap.security.web;
 
 import java.io.IOException;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.util.UrlUtils;
@@ -38,7 +38,7 @@ public class EnhancedRedirectStrategy extends DefaultRedirectStrategy {
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.security.web.RedirectStrategy#sendRedirect(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, java.lang.String)
+     * @see org.springframework.security.web.RedirectStrategy#sendRedirect(jakarta.servlet.http.HttpServletRequest, jakarta.servlet.http.HttpServletResponse, java.lang.String)
      */
     @Override
     public void sendRedirect(HttpServletRequest request, HttpServletResponse response, String url) throws IOException {

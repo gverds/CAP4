@@ -3,8 +3,6 @@ package com.iisigroup.cap.auth.service.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.Resource;
-
 import org.springframework.stereotype.Service;
 
 import com.iisigroup.cap.auth.dao.UserDao;
@@ -16,6 +14,8 @@ import com.iisigroup.cap.security.CapSecurityContext;
 import com.iisigroup.cap.security.constants.SecConstants.PwdPolicyKeys;
 import com.iisigroup.cap.utils.CapAppContext;
 import com.iisigroup.cap.utils.CapDate;
+
+import jakarta.annotation.Resource;
 
 @Service
 public class PwdPolicyServiceImpl implements PwdPolicyService {

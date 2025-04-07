@@ -15,8 +15,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.Resource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -26,6 +24,8 @@ import com.iisigroup.cap.base.model.Sequence;
 import com.iisigroup.cap.base.service.SequenceService;
 import com.iisigroup.cap.db.model.Page;
 import com.iisigroup.cap.utils.CapDate;
+
+import jakarta.annotation.Resource;
 
 /**
  * <pre>

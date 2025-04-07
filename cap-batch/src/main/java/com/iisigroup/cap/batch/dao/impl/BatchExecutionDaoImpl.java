@@ -2,12 +2,13 @@ package com.iisigroup.cap.batch.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.hibernate.usertype.DynamicParameterizedType.ParameterType;
 import org.springframework.batch.core.JobParameter;
-import org.springframework.batch.core.JobParameter.ParameterType;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.stereotype.Repository;
@@ -41,21 +42,21 @@ public class BatchExecutionDaoImpl extends GenericDaoImpl<Object> implements Bat
 
     @Override
     public JobParameters findJobParamsById(String executionId) {
-        final Map<String, JobParameter> map = new HashMap<String, JobParameter>();
+        final Map<String, JobParameter<?>> map = new HashMap<String, JobParameter<?>>();
         RowCallbackHandler handler = new RowCallbackHandler() {
 
             @Override
             public void processRow(ResultSet rs) throws SQLException {
-                ParameterType type = ParameterType.valueOf(rs.getString("TYPE_CD"));
+            	String type = rs.getString("TYPE_CD");
                 JobParameter value = null;
-                if (type == ParameterType.STRING) {
-                    value = new JobParameter(rs.getString("STRING_VAL"));
-                } else if (type == ParameterType.LONG) {
-                    value = new JobParameter(rs.getLong("LONG_VAL"));
-                } else if (type == ParameterType.DOUBLE) {
-                    value = new JobParameter(rs.getDouble("DOUBLE_VAL"));
-                } else if (type == ParameterType.DATE) {
-                    value = new JobParameter(rs.getTimestamp("DATE_VAL"));
+                if (type.equalsIgnoreCase("STRING")) {
+                    value = new JobParameter(rs.getString("STRING_VAL"), String.class);
+                } else if (type.equalsIgnoreCase("LONG")) {
+                    value = new JobParameter(rs.getLong("LONG_VAL"), Long.class);
+                } else if (type.equalsIgnoreCase("DOUBLE")) {
+                    value = new JobParameter(rs.getDouble("DOUBLE_VAL"), Double.class);
+                } else if (type.equalsIgnoreCase("DATE")) {
+                    value = new JobParameter(rs.getTimestamp("DATE_VAL"), Timestamp.class);
                 }
                 map.put(rs.getString("KEY_NAME"), value);
             }

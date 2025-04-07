@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.iisigroup.cap</groupId>
         <artifactId>cap</artifactId>
-        <version>5.0.1-tcb-202205161400</version>
+        <version>5.0.1-tcb-202503241400</version>
     </parent>
     <artifactId>cap-report</artifactId>
     <dependencies>
@@ -19,6 +19,10 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
         </dependency>
+        <dependency>
+		    <groupId>jakarta.annotation</groupId>
+		    <artifactId>jakarta.annotation-api</artifactId>
+		</dependency>
         <!-- PDF LIB -->
         <dependency>
             <groupId>org.xhtmlrenderer</groupId>
@@ -40,5 +44,11 @@
             <scope>compile</scope>
         </dependency>
         <!-- ******************** JExcelApi(jxl) LIB END ******************** -->
+        <!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-webapp -->
+		<dependency>
+		    <groupId>org.eclipse.jetty</groupId>
+		    <artifactId>jetty-webapp</artifactId>
+		    <version>11.0.25</version>
+		</dependency>
     </dependencies>
 </project>

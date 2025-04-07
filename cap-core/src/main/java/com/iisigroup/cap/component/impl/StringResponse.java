@@ -13,7 +13,7 @@ package com.iisigroup.cap.component.impl;
 
 import java.io.OutputStream;
 
-import javax.servlet.ServletResponse;
+import jakarta.servlet.ServletResponse;
 
 import com.iisigroup.cap.exception.CapException;
 

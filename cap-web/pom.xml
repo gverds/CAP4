@@ -1,10 +1,12 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <artifactId>cap</artifactId>
-        <groupId>com.iisigroup.cap</groupId>
-        <version>5.0.1-tcb-202205061100</version>
-    </parent>
+	<parent>
+		<artifactId>cap</artifactId>
+		<groupId>com.iisigroup.cap</groupId>
+		<version>5.0.1-tcb-202503241400</version>
+	</parent>
     <artifactId>cap-web</artifactId>
     <packaging>war</packaging>
     <dependencies>
@@ -34,10 +36,10 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>com.iisigroup.cap</groupId>
             <artifactId>cap-hg</artifactId>
-        </dependency>
+        </dependency-->
         <dependency>
             <groupId>com.iisigroup.cap</groupId>
             <artifactId>cap-captcha</artifactId>
@@ -45,6 +47,10 @@
         <dependency>
             <groupId>com.iisigroup.cap</groupId>
             <artifactId>cap-report</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.iisigroup.cap</groupId>
+            <artifactId>cap-auth-admin</artifactId>
         </dependency>
         <dependency>
             <groupId>org.tuckey</groupId>
@@ -60,7 +66,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-ehcache</artifactId>
-            <version>${hibernate.version}</version>
+            <version>5.6.15.Final</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -84,15 +90,21 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>1.3.176</version>
+            <!--<version>1.3.176</version>-->
+            <version>1.4.200</version>
             <scope>runtime</scope>
         </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>jstl</artifactId>
-            <version>1.2</version>
-            <scope>provided</scope>
-        </dependency>
+        <!-- 2025/03/24 add-->
+	    <dependency>
+	      <groupId>jakarta.servlet</groupId>
+	      <artifactId>jakarta.servlet-api</artifactId>
+	      <version>6.0.0</version>
+	      <scope>provided</scope>
+	    </dependency>
+		<!--<dependency>
+		    <groupId>org.eclipse.jetty</groupId>
+		    <artifactId>apache-jstl</artifactId>
+		</dependency>-->
     </dependencies>
     <build>
         <plugins>
@@ -115,37 +127,66 @@
                     </webResources>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-maven-plugin</artifactId>
-                <configuration>
-                    <webAppConfig>
-                        <extraClasspath>target/cap-web-4.0.1/WEB-INF/classes</extraClasspath>
-                    </webAppConfig>
-                    <contextPath>/cap-web</contextPath>
-                    <stopKey>foo</stopKey>
-                    <stopPort>8080</stopPort>
-                    <!-- <systemProperties>
-                        <systemProperty>
-                            <name>cola.cas.host</name>
-                            <value>https://citi/citi-cas</value>
-                        </systemProperty>
-                        <systemProperty>
-                            <name>cola.ap.host</name>
-                            <value>http://localhost:8080</value>
-                        </systemProperty>
-                    </systemProperties> -->
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>stop-jetty</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>stop</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+
+			<!--<plugin>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-maven-plugin</artifactId>
+				<version>11.0.25</version>
+				<dependencies>
+					 H2 Database 
+					<dependency>
+						<groupId>com.h2database</groupId>
+						<artifactId>h2</artifactId>
+						<version>2.1.214</version>  更新 H2 版本 
+						<scope>runtime</scope>
+					</dependency>
+					 C3P0 Connection Pool 
+					<dependency>
+						<groupId>com.mchange</groupId>
+						<artifactId>c3p0</artifactId>
+						<version>0.9.5.5</version>
+					</dependency>
+				</dependencies>
+				<configuration>
+
+					 Web Application Source Directory 
+					<webAppSourceDirectory>
+						${project.basedir}/cap-web/target/cap-web-5.0.1-tcb-202503241400/</webAppSourceDirectory>
+
+					 Hot Deployment Scanning 
+					<scanIntervalSeconds>5</scanIntervalSeconds>
+
+					 Web Application Configuration 
+					<webApp>
+						 Path to web.xml 
+						<descriptor>
+							/Volumes/OSX/@Project/IISI_GIT_CAP4/CAP4_SOURCE/IISI_CAP4/cap-web/target/cap-web-5.0.1-tcb-202503241400/WEB-INF/web.xml</descriptor>
+
+						 Path to jetty-env.xml 
+						<jettyEnvXml>
+							/Volumes/OSX/@Project/IISI_GIT_CAP4/CAP4_SOURCE/IISI_CAP4/cap-web/target/cap-web-5.0.1-tcb-202503241400/WEB-INF/jetty-env.xml</jettyEnvXml>
+
+						 Context Path 
+						<contextPath>/cap-web</contextPath>
+					</webApp>
+
+					 Classes Directory 
+					<classesDirectory>
+						/Volumes/OSX/@Project/IISI_GIT_CAP4/CAP4_SOURCE/IISI_CAP4/cap-web/target/cap-web-5.0.1-tcb-202503241400/WEB-INF/classes</classesDirectory>
+
+					 Context XML 
+					<contextXml>
+						/Volumes/OSX/@Project/IISI_GIT_CAP4/CAP4_SOURCE/IISI_CAP4/cap-web/src/main/webapp/WEB-INF/jetty-context.xml</contextXml>
+
+					 Annotation Scanning Timeout 
+					<systemProperties>
+						<property>
+							<name>org.eclipse.jetty.annotations.maxWait</name>
+							<value>300</value>
+						</property>
+					</systemProperties>
+				</configuration>
+			</plugin>-->
         </plugins>
     </build>
     <profiles>

@@ -15,8 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
-
 import org.springframework.batch.core.JobParameters;
 
 import com.iisigroup.cap.batch.dao.BatchExecutionDao;
@@ -29,6 +27,8 @@ import com.iisigroup.cap.db.dao.SearchSetting;
 import com.iisigroup.cap.db.model.Page;
 import com.iisigroup.cap.utils.CapAppContext;
 import com.iisigroup.cap.utils.CapSystemConfig;
+
+import jakarta.annotation.Resource;
 
 /**
  * <pre>

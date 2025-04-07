@@ -18,9 +18,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.stereotype.Controller;
@@ -33,6 +32,8 @@ import com.iisigroup.cap.exception.CapException;
 import com.iisigroup.cap.mvc.handler.MFormHandler;
 import com.iisigroup.cap.utils.CapDate;
 import com.iisigroup.cap.utils.CapString;
+
+import jakarta.annotation.Resource;
 
 /**
  * <pre>

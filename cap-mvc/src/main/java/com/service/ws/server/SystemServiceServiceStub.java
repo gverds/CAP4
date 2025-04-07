@@ -158,7 +158,7 @@ public class SystemServiceServiceStub extends org.apache.axis2.client.Stub {
           fromOM(
               _returnEnv.getBody().getFirstElement(),
               com.service.ws.server.SystemServiceServiceStub.ExecuteResponseE.class);
-      org.apache.axis2.transport.TransportUtils.detachInputStream(_returnMessageContext);
+      org.apache.axis2.kernel.TransportUtils.detachInputStream(_returnMessageContext);
 
       return (com.service.ws.server.SystemServiceServiceStub.ExecuteResponseE) object;
 

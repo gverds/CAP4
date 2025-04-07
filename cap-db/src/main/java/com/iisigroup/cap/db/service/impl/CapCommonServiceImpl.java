@@ -14,8 +14,6 @@ package com.iisigroup.cap.db.service.impl;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
-
 import org.springframework.stereotype.Service;
 
 import com.iisigroup.cap.db.dao.CommonDao;
@@ -25,6 +23,8 @@ import com.iisigroup.cap.db.service.CapCommonService;
 import com.iisigroup.cap.db.utils.CapEntityUtil;
 import com.iisigroup.cap.model.GenericBean;
 import com.iisigroup.cap.utils.CapBeanUtil;
+
+import jakarta.annotation.Resource;
 
 /**
  * <pre>

@@ -19,8 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.annotation.Resource;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ReflectionUtils;
 
@@ -48,6 +46,8 @@ import com.iisigroup.cap.utils.CapAppContext;
 import com.iisigroup.cap.utils.CapBeanUtil;
 import com.iisigroup.cap.utils.CapDate;
 import com.iisigroup.cap.utils.CapString;
+
+import jakarta.annotation.Resource;
 
 /**
  * <pre>

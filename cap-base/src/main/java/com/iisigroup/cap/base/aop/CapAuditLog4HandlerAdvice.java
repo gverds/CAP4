@@ -17,9 +17,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.annotation.Resource;
-import javax.servlet.ServletRequest;
-
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.aspectj.lang.JoinPoint;
@@ -42,6 +39,9 @@ import com.iisigroup.cap.utils.CapBeanUtil;
 import com.iisigroup.cap.utils.CapString;
 import com.iisigroup.cap.utils.CapWebUtil;
 import com.iisigroup.cap.utils.UUIDGenerator;
+
+import jakarta.annotation.Resource;
+import jakarta.servlet.ServletRequest;
 
 /**
  * <pre>
@@ -85,7 +85,7 @@ public class CapAuditLog4HandlerAdvice {
     /**
      * 子系統代碼(COLA...)
      */
-    String sysId = null;
+    String sysId = "CAP";
 
     /**
      * Log Around AjaxHandler execute.

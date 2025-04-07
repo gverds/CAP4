@@ -10,14 +10,15 @@
  * This software is confidential and proprietary information of
  * International Integrated System, Inc. ("Confidential Information").
  */
-package com.iisigroup.cap.auth.vote;
+package com.iisigroup.cap.auth.security;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.security.access.ConfigAttribute;
-import org.springframework.security.access.vote.RoleVoter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.FilterInvocation;
@@ -36,9 +37,18 @@ import com.iisigroup.cap.security.service.AccessControlService;
  *          <li>2010/9/27,iristu,new
  *          </ul>
  */
-public class CapPermissionVoter extends RoleVoter {
+public class CapPermissionVoter implements CustomDecisionVoter<Object> {
 
     protected AccessControlService securityService;
+    
+    Set<String> ignores;
+    
+    private String rolePrefix = "ROLE_";
+    
+
+    public CapPermissionVoter(AccessControlService accessSrv) {
+        this.securityService = accessSrv;
+    }
 
     @SuppressWarnings("rawtypes")
     @Override
@@ -130,6 +140,39 @@ public class CapPermissionVoter extends RoleVoter {
             url = url.substring(0, url.length() - 1);
         }
         return url;
+    }
+    
+
+    public String getRolePrefix() {
+        return this.rolePrefix;
+    }
+    
+    /**
+     * Allows the default role prefix of <code>ROLE_</code> to be overridden. May be set
+     * to an empty value, although this is usually not desirable.
+     * @param rolePrefix the new prefix
+     */
+    public void setRolePrefix(String rolePrefix) {
+        this.rolePrefix = rolePrefix;
+    }
+
+	@Override
+	public boolean supports(ConfigAttribute attribute) {
+		return (attribute.getAttribute() != null) && attribute.getAttribute().startsWith(getRolePrefix());
+	}
+
+	@Override
+	public boolean supports(Class<?> clazz) {
+		 return true;
+	}
+    /**
+     * 設置忽略的 Handler
+     * 
+     * @param ignoreHandlers
+     */
+    public void setIgnoreHandlers(Set<String> ignoreHandlers) {
+        this.ignores = new HashSet<String>();
+        ignores.addAll(ignoreHandlers);
     }
 
 }// ~

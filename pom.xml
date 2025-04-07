@@ -2,17 +2,20 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.iisigroup.cap</groupId>
     <artifactId>cap</artifactId>
-    <version>5.0.1-tcb-202205161400</version>
+    <version>5.0.1-tcb-202503241400</version>
     <packaging>pom</packaging>
     <properties>
-        <slf4j.version>1.7.30</slf4j.version>
-        <spring.version>5.3.5</spring.version>
-        <spring-security.version>5.4.5</spring-security.version>
+        <slf4j.version>2.0.16</slf4j.version>
+        <spring.version>6.2.5</spring.version>
+        <spring-security.version>6.4.2</spring-security.version>
         <localRepositoryPath>src/localRepos</localRepositoryPath>
-		<hibernate.version>5.4.17.Final</hibernate.version>
-        <hibernate.validator.version>6.0.17.Final</hibernate.validator.version>
-        <bean.validation.version>2.0.1.Final</bean.validation.version>
-        <log4j.version>2.17.0</log4j.version>
+		<hibernate.version>6.6.8.Final</hibernate.version>
+        <hibernate.validator.version>7.0.5.Final</hibernate.validator.version>
+        <bean.validation.version>3.1.1</bean.validation.version>
+        <log4j.version>2.24.3</log4j.version>
+  		<java.version>21</java.version>
+		<maven.compiler.source>${java.version}</maven.compiler.source>
+		<maven.compiler.target>${java.version}</maven.compiler.target>
     </properties>
     <repositories>
         <repository>
@@ -97,7 +100,7 @@
             <dependency>
                 <groupId>org.freemarker</groupId>
                 <artifactId>freemarker</artifactId>
-                <version>2.3.27-incubating</version>
+                <version>2.3.34</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
@@ -127,14 +130,69 @@
             <dependency>
                 <groupId>org.springframework.ldap</groupId>
                 <artifactId>spring-ldap-core</artifactId>
-                <version>2.3.2.RELEASE</version>
+                <version>3.2.11</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-ldap</artifactId>
-                <version>4.2.4.RELEASE</version>
+                <version>6.4.2</version>
             </dependency>
-        </dependencies>
+            <dependency>
+			    <groupId>jakarta.annotation</groupId>
+			    <artifactId>jakarta.annotation-api</artifactId>
+			    <version>3.0.0</version>
+			</dependency>
+			<dependency>
+				<groupId>opensymphony</groupId>
+				<artifactId>sitemesh</artifactId>
+				<version>2.6.0</version>
+			</dependency>
+	        <dependency>
+	            <groupId>commons-fileupload</groupId>
+	            <artifactId>commons-fileupload</artifactId>
+	            <version>1.5</version>
+	        </dependency>
+	        <dependency>
+	            <groupId>org.apache.commons</groupId>
+	            <artifactId>commons-compress</artifactId>
+	            <version>1.27.1</version>
+	        </dependency>
+			<dependency>
+	            <groupId>jakarta.mail</groupId>
+	            <artifactId>jakarta.mail-api</artifactId>
+	            <version>2.1.3</version>
+	        </dependency>
+			<!-- 2025/03/26-->
+        	<!--<dependency>
+	            <groupId>jakarta.persistence</groupId>
+	            <artifactId>jakarta.persistence-api</artifactId>
+	            <version>3.2.0</version>
+	        </dependency>-->
+	        <dependency>
+			    <groupId>jakarta.xml.bind</groupId>
+			    <artifactId>jakarta.xml.bind-api</artifactId>
+			    <version>4.0.2</version>
+			</dependency>
+			<!-- API for 2nd Level Cache -->
+			<dependency>
+			    <groupId>org.hibernate.orm</groupId>
+			    <artifactId>hibernate-jcache</artifactId>
+			    <version>${hibernate.versio}</version>
+			</dependency>
+			<!-- Implementation for 2nd Level Cache -->
+			<dependency>
+			    <groupId>org.ehcache</groupId>
+			    <artifactId>ehcache</artifactId>
+			    <classifier>jakarta</classifier>
+			    <version>3.10.8</version>
+			</dependency>
+<!--<dependency>
+    <groupId>org.eclipse.jetty</groupId>
+    <artifactId>apache-jstl</artifactId>
+    <version>11.0.0</version>
+</dependency>
+-->        
+		</dependencies>
     </dependencyManagement>
     <modules>
         
@@ -144,18 +202,19 @@
         <module>cap-mvc</module>
         <module>cap-security</module>
         
-        <module>cap-hg</module>
+        <!--<module>cap-hg</module>-->
         
         <module>cap-db</module>
         
         <module>cap-base</module>
-        <!-- <module>cap-auth-admin</module> -->
+        <module>cap-auth-admin</module> 
         <module>cap-batch</module>
-        <module>cap-rule</module>
-        <module>cap-websocket</module>
+        <!--<module>cap-rule</module>-->
+        <!--<module>cap-websocket</module>-->
         <module>cap-captcha</module>
         
-        <module>cap-report</module>
+        <!--<module>cap-report</module>-->
+        <module>cap-web</module>
     </modules>
     <profiles>
         <profile>
@@ -176,11 +235,22 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-compiler-plugin</artifactId>
-                        <version>3.5.1</version>
+                        <!--<version>3.11.0</version>-->
                         <configuration>
-                            <source>1.8</source>
-                            <target>1.8</target>
+                            <source>21</source>
+                            <target>21</target>
                             <encoding>UTF-8</encoding>
+                        <!-- 
+							AOP runtime報錯：Caused by: org.springframework.aop.aspectj.AspectJAdviceParameterNameDiscoverer$AmbiguousBindingException:
+							 Binding of returning parameter 'reVal' is ambiguous: 
+							 there are 2 candidates. Consider compiling with -parameters in order to make declared parameter names available.
+                        	參考的建議https://github.com/spring-projects/spring-framework/issues/34609
+                        	TODO 是否要修改auditLog.xml 內容（應該是錯在aop:after-returning）
+                        	ps.Java映射parameters會是arg0/arg1...，可能是照成問題的關係
+                        -->
+                        <compilerArgs>
+                        	<arg>-parameters</arg>
+                        </compilerArgs>
                         </configuration>
                     </plugin>
                 </plugins>
@@ -276,12 +346,19 @@
     </profiles>
     <dependencies>
         <!-- SERVLET API ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
+        <!--<dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
             <version>3.1.0</version>
             <scope>provided</scope>
-        </dependency>
+        </dependency>-->
+        <!-- 2025/03/24 add-->
+	    <dependency>
+	      <groupId>jakarta.servlet</groupId>
+	      <artifactId>jakarta.servlet-api</artifactId>
+	      <version>6.0.0</version>
+	      <scope>provided</scope>
+	    </dependency>
     </dependencies>
     <build>
         <pluginManagement>
@@ -289,38 +366,106 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.5.1</version>
-                    <configuration>
-                        <source>1.8</source>
-                        <target>1.8</target>
+                    <version>3.11.0</version>
+			        <configuration>
+			            <source>21</source>
+			            <target>21</target>
                         <encoding>UTF-8</encoding>
+                        <compilerArgs>
+                        	<arg>-parameters</arg>
+                        </compilerArgs>
                     </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.19.1</version>
+                    <version>3.2.5</version>
                 </plugin>
                 <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
+                    <groupId>org.codus.mojo</groupId>
                     <artifactId>exec-maven-plugin</artifactId>
-                    <version>1.5.0</version>
+                    <version>3.2.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-war-plugin</artifactId>
-                    <version>2.6</version>
+                    <version>3.4.0</version>
                 </plugin>
                 <plugin>
-                    <groupId>org.eclipse.jetty</groupId>
-                    <artifactId>jetty-maven-plugin</artifactId>
-                    <version>9.2.11.v20150529</version>
+					<groupId>org.eclipse.jetty.ee10</groupId>
+					<artifactId>jetty-ee10-maven-plugin</artifactId>
+					<version>11.0.25</version>
                 </plugin>
                 <plugin>
                     <groupId>com.github.bringking</groupId>
                     <artifactId>requirejs-maven-plugin</artifactId>
                     <version>2.0.4</version>
                 </plugin>
+				<plugin>
+					<groupId>org.eclipse.jetty</groupId>
+					<artifactId>jetty-maven-plugin</artifactId>
+					<version>11.0.25</version>
+					<dependencies>
+						<!-- H2 Database -->
+						<dependency>
+							<groupId>com.h2database</groupId>
+							<artifactId>h2</artifactId>
+							<version>2.1.214</version> <!-- 更新 H2 版本 -->
+							<scope>runtime</scope>
+						</dependency>
+						<!-- C3P0 Connection Pool -->
+						<dependency>
+							<groupId>com.mchange</groupId>
+							<artifactId>c3p0</artifactId>
+							<version>0.9.5.5</version>
+						</dependency>
+					</dependencies>
+					<configuration>
+
+						<!-- Web Application Source Directory -->
+						<!--<webAppSourceDirectory>
+							${project.basedir}/cap-web/target/cap-web-5.0.1-tcb-202503241400/
+						</webAppSourceDirectory>-->
+
+						<!-- Hot Deployment Scanning -->
+						<scanIntervalSeconds>5</scanIntervalSeconds>
+
+						<!-- Web Application Configuration -->
+						<webApp>
+							<!-- Path to web.xml -->
+							<descriptor>
+								/Volumes/OSX/@Project/IISI_GIT_CAP4/CAP4_SOURCE/IISI_CAP4/cap-web/src/main/webapp/WEB-INF/web.xml
+							</descriptor>
+
+							<!-- Path to jetty-env.xml -->
+							<jettyEnvXml>
+								/Volumes/OSX/@Project/IISI_GIT_CAP4/CAP4_SOURCE/IISI_CAP4/cap-web/src/main/webapp/WEB-INF/jetty-env.xml
+							</jettyEnvXml>
+
+							<!-- Context Path -->
+							<contextPath>/cap-web</contextPath>
+						</webApp>
+						<httpConnector>
+						    <port>8088</port>
+						</httpConnector>
+
+						<!-- Classes Directory -->
+						<classesDirectory>
+							/Volumes/OSX/@Project/IISI_GIT_CAP4/CAP4_SOURCE/IISI_CAP4/cap-web/target/cap-web-5.0.1-tcb-202503241400/WEB-INF/classes</classesDirectory>
+
+						<!-- Context XML -->
+						<contextXml>
+							/Volumes/OSX/@Project/IISI_GIT_CAP4/CAP4_SOURCE/IISI_CAP4/cap-web/src/main/webapp/WEB-INF/jetty-env.xml</contextXml>
+
+						<!-- Annotation Scanning Timeout -->
+						<systemProperties>
+							<property>
+								<name>org.eclipse.jetty.annotations.maxWait</name>
+								<value>300</value>
+							</property>
+						</systemProperties>
+					</configuration>
+				</plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -335,7 +480,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>3.0.1</version>
+                <version>3.3.1</version>
                 <configuration>
                     <encoding>UTF-8</encoding>
                 </configuration>

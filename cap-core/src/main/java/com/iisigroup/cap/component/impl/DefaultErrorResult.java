@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.servlet.ServletResponse;
+import jakarta.servlet.ServletResponse;
 
 import org.apache.commons.lang3.CharEncoding;
 

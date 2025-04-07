@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
@@ -28,6 +26,8 @@ import com.iisigroup.cap.security.constants.SecConstants.PwdPolicyKeys;
 import com.iisigroup.cap.security.service.PasswordService;
 import com.iisigroup.cap.utils.CapAppContext;
 import com.iisigroup.cap.utils.CapDate;
+
+import jakarta.annotation.Resource;
 
 @Service
 public class PasswordServiceImpl implements PasswordService {

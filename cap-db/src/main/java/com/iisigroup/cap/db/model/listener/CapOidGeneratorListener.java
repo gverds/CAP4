@@ -13,9 +13,9 @@ package com.iisigroup.cap.db.model.listener;
 
 import java.util.UUID;
 
-import javax.persistence.PrePersist;
-
 import com.iisigroup.cap.db.model.DataObject;
+
+import jakarta.persistence.PrePersist;
 
 /**
  * <pre>

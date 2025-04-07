@@ -14,8 +14,6 @@ package com.iisigroup.cap.base.handler;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.Resource;
-
 import org.springframework.stereotype.Controller;
 
 import com.iisigroup.cap.annotation.HandlerType;
@@ -37,6 +35,8 @@ import com.iisigroup.cap.security.CapSecurityContext;
 import com.iisigroup.cap.utils.CapBeanUtil;
 import com.iisigroup.cap.utils.CapDate;
 import com.iisigroup.cap.utils.CapString;
+
+import jakarta.annotation.Resource;
 
 /**
  * <pre>

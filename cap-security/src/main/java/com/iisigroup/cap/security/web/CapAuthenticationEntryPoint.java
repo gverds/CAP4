@@ -14,10 +14,10 @@ package com.iisigroup.cap.security.web;
 
 import java.io.IOException;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +47,7 @@ public class CapAuthenticationEntryPoint extends LoginUrlAuthenticationEntryPoin
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint#commence(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse,
+     * @see org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint#commence(jakarta.servlet.http.HttpServletRequest, jakarta.servlet.http.HttpServletResponse,
      * org.springframework.security.core.AuthenticationException)
      */
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
@@ -78,7 +78,7 @@ public class CapAuthenticationEntryPoint extends LoginUrlAuthenticationEntryPoin
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.security.ui.AuthenticationEntryPoint#commence(javax .servlet.ServletRequest, javax.servlet.ServletResponse, org.springframework.security.AuthenticationException)
+     * @see org.springframework.security.ui.AuthenticationEntryPoint#commence(javax .servlet.ServletRequest, jakarta.servlet.ServletResponse, org.springframework.security.AuthenticationException)
      */
     protected String determineUrlToUseForThisRequest(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) {
         HttpServletRequest httpRequest = (HttpServletRequest) request;

@@ -24,7 +24,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.annotation.Resource;
 import javax.naming.AuthenticationException;
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
@@ -62,6 +61,8 @@ import com.iisigroup.cap.mvc.token.LdapAuthenticationToken;
 import com.iisigroup.cap.security.model.CapUserDetails;
 import com.iisigroup.cap.utils.CapString;
 import com.iisigroup.cap.utils.CapSystemConfig;
+
+import jakarta.annotation.Resource;
 
 /**
  * <pre>

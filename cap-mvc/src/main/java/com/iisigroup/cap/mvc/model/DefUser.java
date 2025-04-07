@@ -4,14 +4,6 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Locale;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.persistence.UniqueConstraint;
-
 import com.iisigroup.cap.db.model.DataObject;
 import com.iisigroup.cap.db.model.listener.CapOidGeneratorListener;
 import com.iisigroup.cap.model.GenericBean;
@@ -19,6 +11,14 @@ import com.iisigroup.cap.operation.simple.SimpleContextHolder;
 import com.iisigroup.cap.security.model.Role;
 import com.iisigroup.cap.security.model.User;
 import com.iisigroup.cap.utils.CapWebUtil;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+import jakarta.persistence.UniqueConstraint;
 
 /**
  * <pre>

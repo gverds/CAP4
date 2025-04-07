@@ -2,10 +2,6 @@ package com.iisigroup.cap.auth.provider;
 
 import java.util.Map;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +20,10 @@ import com.iisigroup.cap.security.model.CapUserDetails;
 import com.iisigroup.cap.security.service.AccessControlService;
 import com.iisigroup.cap.security.service.PasswordService;
 import com.iisigroup.cap.utils.CapAppContext;
+
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 public class CapAuthenticationProvider implements AuthenticationProvider {
 

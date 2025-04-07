@@ -16,8 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
-
 import org.springframework.stereotype.Controller;
 
 import com.iisigroup.cap.base.model.Remind;
@@ -29,6 +27,8 @@ import com.iisigroup.cap.db.utils.CapEntityUtil;
 import com.iisigroup.cap.mvc.handler.MFormHandler;
 import com.iisigroup.cap.security.CapSecurityContext;
 import com.iisigroup.cap.utils.CapBeanUtil;
+
+import jakarta.annotation.Resource;
 
 /**
  * <pre>

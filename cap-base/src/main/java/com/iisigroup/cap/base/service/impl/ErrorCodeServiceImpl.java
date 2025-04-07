@@ -6,9 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +18,9 @@ import com.iisigroup.cap.exception.CapException;
 import com.iisigroup.cap.utils.CapBeanUtil;
 import com.iisigroup.cap.utils.CapString;
 import com.iisigroup.cap.utils.ManagementUtil;
+
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.Resource;
 
 /**
  * <pre>

@@ -16,8 +16,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpSession;
 
 import com.iisigroup.cap.action.Action;
 import com.iisigroup.cap.annotation.HandlerType;
@@ -40,6 +39,8 @@ import com.iisigroup.cap.utils.CapAppContext;
 import com.iisigroup.cap.utils.CapBeanUtil;
 import com.iisigroup.cap.utils.CapString;
 import com.iisigroup.cap.utils.GsonUtil;
+
+import jakarta.annotation.Resource;
 
 /**
  * <pre>

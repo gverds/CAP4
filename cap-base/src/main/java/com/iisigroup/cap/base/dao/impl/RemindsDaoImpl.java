@@ -12,13 +12,13 @@ package com.iisigroup.cap.base.dao.impl;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.persistence.Query;
-
 import org.springframework.stereotype.Repository;
 
 import com.iisigroup.cap.base.dao.RemindsDao;
 import com.iisigroup.cap.base.model.Reminds;
 import com.iisigroup.cap.db.dao.impl.GenericDaoImpl;
+
+import jakarta.persistence.Query;
 
 /**
  * <pre>

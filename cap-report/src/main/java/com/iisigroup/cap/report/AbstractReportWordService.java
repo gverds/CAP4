@@ -17,8 +17,6 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Map;
 
-import javax.annotation.Resource;
-
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +28,7 @@ import com.iisigroup.cap.report.constants.ReportParamEnum;
 import com.iisigroup.cap.utils.CapSystemConfig;
 
 import freemarker.template.Template;
+import jakarta.annotation.Resource;
 
 /**
  * <pre>

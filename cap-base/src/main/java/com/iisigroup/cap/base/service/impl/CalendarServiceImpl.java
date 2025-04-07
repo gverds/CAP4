@@ -3,8 +3,6 @@ package com.iisigroup.cap.base.service.impl;
 import java.sql.Timestamp;
 import java.util.List;
 
-import javax.annotation.Resource;
-
 import org.springframework.stereotype.Service;
 
 import com.iisigroup.cap.base.dao.RemindDao;
@@ -13,6 +11,8 @@ import com.iisigroup.cap.base.service.CalendarService;
 import com.iisigroup.cap.operation.simple.SimpleContextHolder;
 import com.iisigroup.cap.utils.CapString;
 import com.iisigroup.cap.utils.CapWebUtil;
+
+import jakarta.annotation.Resource;
 
 @Service
 public class CalendarServiceImpl implements CalendarService {

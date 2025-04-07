@@ -20,7 +20,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletResponse;
+import jakarta.servlet.ServletResponse;
 
 import com.google.gson.JsonArray;
 import com.iisigroup.cap.component.GridResult;

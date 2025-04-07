@@ -12,8 +12,6 @@ package com.iisigroup.cap.base.dao.impl;
 import java.sql.Timestamp;
 import java.util.List;
 
-import javax.persistence.Query;
-
 import org.springframework.stereotype.Repository;
 
 import com.iisigroup.cap.base.dao.RemindDao;
@@ -21,6 +19,8 @@ import com.iisigroup.cap.base.model.Remind;
 import com.iisigroup.cap.db.constants.SearchMode;
 import com.iisigroup.cap.db.dao.SearchSetting;
 import com.iisigroup.cap.db.dao.impl.GenericDaoImpl;
+
+import jakarta.persistence.Query;
 
 /**
  * <pre>

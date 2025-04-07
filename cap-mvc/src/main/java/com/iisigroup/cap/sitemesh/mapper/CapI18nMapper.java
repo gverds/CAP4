@@ -12,7 +12,7 @@ package com.iisigroup.cap.sitemesh.mapper;
 
 import java.util.Properties;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +52,7 @@ public class CapI18nMapper extends AbstractDecoratorMapper {
     /*
      * (non-Javadoc)
      * 
-     * @see com.opensymphony.module.sitemesh.mapper.AbstractDecoratorMapper#getDecorator (javax.servlet.http.HttpServletRequest, com.opensymphony.module.sitemesh.Page)
+     * @see com.opensymphony.module.sitemesh.mapper.AbstractDecoratorMapper#getDecorator (jakarta.servlet.http.HttpServletRequest, com.opensymphony.module.sitemesh.Page)
      */
     @Override
     public Decorator getDecorator(HttpServletRequest request, com.opensymphony.module.sitemesh.Page page) {

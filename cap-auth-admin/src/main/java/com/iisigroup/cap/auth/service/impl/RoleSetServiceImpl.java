@@ -4,8 +4,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +19,8 @@ import com.iisigroup.cap.auth.model.Department;
 import com.iisigroup.cap.auth.service.RoleSetService;
 import com.iisigroup.cap.db.dao.SearchSetting;
 import com.iisigroup.cap.db.model.Page;
+
+import jakarta.annotation.Resource;
 
 /**
  * <pre>

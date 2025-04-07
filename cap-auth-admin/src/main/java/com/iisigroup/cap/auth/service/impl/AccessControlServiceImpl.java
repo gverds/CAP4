@@ -2,8 +2,7 @@ package com.iisigroup.cap.auth.service.impl;
 
 import java.util.List;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import com.iisigroup.cap.auth.dao.RoleDao;
 import com.iisigroup.cap.auth.dao.UserDao;
@@ -15,6 +14,8 @@ import com.iisigroup.cap.security.service.AccessControlService;
 import com.iisigroup.cap.security.service.CheckCodeService;
 import com.iisigroup.cap.utils.CapAppContext;
 import com.iisigroup.cap.utils.CapDate;
+
+import jakarta.annotation.Resource;
 
 //@Service
 public class AccessControlServiceImpl implements AccessControlService {

@@ -46,7 +46,7 @@
     <!-- batch -->
     <import resource="classpath:batch/batch.xml" />
     <!-- web socket -->
-    <import resource="classpath:websocket/websocket.xml" />
+    <!-- <import resource="classpath:websocket/websocket.xml" /> -->
     <!-- captcha -->
     <import resource="classpath:spring/captcha.xml" />
     <!-- report -->

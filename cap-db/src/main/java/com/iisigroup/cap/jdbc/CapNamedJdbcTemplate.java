@@ -12,6 +12,8 @@
 package com.iisigroup.cap.jdbc;
 
 import java.sql.BatchUpdateException;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -22,12 +24,15 @@ import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.JdbcOperations;
+import org.springframework.jdbc.core.PreparedStatementCreatorFactory;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterBatchUpdateUtils;
+//import org.springframework.jdbc.core.namedparam.NamedParameterBatchUpdateUtils;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterUtils;
 import org.springframework.jdbc.core.namedparam.ParsedSql;
@@ -320,12 +325,16 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
                     }
                 }
                 cur = System.currentTimeMillis();
-                batchCount = NamedParameterBatchUpdateUtils.executeBatchUpdateWithNamedParameters(parsedSql, batch, super.getJdbcOperations());
-
+                //SpringJdbc5.x deprecate NamedParameterBatchUpdateUtils
+                //batchCount = NamedParameterBatchUpdateUtils.executeBatchUpdateWithNamedParameters(parsedSql, batch, super.getJdbcOperations());
+                batchCount = executeBatchUpdateWithNamedParameters(parsedSql, batch, super.getJdbcOperations());
+                //上面自製的executeBatchUpdateWithNamedParameters不能用的話，是否改用下行執行batch update
+                //batchCount = super.batchUpdate(parsedSql.toString(), batch);
             } else {
                 SqlParameterSource[] batch = SqlParameterSourceUtils.createBatch(batchValues.toArray(new HashMap[batchValues.size()]));
                 cur = System.currentTimeMillis();
-                batchCount = NamedParameterBatchUpdateUtils.executeBatchUpdateWithNamedParameters(parsedSql, batch, super.getJdbcOperations());
+                //batchCount = NamedParameterBatchUpdateUtils.executeBatchUpdateWithNamedParameters(parsedSql, batch, super.getJdbcOperations());
+                batchCount = super.batchUpdate(parsedSql.toString(), batch);
             }
             int rows = 0;
             for (int i : batchCount) {
@@ -347,6 +356,36 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
         }
     }
 
+    /**
+     * 參考 NamedParameterJdbcTemplate.batchUpdate()，模擬NamedParameterBatchUpdateUtils.executeBatchUpdateWithNamedParameters
+     * @param parsedSql
+     * @param batchArgs
+     * @param jdbcOperations
+     * @return
+     */
+    private int[] executeBatchUpdateWithNamedParameters(ParsedSql parsedSql, SqlParameterSource[] batchArgs, JdbcOperations jdbcOperations) {
+
+        if (batchArgs.length == 0) {
+        	return new int[0];
+		}
+		//String sqlToUse = NamedParameterUtils.substituteNamedParameters(parsedSql, batch[0]);
+		PreparedStatementCreatorFactory pscf = getPreparedStatementCreatorFactory(parsedSql, batchArgs[0]);
+		
+		return super.getJdbcOperations().batchUpdate(
+				pscf.getSql(),
+				new BatchPreparedStatementSetter() {
+					@Override
+					public void setValues(PreparedStatement ps, int i) throws SQLException {
+						Object[] values = NamedParameterUtils.buildValueArray(parsedSql, batchArgs[i], null);
+						pscf.newPreparedStatementSetter(values).setValues(ps);
+					}
+					@Override
+					public int getBatchSize() {
+						return batchArgs.length;
+					}
+				});
+    }
+    
     /**
      * call SP
      * 

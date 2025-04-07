@@ -1,18 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Configure PUBLIC "-//Jetty//Configure//EN" "https://jetty.org/configure.dtd">
 <Configure class="org.eclipse.jetty.webapp.WebAppContext">
+    <!-- 定義 JNDI 資源 -->
     <New id="comdb" class="org.eclipse.jetty.plus.jndi.Resource">
         <Arg>jdbc/capdb</Arg>
         <Arg>
             <New class="com.mchange.v2.c3p0.ComboPooledDataSource">
                 <Set name="driverClass">org.h2.Driver</Set>
-                <Set name="jdbcUrl">jdbc:h2:../h2db/capdb</Set>
+                <Set name="jdbcUrl">jdbc:h2:tcp://localhost:51065//Volumes/RamDisk/h2db/capdb.v2</Set>
                 <Set name="user">sa</Set>
                 <Set name="password"></Set>
             </New>
         </Arg>
     </New>
-    <Call name="getServletHandler">
+
+    <!-- 設定 WebAppContext 的屬性 -->
+    <Set name="contextPath">/ecol-web</Set>
+    <Set name="war">${project.basedir}/cap-web/target/cap-web-5.0.1-tcb-202503241400/</Set>
+    <Set name="extractWAR">false</Set>
+
+    <Call name="setAttribute">
+      <Arg>org.eclipse.jetty.server.webapp.WebInfIncludeJarPattern</Arg>
+      <Arg>.*/spring-[^/]*\.jar$</Arg>
     </Call>
-    <Call name="addServlet">
+    <!-- 配置 Servlet -->
+    <!-- <Call name="addServlet">
         <Arg>
             <New class="org.eclipse.jetty.servlet.ServletHolder">
                 <Arg>
@@ -27,5 +39,5 @@
             </New>
         </Arg>
         <Arg>/</Arg>
-    </Call>
+    </Call> -->
 </Configure>

@@ -21,8 +21,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.annotation.Resource;
-
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +32,7 @@ import com.iisigroup.cap.exception.CapException;
 import com.iisigroup.cap.utils.CapDate;
 import com.iisigroup.cap.utils.CapSystemConfig;
 
+import jakarta.annotation.Resource;
 import jxl.Workbook;
 import jxl.WorkbookSettings;
 import jxl.format.Alignment;

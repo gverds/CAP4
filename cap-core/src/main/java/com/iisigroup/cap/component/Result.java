@@ -14,7 +14,7 @@ package com.iisigroup.cap.component;
 
 import java.io.Serializable;
 
-import javax.servlet.ServletResponse;
+import jakarta.servlet.ServletResponse;
 
 /**
  * <p>

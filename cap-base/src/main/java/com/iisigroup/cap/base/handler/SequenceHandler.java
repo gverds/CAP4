@@ -13,8 +13,6 @@ package com.iisigroup.cap.base.handler;
 
 import java.util.Map;
 
-import javax.annotation.Resource;
-
 import org.springframework.stereotype.Controller;
 
 import com.iisigroup.cap.annotation.HandlerType;
@@ -27,6 +25,8 @@ import com.iisigroup.cap.component.impl.MapGridResult;
 import com.iisigroup.cap.db.dao.SearchSetting;
 import com.iisigroup.cap.db.model.Page;
 import com.iisigroup.cap.mvc.handler.MFormHandler;
+
+import jakarta.annotation.Resource;
 
 /**
  * <pre>

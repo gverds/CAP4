@@ -3,8 +3,6 @@ package com.iisigroup.cap.auth.service.impl;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
-
 import org.springframework.stereotype.Service;
 
 import com.iisigroup.cap.auth.dao.FunctionDao;
@@ -23,6 +21,8 @@ import com.iisigroup.cap.utils.CapBeanUtil;
 import com.iisigroup.cap.utils.CapDate;
 import com.iisigroup.cap.utils.CapString;
 import com.iisigroup.cap.utils.CapWebUtil;
+
+import jakarta.annotation.Resource;
 
 /**
  * <pre>

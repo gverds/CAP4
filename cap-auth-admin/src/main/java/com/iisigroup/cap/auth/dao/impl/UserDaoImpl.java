@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.Query;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 
@@ -20,6 +18,8 @@ import com.iisigroup.cap.db.model.Page;
 import com.iisigroup.cap.security.dao.SecUserDao;
 import com.iisigroup.cap.security.model.User;
 import com.iisigroup.cap.utils.CapDate;
+
+import jakarta.persistence.Query;
 
 /**
  * <pre>

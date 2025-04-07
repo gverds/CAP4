@@ -18,8 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
-import javax.annotation.Resource;
-
 import org.apache.commons.collections.MapUtils;
 import org.quartz.SchedulerException;
 import org.springframework.batch.admin.service.JobService;
@@ -74,6 +72,8 @@ import com.iisigroup.cap.utils.CapBeanUtil;
 import com.iisigroup.cap.utils.CapDate;
 import com.iisigroup.cap.utils.CapString;
 import com.iisigroup.cap.utils.CapSystemConfig;
+
+import jakarta.annotation.Resource;
 
 /**
  * <pre>

@@ -3,11 +3,11 @@
     <parent>
         <artifactId>cap</artifactId>
         <groupId>com.iisigroup.cap</groupId>
-        <version>5.0.1-tcb-202205061100</version>
+        <version>5.0.1-tcb-202503241400</version>
     </parent>
     <artifactId>cap-auth-admin</artifactId>
     <properties>
-        <spring.batch.version>4.0.2.RELEASE</spring.batch.version>
+        <spring.batch.version>5.2.1</spring.batch.version>
     </properties>
     <dependencies>
         <dependency>
@@ -54,12 +54,12 @@
             <!-- 包版時不包進 war 中 使用 build plugin copy 進classes -->
             <scope>test</scope>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-ehcache</artifactId>
-            <version>${hibernate.version}</version>
+            <version>5.6.15.Final</version>
             <scope>test</scope>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>

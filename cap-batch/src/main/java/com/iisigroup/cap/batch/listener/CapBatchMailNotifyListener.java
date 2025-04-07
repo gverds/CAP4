@@ -15,8 +15,6 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
-
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.JobListener;
@@ -28,6 +26,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
+import com.iisigroup.cap.base.service.EmailService;
 import com.iisigroup.cap.batch.constants.CapBatchConstants;
 import com.iisigroup.cap.batch.model.BatchSchedule;
 import com.iisigroup.cap.batch.service.BatchJobService;
@@ -38,6 +37,7 @@ import com.iisigroup.cap.utils.CapSystemConfig;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import jakarta.annotation.Resource;
 
 /**
  * <pre>
@@ -56,7 +56,9 @@ public class CapBatchMailNotifyListener implements JobListener, InitializingBean
     private final Logger logger = LoggerFactory.getLogger(CapBatchMailNotifyListener.class);
 
     private BatchJobService batchSerivce;
-    // FIXME private EmailService mailSender;
+    // FIXME
+    private EmailService mailSender;
+    
     private JobParametersExtractor jobParametersExtractor;
     @Resource
     private CapSystemConfig config;
@@ -82,7 +84,8 @@ public class CapBatchMailNotifyListener implements JobListener, InitializingBean
                     if (CapString.trimNull(status).equals(job.getExitStatus().getExitCode())) {
                         // 主旨
                         String subject = MessageFormat.format(mailSubject, new Object[] { sch.getSchId(), sch.getSchDesc(), job.getExitStatus().getExitCode() });
-                        // FIXME mailSender.sendEmail(sch.getNotifyTo().split(","), subject, buildText(job));
+                        // FIXME 
+                        mailSender.sendEmail(sch.getNotifyTo().split(","), subject, buildText(job));
                         break;
                     }
                 }
@@ -163,9 +166,9 @@ public class CapBatchMailNotifyListener implements JobListener, InitializingBean
         this.mailSubject = mailSubject;
     }
     // FIXME
-    // public void setMailSender(EmailService mailSender) {
-    // this.mailSender = mailSender;
-    // }
+	public void setMailSender(EmailService mailSender) {
+		this.mailSender = mailSender;
+	}
 
     public void setFmConfg(FreeMarkerConfigurer fmConfg) {
         this.fmConfg = fmConfg;

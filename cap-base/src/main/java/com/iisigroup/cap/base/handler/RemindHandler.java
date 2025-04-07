@@ -16,8 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -50,6 +48,8 @@ import com.iisigroup.cap.utils.CapDate;
 import com.iisigroup.cap.utils.CapMath;
 import com.iisigroup.cap.utils.CapString;
 import com.iisigroup.cap.utils.CapWebUtil;
+
+import jakarta.annotation.Resource;
 
 /**
  * <pre>

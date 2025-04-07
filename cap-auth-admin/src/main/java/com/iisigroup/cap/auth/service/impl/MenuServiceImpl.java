@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.annotation.Resource;
-
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.stereotype.Service;
@@ -22,6 +20,8 @@ import com.iisigroup.cap.operation.simple.SimpleContextHolder;
 import com.iisigroup.cap.utils.CapAppContext;
 import com.iisigroup.cap.utils.CapSystemConfig;
 import com.iisigroup.cap.utils.CapWebUtil;
+
+import jakarta.annotation.Resource;
 
 @Service
 public class MenuServiceImpl implements MenuService {

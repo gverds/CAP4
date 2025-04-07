@@ -19,9 +19,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Map;
 
-import javax.annotation.Resource;
-import javax.servlet.ServletContext;
-
+import org.eclipse.jetty.webapp.WebAppContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
@@ -40,6 +38,7 @@ import com.iisigroup.cap.utils.CapSystemConfig;
 import com.lowagie.text.pdf.BaseFont;
 
 import freemarker.template.Template;
+import jakarta.annotation.Resource;
 
 /**
  * <pre>
@@ -68,7 +67,7 @@ public abstract class AbstractReportPdfService implements ReportService {
     private ItextFontFactory fontFactory;
 
     @Resource
-    private ServletContext servletContext;
+    private WebAppContext servletAppContext;
 
     /*
      * (non-Javadoc)
@@ -119,7 +118,7 @@ public abstract class AbstractReportPdfService implements ReportService {
             }
             iTextRenderer.setPDFEncryption(pdfEncryption);
 
-            iTextRenderer.setDocument(document, FIL_URL_PREFIX + servletContext.getRealPath("").replace("\\", "/") + "/");
+            iTextRenderer.setDocument(document, FIL_URL_PREFIX + servletAppContext.getRequestContextPath().replace("\\", "/") + "/");
 
             iTextRenderer.layout();
             iTextRenderer.createPDF(out);

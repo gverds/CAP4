@@ -206,7 +206,7 @@ public class EDOCServiceServiceStub extends org.apache.axis2.client.Stub {
           fromOM(
               _returnEnv.getBody().getFirstElement(),
               com.tcb.ecol.adapter.eland.ws.EDOCServiceServiceStub.ApplyQueryResponse.class);
-      org.apache.axis2.transport.TransportUtils.detachInputStream(_returnMessageContext);
+      org.apache.axis2.kernel.TransportUtils.detachInputStream(_returnMessageContext);
 
       return (com.tcb.ecol.adapter.eland.ws.EDOCServiceServiceStub.ApplyQueryResponse) object;
 
@@ -488,7 +488,7 @@ public class EDOCServiceServiceStub extends org.apache.axis2.client.Stub {
           fromOM(
               _returnEnv.getBody().getFirstElement(),
               com.tcb.ecol.adapter.eland.ws.EDOCServiceServiceStub.ApplyEDOCResponse.class);
-      org.apache.axis2.transport.TransportUtils.detachInputStream(_returnMessageContext);
+      org.apache.axis2.kernel.TransportUtils.detachInputStream(_returnMessageContext);
 
       return (com.tcb.ecol.adapter.eland.ws.EDOCServiceServiceStub.ApplyEDOCResponse) object;
 
@@ -769,7 +769,7 @@ public class EDOCServiceServiceStub extends org.apache.axis2.client.Stub {
           fromOM(
               _returnEnv.getBody().getFirstElement(),
               com.tcb.ecol.adapter.eland.ws.EDOCServiceServiceStub.GetSectionResponse.class);
-      org.apache.axis2.transport.TransportUtils.detachInputStream(_returnMessageContext);
+      org.apache.axis2.kernel.TransportUtils.detachInputStream(_returnMessageContext);
 
       return (com.tcb.ecol.adapter.eland.ws.EDOCServiceServiceStub.GetSectionResponse) object;
 
@@ -1052,7 +1052,7 @@ public class EDOCServiceServiceStub extends org.apache.axis2.client.Stub {
           fromOM(
               _returnEnv.getBody().getFirstElement(),
               com.tcb.ecol.adapter.eland.ws.EDOCServiceServiceStub.ExportEDOCDataResponse.class);
-      org.apache.axis2.transport.TransportUtils.detachInputStream(_returnMessageContext);
+      org.apache.axis2.kernel.TransportUtils.detachInputStream(_returnMessageContext);
 
       return (com.tcb.ecol.adapter.eland.ws.EDOCServiceServiceStub.ExportEDOCDataResponse) object;
 
@@ -1335,7 +1335,7 @@ public class EDOCServiceServiceStub extends org.apache.axis2.client.Stub {
           fromOM(
               _returnEnv.getBody().getFirstElement(),
               com.tcb.ecol.adapter.eland.ws.EDOCServiceServiceStub.GetCityResponse.class);
-      org.apache.axis2.transport.TransportUtils.detachInputStream(_returnMessageContext);
+      org.apache.axis2.kernel.TransportUtils.detachInputStream(_returnMessageContext);
 
       return (com.tcb.ecol.adapter.eland.ws.EDOCServiceServiceStub.GetCityResponse) object;
 
@@ -1613,7 +1613,7 @@ public class EDOCServiceServiceStub extends org.apache.axis2.client.Stub {
           fromOM(
               _returnEnv.getBody().getFirstElement(),
               com.tcb.ecol.adapter.eland.ws.EDOCServiceServiceStub.ApplyQuery2Response.class);
-      org.apache.axis2.transport.TransportUtils.detachInputStream(_returnMessageContext);
+      org.apache.axis2.kernel.TransportUtils.detachInputStream(_returnMessageContext);
 
       return (com.tcb.ecol.adapter.eland.ws.EDOCServiceServiceStub.ApplyQuery2Response) object;
 

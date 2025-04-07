@@ -13,8 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.Query;
-
 import org.springframework.stereotype.Repository;
 
 import com.iisigroup.cap.auth.dao.RoleDao;
@@ -24,6 +22,8 @@ import com.iisigroup.cap.db.dao.SearchSetting;
 import com.iisigroup.cap.db.dao.impl.GenericDaoImpl;
 import com.iisigroup.cap.db.model.Page;
 import com.iisigroup.cap.security.model.Role;
+
+import jakarta.persistence.Query;
 
 /**
  * <pre>

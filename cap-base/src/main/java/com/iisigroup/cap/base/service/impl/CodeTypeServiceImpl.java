@@ -14,8 +14,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
-
 import org.springframework.stereotype.Service;
 
 import com.iisigroup.cap.base.dao.CodeTypeDao;
@@ -24,6 +22,8 @@ import com.iisigroup.cap.base.service.CodeTypeService;
 import com.iisigroup.cap.component.impl.AjaxFormResult;
 import com.iisigroup.cap.operation.simple.SimpleContextHolder;
 import com.iisigroup.cap.utils.CapWebUtil;
+
+import jakarta.annotation.Resource;
 
 /**
  * <pre>

@@ -17,7 +17,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -51,14 +50,14 @@ public class FunctionSetServiceTest {
 
     public FunctionSetServiceTest() {
         try {
-            SimpleNamingContextBuilder builder = new SimpleNamingContextBuilder();
+//            SimpleNamingContextBuilder builder = new SimpleNamingContextBuilder();
             ComboPooledDataSource dataSource = new ComboPooledDataSource();
             dataSource.setDriverClass("org.h2.Driver");
             dataSource.setJdbcUrl("jdbc:h2:../h2db/capdb");
             dataSource.setUser("sa");
             dataSource.setPassword("");
-            builder.bind("java:comp/env/jdbc/capdb", dataSource);
-            builder.activate();
+//            builder.bind("java:comp/env/jdbc/capdb", dataSource);
+//            builder.activate();
         } catch (Exception e) {
             e.printStackTrace();
         }

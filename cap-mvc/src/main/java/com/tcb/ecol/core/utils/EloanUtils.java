@@ -45,8 +45,8 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import javax.persistence.Column;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Table;
 
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.collections4.CollectionUtils;
