@@ -16,8 +16,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import javax.annotation.Resource;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -37,6 +35,8 @@ import com.iisigroup.cap.mvc.handler.MFormHandler;
 import com.iisigroup.cap.report.constants.ContextTypeEnum;
 import com.iisigroup.cap.sample.service.impl.SampleRptService;
 import com.iisigroup.cap.security.annotation.Captcha;
+
+import jakarta.annotation.Resource;
 
 /**
  * <pre>
@@ -88,15 +88,15 @@ public class SampleHandler extends MFormHandler {
         // "text/plain");
     }
 
-    @Resource
-    private SampleRptService sampleRptService;
+//    @Resource
+//    private SampleRptService sampleRptService;
 
     @HandlerType(HandlerTypeEnum.FILE_DOWNLOAD)
     public Result dwnloadPdf(Request request) throws CapException {
         ByteArrayOutputStream file = null;
         try {
-            file = sampleRptService.generateReport(request);
-            return new ByteArrayDownloadResult(request, file.toByteArray(), ContextTypeEnum.pdf.toString(), "test.pdf");
+//            file = sampleRptService.generateReport(request);
+//            return new ByteArrayDownloadResult(request, file.toByteArray(), ContextTypeEnum.pdf.toString(), "test.pdf");
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         } finally {

@@ -14,7 +14,7 @@ import com.iisigroup.cap.report.constants.ReportParamEnum;
 import com.iisigroup.cap.utils.CapDate;
 import com.lowagie.text.pdf.PdfWriter;
 
-@Service
+//@Service
 public class SampleRptService extends AbstractReportPdfService {
 
     @Override
