@@ -410,7 +410,7 @@
 						<dependency>
 							<groupId>com.h2database</groupId>
 							<artifactId>h2</artifactId>
-							<version>2.1.214</version> <!-- 更新 H2 版本 -->
+							<version>2.2.224</version> <!-- 更新 H2 版本 -->
 							<scope>runtime</scope>
 						</dependency>
 						<!-- C3P0 Connection Pool -->
@@ -428,7 +428,28 @@
 						</webAppSourceDirectory>-->
 
 						<!-- Hot Deployment Scanning -->
-						<scanIntervalSeconds>5</scanIntervalSeconds>
+						<scan>5</scan>
+						<scanClassesPattern>
+							<includes>
+								<include>/Volumes/OSX/@Project/IISI_GIT_CAP4/CAP4_SOURCE/IISI_CAP4/**/target/*.jar</include>
+								<!--<include>/Volumes/OSX/@Project/IISI_GIT_CAP4/CAP4_SOURCE/IISI_CAP4/cap-auth-admin/target/**</include>
+								<include>/Volumes/OSX/@Project/IISI_GIT_CAP4/CAP4_SOURCE/IISI_CAP4/cap-batch/target/**</include>
+								<include>/Volumes/OSX/@Project/IISI_GIT_CAP4/CAP4_SOURCE/IISI_CAP4/cap-core/target/**</include>
+								<include>/Volumes/OSX/@Project/IISI_GIT_CAP4/CAP4_SOURCE/IISI_CAP4/cap-db/target/**</include>
+								<include>/Volumes/OSX/@Project/IISI_GIT_CAP4/CAP4_SOURCE/IISI_CAP4/cap-hg/target/**</include>
+								<include>/Volumes/OSX/@Project/IISI_GIT_CAP4/CAP4_SOURCE/IISI_CAP4/cap-mvc/target/**</include>
+								<include>/Volumes/OSX/@Project/IISI_GIT_CAP4/CAP4_SOURCE/IISI_CAP4/cap-security/target/**</include>-->
+							</includes>
+						</scanClassesPattern>
+						<scanTargetPatterns>
+							<scanTargetPattern>
+								<directory>/Volumes/OSX/@Project/IISI_GIT_CAP4/CAP4_SOURCE/IISI_CAP4/cap-config</directory>
+								<includes>
+									<include>**/*.xml</include>
+									<include>**/*.properties</include>
+								</includes>
+							</scanTargetPattern>
+						</scanTargetPatterns>
 
 						<!-- Web Application Configuration -->
 						<webApp>

@@ -35,9 +35,9 @@
     <bean id="jobLoader" class="org.springframework.batch.core.configuration.support.DefaultJobLoader">
         <property name="jobRegistry" ref="jobRegistry" />
     </bean>
-    <bean id="jobExplorer" class="org.springframework.batch.core.explore.support.JobExplorerFactoryBean">
+    <!-- <bean id="jobExplorer" class="org.springframework.batch.core.explore.support.JobExplorerFactoryBean">
         <property name="dataSource" ref="cap-db" />
-    </bean>
+    </bean> -->
     <bean id="batchJobService" class="com.iisigroup.cap.batch.service.impl.BatchJobServiceImpl" />
     <bean id="batchScheduler" class="com.iisigroup.cap.batch.core.CapBatchScheduler" init-method="loadSchedule">
         <property name="batchService" ref="batchJobService" />

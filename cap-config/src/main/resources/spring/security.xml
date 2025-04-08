@@ -3,7 +3,7 @@
     xsi:schemaLocation="
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
-    <http auto-config="false" use-authorization-manager="true"
+    <http request-matcher="mvc" auto-config="false" use-authorization-manager="true"
     entry-point-ref="capAuthenticationEntryPoint" use-expressions="true" disable-url-rewriting="false">
         <headers>
             <frame-options policy="SAMEORIGIN" />
@@ -25,7 +25,6 @@
         <intercept-url pattern="/page/error*" access="IS_AUTHENTICATED_ANONYMOUSLY" />
         <intercept-url pattern="/app/error/message" access="IS_AUTHENTICATED_ANONYMOUSLY" />
         
-        <csrf disabled="true" />
         <access-denied-handler error-page="/page/login?error" />
         <intercept-url pattern="/page/home/*" access="IS_AUTHENTICATED_ANONYMOUSLY" />
         <intercept-url pattern="/page/index" access="IS_AUTHENTICATED_FULLY" />
@@ -53,7 +52,26 @@
         <!-- cap-captcha start -->
         <custom-filter ref="captchaCaptureFilter" before="FORM_LOGIN_FILTER" />
         <!-- cap-captcha end -->
+        <csrf request-matcher-ref="csrfMatcher" />
     </http>
+    <beans:bean id="csrfMatcher" class="org.springframework.security.web.util.matcher.AndRequestMatcher">
+        <beans:constructor-arg>
+            <beans:list value-type="org.springframework.security.web.util.matcher.RequestMatcher">
+                <beans:value>#{T(org.springframework.security.web.csrf.CsrfFilter).DEFAULT_CSRF_MATCHER}</beans:value>
+                <beans:bean class="org.springframework.security.web.util.matcher.NegatedRequestMatcher">
+                    <beans:constructor-arg>
+                        <beans:bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher">
+                            <beans:constructor-arg name="pattern" value="/api/**" />
+                            <beans:constructor-arg name="pattern" value="/page/**" />
+                            <beans:constructor-arg name="pattern" value="/**" />
+                            <beans:constructor-arg name="httpMethod" value="POST" />
+                        </beans:bean>
+                    </beans:constructor-arg>
+                </beans:bean>
+            </beans:list>
+        </beans:constructor-arg>
+    </beans:bean>
+    <beans:bean id="mvcHandlerMappingIntrospector" class="org.springframework.web.servlet.handler.HandlerMappingIntrospector" />
     
     <!-- cap-captcha start -->
     <beans:bean id="captchaCaptureFilter" class="com.iisigroup.cap.security.captcha.filter.CaptchaCaptureFilter"></beans:bean>
@@ -82,7 +100,7 @@
         <beans:constructor-arg value="/page/login" />
         <beans:property name="forceHttps" value="false" />
     </beans:bean>
-    <beans:bean id="authorizationManager" class="org.springframework.security.authorization.AuthorizationManager" factory-method="authorizationManager" />
+    <!-- <beans:bean id="authorizationManager" class="org.springframework.security.authorization.AuthorizationManager" factory-method="authorizationManager" /> -->
     <!-- <beans:bean id="accessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
         <beans:constructor-arg name="decisionVoters">
             <beans:list>

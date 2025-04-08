@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="warn">
     <Properties>
-        <Property name="console-appender">console-sit</Property>
-        <!-- <Property name="basePath">/eloanlog</Property> -->
+        <Property name="console-appender">console</Property>
         <Property name="basePath">/Volumes/RamDisk/tcb/logs</Property>
         <!-- 查詢個資文件日誌 -->
         <property name="LOG_HOME">/Volumes/RamDisk/tcb/pii_logs</property>
@@ -10,7 +9,7 @@
         <property name="SERVER_NAME">PersonalInformation_log</property>
     </Properties>
     <Appenders>
-        <RollingFile name="fileLogger" fileName="${basePath}/eloan-log.log" filePattern="${basePath}/${date:yyyy-MM}/eloan-log-%d{yyyy-MM-dd}-%i.log.zip">
+        <RollingFile name="fileLogger" fileName="${basePath}/cap-log.log" filePattern="${basePath}/${date:yyyy-MM}/cap-log-%d{yyyy-MM-dd}-%i.log.zip">
             <PatternLayout pattern="%d [%t][%X{sessionId}]| %X{uuid} | %X{login} | %X{reqURI} | %-28.28c{1} [%-5p] %m%n" />
             <Policies>
                 <TimeBasedTriggeringPolicy interval="1" modulate="true" />
@@ -18,7 +17,8 @@
             </Policies>
             <DefaultRolloverStrategy compressionLevel="9" max="100" />
         </RollingFile>
-        <Console name="console-ft/" target="SYSTEM_OUT">
+        <!-- <Console name="console-ft/" target="SYSTEM_OUT"> -->
+        <Console name="console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d [%t][%X{sessionId}]| %X{uuid} | %X{login} | %X{reqURI} | %-28.28c{1} [%-5p] %m%n" />
         </Console>
         <!-- 查詢個資文件日誌 -->
@@ -39,37 +39,17 @@
                 <SizeBasedTriggeringPolicy size="50 MB"/>
             </Policies> -->
         </RollingFile>
-        <!-- 紀錄ORA-00001違反必須為唯一的限制條件日誌 -->
-        <RollingFile name="uniqueIXLogger" fileName="${basePath}/${date:yyyy-MM}/violatedUniqueIX.log"
-                     filePattern="${basePath}/${date:yyyy-MM}/violatedUniqueIX-%d{yyyy-MM}-%i.log.zip">
-            <PatternLayout pattern="%d [%t][%X{sessionId}]| %X{uuid} | %X{login} | %X{reqURI} | %-28.28c{1} [%-5p] %m%n" />
-            <Policies>
-                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
-                <SizeBasedTriggeringPolicy size="50 MB" />
-            </Policies>
-            <DefaultRolloverStrategy compressionLevel="9" max="100" />
-        </RollingFile>
-        <!-- 徵信報告號碼放寬檢核記錄交易資訊 -->
-        <RollingFile name="crdtNoChkLogger" fileName="${basePath}/${date:yyyy-MM}/crdtNoSpecialChk.log"
-                     filePattern="${basePath}/${date:yyyy-MM}/crdtNoSpecialChk-%d{yyyy-MM}-%i.log.zip">
-            <PatternLayout pattern="%d [%t][%X{sessionId}]| %X{uuid} | %X{login} | %X{reqURI} | %-28.28c{1} [%-5p] %m%n" />
-            <Policies>
-                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
-                <SizeBasedTriggeringPolicy size="50 MB" />
-            </Policies>
-            <DefaultRolloverStrategy compressionLevel="9" max="100" />
-        </RollingFile>
     </Appenders>
     <Loggers>
-        <Root level="error">
-            <!-- <AppenderRef ref="console-ft/" /> -->
-            <AppenderRef ref="${console-appender}"/>
+        <Root level="debug">
+            <AppenderRef ref="console" />
+            <!-- <AppenderRef ref="${console-appender}"/> -->
             <AppenderRef ref="fileLogger" />
         </Root>
         <Logger name="org" level="error" />
         <Logger name="net" level="error" />
-        <Logger name="com.iisigroup.cap.web.CapHandlerServlet" level="info" />
-        <Logger name="com.tcb.ecol.api.command.impl" level="info" />
+        <Logger name="com.iisigroup.cap.web.CapHandlerServlet" level="debug" />
+        <Logger name="com.tcb.ecol.api.command.impl" level="debug" />
         <!-- 
         <Logger name="com.iisigroup.cap.utils.CapBeanUtil" level="trace" />
         <Logger name="com.iisigroup.cap.jdbc.CapNamedJdbcTemplate" level="trace" />
@@ -85,7 +65,7 @@
         <!-- others -->
         <Logger name="org.springframework.security" level="error" />
         <Logger name="org.apache.commons" level="warn" />
-        <Logger name="org.springframework" level="warn" />
+        <Logger name="org.springframework" level="debug" />
         <Logger name="com.mchange.v2" level="error" />
         <Logger name="springfox" level="error" />
         <!-- sas 
