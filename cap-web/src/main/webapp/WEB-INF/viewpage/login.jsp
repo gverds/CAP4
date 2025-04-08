@@ -56,6 +56,7 @@
                             <spring:message code="btn.login"></spring:message>
                         </button>
                     </div>
+                    <input type="text" id="_csrf" name="_csrf" value="${_csrf.token}" class="hidden" />
                 </form>
             </div>
             <div class="line"></div>

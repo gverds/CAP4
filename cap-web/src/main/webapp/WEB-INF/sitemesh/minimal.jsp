@@ -13,6 +13,8 @@
 <script src="../../static/main.js"></script>
 <decorator:getProperty property="reqJSON" default="" />
 <decorator:head />
+<meta name="_csrf" content="${_csrf.token}" />
+<meta name="_csrf_header" content="${_csrf.headerName}" />
 </head>
 <body>
     <div class="mainBody">

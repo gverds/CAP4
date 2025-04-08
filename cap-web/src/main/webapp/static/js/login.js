@@ -16,7 +16,10 @@ pageInit(function() {
                     confirm: $('#confirm').val(),
                     ignoreNotify: ignoreNotify,
                     agreeChange: agreeChange
-                }
+                },
+		        headers : {
+		          'X-CSRF-TOKEN' : $('#_csrf').val()
+		        }
             }).done(function() {
                 API.formSubmit({
                     url: url('page/index')

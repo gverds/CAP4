@@ -20,6 +20,8 @@
 <decorator:getProperty property="reqJSON" default="" />
 <decorator:getProperty property="i18n" default="" />
 <decorator:head />
+<meta name="_csrf" content="${_csrf.token}" />
+<meta name="_csrf_header" content="${_csrf.headerName}" />
 </head>
 <body>
     <decorator:body />

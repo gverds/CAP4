@@ -484,8 +484,8 @@
 								<name>org.eclipse.jetty.annotations.maxWait</name>
 								<value>300</value>
 							</property>
-						</systemProperties>
-					</configuration>
+						</systemProperties>				
+		        	</configuration>
 				</plugin>
             </plugins>
         </pluginManagement>

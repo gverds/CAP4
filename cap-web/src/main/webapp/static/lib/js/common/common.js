@@ -434,6 +434,7 @@ $.holdReady(true);
                             target: settings.target,
                             method: settings.type
                         });
+						var metaCsrf = $("meta[name='_csrf']").attr("content");
                         for (var key in settings.data) {
                             if (settings.data[key]) {
                                 if (settings.data[key].constructor == Array) {
@@ -445,6 +446,9 @@ $.holdReady(true);
                                 }
                             }
                         }
+						if (metaCsrf) {
+						  obj.append('<input type="hidden" name="_csrf" value="' + $("meta[name='_csrf']").attr("content") + '" />');
+						}
                         $('body').append(obj);
                         obj.submit();
                         obj.empty().remove();
@@ -557,6 +561,9 @@ $.holdReady(true);
                     // if(window.responseJSON) delete
                     // responseJSON.page;
                     s = $.extend({
+						headers : {
+						  'X-CSRF-TOKEN' : $("meta[name='_csrf']").attr("content")
+						},
                         dataType: "json",
                         cache: false,
                         type: 'post'
@@ -1512,6 +1519,9 @@ $.holdReady(true);
             keys: [],
             load: function(f, st) {
                 return $.ajax({
+						headers : {
+						  'X-CSRF-TOKEN' : $("meta[name='_csrf']").attr("content")
+						},
                         url: url("i18njs"),
                         async: st && st.async || true,
                         cache: false,
