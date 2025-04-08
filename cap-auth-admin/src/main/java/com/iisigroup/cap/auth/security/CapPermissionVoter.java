@@ -18,7 +18,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.ConfigAttribute;
+import org.springframework.security.access.vote.RoleVoter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.FilterInvocation;
@@ -37,7 +39,7 @@ import com.iisigroup.cap.security.service.AccessControlService;
  *          <li>2010/9/27,iristu,new
  *          </ul>
  */
-public class CapPermissionVoter implements CustomDecisionVoter<Object> {
+public class CapPermissionVoter extends RoleVoter implements CustomDecisionVoter<Object> {
 
     protected AccessControlService securityService;
     
@@ -53,7 +55,7 @@ public class CapPermissionVoter implements CustomDecisionVoter<Object> {
     @SuppressWarnings("rawtypes")
     @Override
     public int vote(Authentication authentication, Object object, Collection<ConfigAttribute> attributes) {
-        int result = ACCESS_ABSTAIN;
+        int result = AccessDecisionVoter.ACCESS_ABSTAIN;
         Iterator iter = attributes.iterator();
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 
@@ -61,7 +63,7 @@ public class CapPermissionVoter implements CustomDecisionVoter<Object> {
             ConfigAttribute attribute = (ConfigAttribute) iter.next();
 
             if (this.supports(attribute)) {
-                result = ACCESS_DENIED;
+                result = AccessDecisionVoter.ACCESS_DENIED;
 
                 FilterInvocation filterInvocation = (FilterInvocation) object;
 
@@ -75,7 +77,7 @@ public class CapPermissionVoter implements CustomDecisionVoter<Object> {
                     for (Role role : roles) {
                         for (GrantedAuthority auth : authorities) {
                             if (auth.getAuthority().equals(role.getCode())) {
-                                return ACCESS_GRANTED;
+                                return AccessDecisionVoter.ACCESS_GRANTED;
                             }
                         }
                     }
