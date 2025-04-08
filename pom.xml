@@ -419,6 +419,11 @@
 							<artifactId>c3p0</artifactId>
 							<version>0.9.5.5</version>
 						</dependency>
+						<!--<dependency>
+							<groupId>javax.servlet</groupId>
+							<artifactId>javax.servlet-api</artifactId>
+							<version>4.0.1</version>
+						</dependency>-->
 					</dependencies>
 					<configuration>
 
@@ -431,7 +436,7 @@
 						<scan>5</scan>
 						<scanClassesPattern>
 							<includes>
-								<include>/Volumes/OSX/@Project/IISI_GIT_CAP4/CAP4_SOURCE/IISI_CAP4/**/target/*.jar</include>
+								<include>./**/target/*.jar</include>
 								<!--<include>/Volumes/OSX/@Project/IISI_GIT_CAP4/CAP4_SOURCE/IISI_CAP4/cap-auth-admin/target/**</include>
 								<include>/Volumes/OSX/@Project/IISI_GIT_CAP4/CAP4_SOURCE/IISI_CAP4/cap-batch/target/**</include>
 								<include>/Volumes/OSX/@Project/IISI_GIT_CAP4/CAP4_SOURCE/IISI_CAP4/cap-core/target/**</include>
@@ -443,10 +448,10 @@
 						</scanClassesPattern>
 						<scanTargetPatterns>
 							<scanTargetPattern>
-								<directory>/Volumes/OSX/@Project/IISI_GIT_CAP4/CAP4_SOURCE/IISI_CAP4/cap-config</directory>
+								<directory>${basedir}</directory>
 								<includes>
-									<include>**/*.xml</include>
-									<include>**/*.properties</include>
+									<include>**/**/*.xml</include>
+									<include>**/**/*.properties</include>
 								</includes>
 							</scanTargetPattern>
 						</scanTargetPatterns>
@@ -455,12 +460,12 @@
 						<webApp>
 							<!-- Path to web.xml -->
 							<descriptor>
-								/Volumes/OSX/@Project/IISI_GIT_CAP4/CAP4_SOURCE/IISI_CAP4/cap-web/src/main/webapp/WEB-INF/web.xml
+								${basedir}/cap-web/src/main/webapp/WEB-INF/web.xml
 							</descriptor>
 
 							<!-- Path to jetty-env.xml -->
 							<jettyEnvXml>
-								/Volumes/OSX/@Project/IISI_GIT_CAP4/CAP4_SOURCE/IISI_CAP4/cap-web/src/main/webapp/WEB-INF/jetty-env.xml
+								${basedir}/cap-web/src/main/webapp/WEB-INF/jetty-env.xml
 							</jettyEnvXml>
 
 							<!-- Context Path -->
@@ -472,11 +477,11 @@
 
 						<!-- Classes Directory -->
 						<classesDirectory>
-							/Volumes/OSX/@Project/IISI_GIT_CAP4/CAP4_SOURCE/IISI_CAP4/cap-web/target/cap-web-5.0.1-tcb-202503241400/WEB-INF/classes</classesDirectory>
+							${basedir}/cap-web/target/cap-web-5.0.1-tcb-202503241400/WEB-INF/classes</classesDirectory>
 
 						<!-- Context XML -->
 						<contextXml>
-							/Volumes/OSX/@Project/IISI_GIT_CAP4/CAP4_SOURCE/IISI_CAP4/cap-web/src/main/webapp/WEB-INF/jetty-env.xml</contextXml>
+							${basedir}/cap-web/src/main/webapp/WEB-INF/jetty-env.xml</contextXml>
 
 						<!-- Annotation Scanning Timeout -->
 						<systemProperties>
