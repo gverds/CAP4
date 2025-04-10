@@ -101,13 +101,6 @@ public class LogContextFilter implements Filter {
         }
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         httpResponse.setHeader("Content-Security-Policy", "script-src 'self' https://maps.googleapis.com 'unsafe-inline' 'unsafe-eval'");
-        // 2025/03/28,unsafe-eval in requireJS fix:use var fun=new Function("return "+test);
-        httpResponse.setHeader("Content-Security-Policy", "script-src 'self' 'unsafe-eval' 'unsafe-inline' " // + "'nonce-comm' 'nonce-login_a1' 'nonce-login_a2' 'nonce-login_a3' 'nonce-login_a4'
-                                                                                                             // 'nonce-login_a5'
-                                                                                                             // 'nonce-login_a6' 'nonce-login_a7'"
-                + " maps.googleapis.com/ ; img-src 'self' data: www.w3.org/2000/svg/ maps.googleapis.com/ maps.gstatic.com/ developers.google.com/;"
-                + " connect-src 'self' www.w3.org/2000/svg/ maps.googleapis.com/ maps.gstatic.com/ ; font-src 'self' fonts.googleapis.com/ fonts.gstatic.com/;"
-                + " style-src 'self' 'unsafe-inline' fonts.googleapis.com/ data: ; default-src 'self' ");
         chain.doFilter(request, response);
         // LogContext.resetLogContext();
         ThreadContext.clearMap();

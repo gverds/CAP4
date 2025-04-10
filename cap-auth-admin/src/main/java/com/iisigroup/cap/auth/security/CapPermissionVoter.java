@@ -85,7 +85,7 @@ public class CapPermissionVoter extends RoleVoter implements CustomDecisionVoter
             }
         }
         // 暫時關閉CapPermissionVoter檢核
-		// result = AccessDecisionVoter.ACCESS_GRANTED;
+		result = AccessDecisionVoter.ACCESS_GRANTED;
 		return result;
     }
 

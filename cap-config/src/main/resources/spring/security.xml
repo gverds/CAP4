@@ -7,12 +7,12 @@
 	access-decision-manager-ref="accessDecisionManager"
 	use-authorization-manager="false"
 	entry-point-ref="capAuthenticationEntryPoint" use-expressions="false"
-	disable-url-rewriting="false" request-matcher="ant">
+	disable-url-rewriting="false">
         <headers>
             <frame-options policy="SAMEORIGIN" />
             <!-- <content-security-policy policy-directives="script-src 'self' https://maps.googleapis.com; https://ajax.googleapis.com;" /> -->
             <!-- HTML5: Unenforced Content Security Policy -->
-            <!-- <content-security-policy policy-directives="script-src 'self'" /> -->
+            <content-security-policy policy-directives="script-src 'self'" />
         </headers>
         <access-denied-handler error-page="/page/login?error" />
         <intercept-url pattern="/img/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
