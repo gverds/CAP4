@@ -18,17 +18,17 @@ import org.springframework.security.web.access.intercept.RequestAuthorizationCon
 
 import com.iisigroup.cap.utils.CapAppContext;
 
-@Configuration
+//@Configuration
 public class CapSecurityConfig {
 
-    @Bean
+//    @Bean
     public AuthorizationManager<RequestAuthorizationContext> authorizationManager() {
         return new AuthorizationManager<RequestAuthorizationContext>() {
             @Override
             public AuthorizationDecision check(Supplier<Authentication> authentication, RequestAuthorizationContext object) {
                 List<CustomDecisionVoter<?>> voters = new ArrayList<CustomDecisionVoter<?>>();
 
-                CapPermissionVoter capPermissionVoter = new CapPermissionVoter(CapAppContext.getBean("authService"));
+                CapPermissionVoter capPermissionVoter = new CapPermissionVoter(CapAppContext.getBean("accessControlService"));
                 capPermissionVoter.setRolePrefix("EL");
                 capPermissionVoter.setIgnoreHandlers(new HashSet<>(Arrays.asList("i18nhandler", "codetypehandler", "Simplefileuploadhandler", "simplefiledwnhandler")));
                 voters.add(capPermissionVoter);
