@@ -18,16 +18,27 @@ pageInit(function() {
                     agreeChange: agreeChange
                 },
 		        headers : {
-		          'X-CSRF-TOKEN' : $('#_csrf').val()
+		          'X-CSRF-TOKEN' : $('#_csrf').val(),
+					captcha : $('#captcha').val(),
+					newPwd : $('#newPwd').val(),
+					confirm : $('#confirm').val(),
+					ignoreNotify : ignoreNotify,
+					agreeChange : agreeChange
 		        }
             }).done(function() {
+				debugger;
                 API.formSubmit({
                     url: url('page/index')
                 });
             }).fail(function(jqXHR, status, errorThrown) {
                 console.log('status: ' + status);
                 console.log('text: ' + jqXHR.responseText);
-                var result = JSON.parse(decodeURIComponent(errorThrown));
+                var result = '';
+				try{
+					result = JSON.parse(decodeURIComponent(errorThrown));
+				}catch{
+					result = errorThrown;
+				}
                 console.log('msg: ' + result.msg);
                 console.log('capchaEnabled: ' + result.capchaEnabled);
                 console.log('forceChangePwd: ' + result.forceChangePwd);

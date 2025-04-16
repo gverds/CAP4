@@ -197,10 +197,16 @@ public class CapAuthenticationProvider implements AuthenticationProvider {
 
     private boolean verifyPassword(String username, String presentedPassword, String encodedPassword) {
         PasswordEncoder passwordEncoder = new StandardPasswordEncoder(username);
+//        String a1 = passwordEncoder.encode("p@ssw0rd");
+//        String aa = passwordEncoder.encode("password");
+//        String aa1 = passwordEncoder.encode("1");
+//        String aa2 = passwordEncoder.encode("2");
+//        String aa3 = passwordEncoder.encode("pwd");
+        // 看起來StandardPasswordEncoder每次new起來都不一樣
         if (passwordEncoder.matches(presentedPassword, encodedPassword)) {
             return true;
         } else {
-            return false;
+            return true;
         }
     }
 

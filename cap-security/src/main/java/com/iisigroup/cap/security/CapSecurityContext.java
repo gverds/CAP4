@@ -132,11 +132,13 @@ public class CapSecurityContext {
     public static Set<String> getRoleIds() {
         Set<String> roleOids = new HashSet<String>();
         Collection<? extends GrantedAuthority> auths = getAuthorities();
-        for (GrantedAuthority auth : auths) {
-            if (AuthenticatedVoter.IS_AUTHENTICATED_ANONYMOUSLY.equals(auth.getAuthority())) {
-                continue;
-            }
-            roleOids.add(auth.getAuthority());
+        if(auths!=null) {
+        	for (GrantedAuthority auth : auths) {
+        		if (AuthenticatedVoter.IS_AUTHENTICATED_ANONYMOUSLY.equals(auth.getAuthority())) {
+        			continue;
+        		}
+        		roleOids.add(auth.getAuthority());
+        	}
         }
         return roleOids;
     }
