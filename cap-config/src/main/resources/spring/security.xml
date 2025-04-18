@@ -3,7 +3,8 @@
     xsi:schemaLocation="
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
-    <http auto-config="false"
+	<!-- security-context-explicit-save="true" 等於 http.securityContext((securityContext) -> securityContext.requireExplicitSave(true)); -->
+    <http auto-config="false" security-context-explicit-save="true"
 	access-decision-manager-ref="accessDecisionManager"
 	use-authorization-manager="false"
 	entry-point-ref="capAuthenticationEntryPoint" use-expressions="false"
@@ -39,7 +40,7 @@
         <!-- <custom-filter ref="captchaCaptureFilter" before="FORM_LOGIN_FILTER" /> -->
         <!-- cap-captcha end -->
         <!-- 定義 SecurityContextPersistenceFilter 因為6.4預設不會使用securityContextPersistenceFilter來串上下文的authToken -->
-        <custom-filter ref="securityContextPersistenceFilter" before="SECURITY_CONTEXT_FILTER" />
+        <!-- <custom-filter ref="securityContextPersistenceFilter" before="SECURITY_CONTEXT_FILTER" /> -->
         <custom-filter ref="concurrentSessionFilter" position="CONCURRENT_SESSION_FILTER" />
         <custom-filter ref="switchProviderFilter" before="FORM_LOGIN_FILTER" />
         <custom-filter ref="anonymousAuthFilter" position="ANONYMOUS_FILTER" />

@@ -3,19 +3,25 @@ package com.iisigroup.cap.mvc.provider;
 import java.util.HashMap;
 import java.util.Map;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.context.DelegatingSecurityContextRepository;
+import org.springframework.security.web.context.HttpRequestResponseHolder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
 
 import com.iisigroup.cap.mvc.token.CapAuthenticationToken;
 import com.iisigroup.cap.mvc.token.LdapAuthenticationToken;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * <pre>
@@ -104,7 +110,20 @@ public class SwitchProviderFilter extends UsernamePasswordAuthenticationFilter {
 
         authRequest = new CapAuthenticationToken(j_username, j_pxd);
         authRequest.setDetails(authenticationDetailsSource.buildDetails(request));
-        return this.getAuthenticationManager().authenticate(authRequest);
+        Authentication authToken = this.getAuthenticationManager().authenticate(authRequest);
+		//HttpRequestResponseHolder holder = new HttpRequestResponseHolder(request, response);
+        /*
+         * 對應SecurityContextHolderFilter的做法，需要手動把SecurityContext塞回SecurityContextRepository
+         * 
+         */
+		SecurityContext contextBeforeChainExecution = SecurityContextHolder.getContext();
+		contextBeforeChainExecution.setAuthentication(authToken);
+		DelegatingSecurityContextRepository secRepo=new DelegatingSecurityContextRepository(
+                new RequestAttributeSecurityContextRepository(),
+                new HttpSessionSecurityContextRepository());
+        SecurityContextHolder.setContext(contextBeforeChainExecution);
+        secRepo.saveContext(contextBeforeChainExecution, request, response);
+        return authToken;
 
     }
 
