@@ -78,6 +78,23 @@ $.extend(Properties || {}, {
       dom.after(refresh).after(audio);
     });
     //for captcha end
+	$("a#logout_button").on('click', function(event){
+		event.preventDefault();
+		$.ajax({
+			method: "POST",
+            url: url("j_spring_security_logout"),
+            data: {
+                j_username: $('#j_username').val(),
+                j_password: $('#j_password').val()
+            },
+	        headers : {
+	          'X-CSRF-TOKEN' : $('#_csrf').val(),
+	        }
+        }).always(function(jqXHR, textStatus, errorThrown) {
+			window.setCloseConfirm(false);
+			window.location = url('page/login');
+        });
+	});
   },
   timeOut : 'TIME_OUT',
   // Control Client Timeout

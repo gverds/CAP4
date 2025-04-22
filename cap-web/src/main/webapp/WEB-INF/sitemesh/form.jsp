@@ -36,7 +36,7 @@
                 <a><img src="../../static/images/logo.png"></a>
             </div>
             <ol style="height: 18px; width: 35px; right: 140px;">
-                <li class="lang"><a href="../../j_spring_security_logout">登出</a></li>
+                <li class="lang"><a id="logout_button" href="../../j_spring_security_logout">登出</a></li>
             </ol>
             <ol style="height: 18px;">
                 <li class="lang"><a href="#language">&nbsp;LANGUAGE&nbsp;</a></li>
