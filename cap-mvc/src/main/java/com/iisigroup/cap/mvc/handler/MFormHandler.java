@@ -16,7 +16,8 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
-import jakarta.servlet.http.HttpSession;
+import org.kordamp.json.JSONArray;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.iisigroup.cap.action.Action;
 import com.iisigroup.cap.annotation.HandlerType;
@@ -25,7 +26,7 @@ import com.iisigroup.cap.component.GridResult;
 import com.iisigroup.cap.component.Request;
 import com.iisigroup.cap.component.Result;
 import com.iisigroup.cap.component.impl.AjaxFormResult;
-import com.iisigroup.cap.constants.GridEnum;
+import com.iisigroup.cap.constants.GridEnumReader;
 import com.iisigroup.cap.context.CapParameter;
 import com.iisigroup.cap.db.dao.SearchSetting;
 import com.iisigroup.cap.db.dao.impl.SearchSettingImpl;
@@ -38,9 +39,12 @@ import com.iisigroup.cap.plugin.HandlerPlugin;
 import com.iisigroup.cap.utils.CapAppContext;
 import com.iisigroup.cap.utils.CapBeanUtil;
 import com.iisigroup.cap.utils.CapString;
+import com.iisigroup.cap.utils.CapSystemConfig;
 import com.iisigroup.cap.utils.GsonUtil;
 
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpSession;
+
 
 /**
  * <pre>
@@ -65,6 +69,9 @@ public abstract class MFormHandler extends HandlerPlugin {
 
     @Resource
     private HttpSession session;
+    
+    @Autowired
+    private GridEnumReader enumReader;
 
     /**
      * <pre>
@@ -151,48 +158,90 @@ public abstract class MFormHandler extends HandlerPlugin {
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     private Result getGridData(Method method, Request params) {
-        SearchSetting search = createSearchTemplete();
-        boolean pages = params.containsParamsKey(GridEnum.PAGE.getCode());
-        int page = 0, pageRows = 0, startRow = 0;
-        if (pages) {
-            // page = params.getParamsAsInteger(GridEnum.PAGE.getCode());
-            pageRows = params.getParamsAsInteger(GridEnum.PAGEROWS.getCode());
-            // startRow = (page - 1) * pageRows;
-            startRow = params.getParamsAsInteger(GridEnum.START.getCode());
-            page = startRow / pageRows + 1;
-            search.setFirstResult(startRow).setMaxResults(pageRows);
-        }
-        boolean sort = params.containsParamsKey(GridEnum.SORTCOLUMN.getCode()) && !CapString.isEmpty(params.get(GridEnum.SORTCOLUMN.getCode()));
-        if (sort) {
-            String[] sortBy = params.get(GridEnum.SORTCOLUMN.getCode()).split("\\|");
-            String[] isAscAry = params.get(GridEnum.SORTTYPE.getCode(), "asc").split("\\|");
-            for (int i = 0; i < sortBy.length; i++) {
-                String isAsc = (i < isAscAry.length) ? isAscAry[i] : "asc";
-                search.addOrderBy(sortBy[i], !GridEnum.SORTASC.getCode().equals(isAsc));
-            }
-        }
+    	boolean isDatatable = "dt".equals(enumReader.getGridType()); 
         GridResult result = null;
-        AjaxFormResult wrapper = new AjaxFormResult();
-        try {
-            result = (GridResult) method.invoke(this, search, params);
-            result.setColumns(getColumns(params.get(GridEnum.COL_PARAM.getCode(), false)));
-            result.setPage(page);
-            // result.setPageCount(result.getRecords(), pageRows);
-            wrapper.set("recordsTotal", result.getRecords());
-            wrapper.set("recordsFiltered", result.getRecords());
-            wrapper.set("data", result.getRowDataToList());
-        } catch (InvocationTargetException e) {
-            if (e.getCause() instanceof CapMessageException) {
-                throw (CapMessageException) e.getCause();
-            } else if (e.getCause() instanceof CapException) {
-                throw (CapException) e.getCause();
-            } else {
-                throw new CapException(e.getCause(), this.getClass());
+        if(isDatatable) {
+        	SearchSetting search = createSearchTemplete();
+        	boolean pages = params.containsParamsKey(enumReader.getPAGE().toString());
+        	int page = 0, pageRows = 0, startRow = 0;
+        	if (pages) {
+        		// page = params.getParamsAsInteger(enumReader.PAGE.getCode());
+        		pageRows = params.getParamsAsInteger(enumReader.getPAGEROWS().toString());
+        		// startRow = (page - 1) * pageRows;
+        		startRow = params.getParamsAsInteger(enumReader.getSTART().toString());
+        		page = startRow / pageRows + 1;
+        		search.setFirstResult(startRow).setMaxResults(pageRows);
+        	}
+        	boolean sort = params.containsParamsKey(enumReader.getSORTCOLUMN().toString()) && !CapString.isEmpty(params.get(enumReader.getSORTCOLUMN().toString()));
+        	if (sort) {
+        		String[] sortBy = params.get(enumReader.getSORTCOLUMN().toString()).split("\\|");
+        		String[] isAscAry = params.get(enumReader.getSORTTYPE().toString(), "asc").split("\\|");
+        		for (int i = 0; i < sortBy.length; i++) {
+        			String isAsc = (i < isAscAry.length) ? isAscAry[i] : "asc";
+        			search.addOrderBy(sortBy[i], !enumReader.getSORTASC().toString().equals(isAsc));
+        		}
+        	}
+        	AjaxFormResult wrapper = new AjaxFormResult();
+        	try {
+        		result = (GridResult) method.invoke(this, search, params);
+        		result.setColumns(getColumns(params.get(enumReader.getCOL_PARAM().toString(), false)));
+        		result.setPage(page);
+        		// result.setPageCount(result.getRecords(), pageRows);
+        		wrapper.set("recordsTotal", result.getRecords());
+        		wrapper.set("recordsFiltered", result.getRecords());
+        		wrapper.set("data", result.getRowDataToList());
+        	} catch (InvocationTargetException e) {
+        		if (e.getCause() instanceof CapMessageException) {
+        			throw (CapMessageException) e.getCause();
+        		} else if (e.getCause() instanceof CapException) {
+        			throw (CapException) e.getCause();
+        		} else {
+        			throw new CapException(e.getCause(), this.getClass());
+        		}
+        	} catch (Throwable t) {
+        		throw new CapException(t, this.getClass());
+        	}
+        	return wrapper;
+        }else {
+            SearchSetting search = createSearchTemplete();
+            boolean pages = params.containsParamsKey(enumReader.getPAGE().toString());
+            int page = 0, pageRows = 0, startRow = 0;
+            if (pages) {
+                page = params.getParamsAsInteger(enumReader.getPAGE().toString());
+                pageRows = params.getParamsAsInteger(enumReader.getPAGEROWS().toString());
+                startRow = (page - 1) * pageRows;
+                search.setFirstResult(startRow).setMaxResults(pageRows);
             }
-        } catch (Throwable t) {
-            throw new CapException(t, this.getClass());
+            boolean sort = params.containsParamsKey(enumReader.getSORTCOLUMN().toString()) && !CapString.isEmpty(params.get(enumReader.getSORTCOLUMN().toString()));
+            if (sort) {
+                String[] sortBy = params.get(enumReader.getSORTCOLUMN().toString()).split("\\|");
+                String[] isAscAry = params.get(enumReader.getSORTTYPE().toString(), "asc").split("\\|");
+                for (int i = 0; i < sortBy.length; i++) {
+                    String isAsc = (i < isAscAry.length) ? isAscAry[i] : "asc";
+                    search.addOrderBy(sortBy[i], !enumReader.getSORTASC().toString().equals(isAsc));
+                }
+            }
+            try {
+                result = (GridResult) method.invoke(this, search, params);
+                result.setColumns(getColumns(params.get(enumReader.getCOL_PARAM().toString())));
+                result.setPage(page);
+                result.setPageCount(result.getRecords(), pageRows);
+                //result.setRowData(result.getRowData());
+            } catch (InvocationTargetException e) {
+                if (e.getCause() instanceof CapMessageException) {
+                    throw (CapMessageException) e.getCause();
+                } else if (e.getCause() instanceof CapException) {
+                    throw (CapException) e.getCause();
+                } else {
+                    throw new CapException(e.getCause(), this.getClass());
+                }
+            } catch (Throwable t) {
+                throw new CapException(t, this.getClass());
+            }
+            return result;
         }
-        return wrapper;
+        
+        
     }
 
     /**
@@ -204,17 +253,32 @@ public abstract class MFormHandler extends HandlerPlugin {
      */
     @SuppressWarnings("unchecked")
     protected String[] getColumns(String params) {
-        List<Object> arr = GsonUtil.jsonToObjectList(params);
-        String[] colNames = new String[arr.size()];
-        for (int i = 0; i < arr.size(); i++) {
-            Map<String, String> m = (Map<String, String>) GsonUtil.objToObj(arr.get(i));
-            if (m.containsKey(GridEnum.COL_INDEX.getCode())) {
-                colNames[i] = new StringBuffer().append(m.get(GridEnum.COL_NAME.getCode())).append("|").append(m.get(GridEnum.COL_INDEX.getCode())).toString();
-            } else {
-                colNames[i] = m.get(GridEnum.COL_NAME.getCode());
+    	boolean isDatatable = false;
+    	if(isDatatable) {
+    		List<Object> arr = GsonUtil.jsonToObjectList(params);
+    		String[] colNames = new String[arr.size()];
+    		for (int i = 0; i < arr.size(); i++) {
+    			Map<String, String> m = (Map<String, String>) GsonUtil.objToObj(arr.get(i));
+    			if (m.containsKey(enumReader.getCOL_INDEX().toString())) {
+    				colNames[i] = new StringBuffer().append(m.get(enumReader.getCOL_NAME().toString())).append("|").append(m.get(enumReader.getCOL_INDEX().toString())).toString();
+    			} else {
+    				colNames[i] = m.get(enumReader.getCOL_NAME().toString());
+    			}
+    		}
+    		return colNames;
+    	}else {
+            JSONArray arr = JSONArray.fromObject(params);
+            String[] colNames = new String[arr.size()];
+            for (int i = 0; i < arr.size(); i++) {
+                Map<String, String> m = (Map<String, String>) arr.get(i);
+                if (m.containsKey(enumReader.getCOL_INDEX().toString())) {
+                    colNames[i] = new StringBuffer().append(m.get(enumReader.getCOL_NAME().toString())).append("|").append(m.get(enumReader.getCOL_INDEX().toString())).toString();
+                } else {
+                    colNames[i] = m.get(enumReader.getCOL_NAME().toString());
+                }
             }
-        }
-        return colNames;
+            return colNames;
+    	}
     };
 
     /**

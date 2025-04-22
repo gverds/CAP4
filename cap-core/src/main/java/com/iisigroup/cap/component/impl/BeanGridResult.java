@@ -16,13 +16,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import jakarta.servlet.ServletResponse;
 
 import com.iisigroup.cap.component.GridResult;
 import com.iisigroup.cap.component.Result;
 import com.iisigroup.cap.constants.GridEnum;
+import com.iisigroup.cap.constants.GridEnumReader;
 import com.iisigroup.cap.formatter.Formatter;
 import com.iisigroup.cap.model.GenericBean;
+import com.iisigroup.cap.utils.CapAppContext;
 import com.iisigroup.cap.utils.GsonUtil;
 
 /**
@@ -51,8 +55,14 @@ public class BeanGridResult extends AjaxFormResult implements GridResult<BeanGri
     protected String[] columns;
 
     protected Map<String, Formatter> dataReformatter;
+    
+    @Autowired
+    private GridEnumReader enumReader;
 
     public BeanGridResult() {
+    	if(this.enumReader==null) {
+    		enumReader = CapAppContext.getBean("gridEnumReader");
+    	}
         resultMap = new HashMap<String, Object>();
     }
 
@@ -61,6 +71,9 @@ public class BeanGridResult extends AjaxFormResult implements GridResult<BeanGri
     }
 
     public BeanGridResult(List<? extends GenericBean> rowData, int records, Map<String, Formatter> dataReformatter) {
+    	if(this.enumReader==null) {
+    		enumReader = CapAppContext.getBean("gridEnumReader");
+    	}
         resultMap = new HashMap<String, Object>();
         setRowData(rowData);
         setRecords(records);
@@ -77,7 +90,7 @@ public class BeanGridResult extends AjaxFormResult implements GridResult<BeanGri
      * @return this
      */
     public BeanGridResult setPage(int page) {
-        resultMap.put(GridEnum.PAGE.getCode(), page);
+        resultMap.put(enumReader.getPAGE().toString(), page);
         return this;
     }
 
@@ -87,7 +100,7 @@ public class BeanGridResult extends AjaxFormResult implements GridResult<BeanGri
      * @return 頁碼
      */
     public int getPage() {
-        return (Integer) resultMap.get(GridEnum.PAGE.getCode());
+        return (Integer) resultMap.get(enumReader.getPAGE().toString());
     }
 
     /**
@@ -102,9 +115,9 @@ public class BeanGridResult extends AjaxFormResult implements GridResult<BeanGri
      * @return this
      */
     public BeanGridResult setPageCount(int rowCount, int pageRows) {
-        resultMap.put(GridEnum.TOTAL.getCode(), rowCount / pageRows + (rowCount % pageRows > 0 ? 1 : 0));
-        resultMap.put(GridEnum.RECORDS.getCode(), rowCount);
-        resultMap.put(GridEnum.PAGEROWS.getCode(), pageRows);
+        resultMap.put(enumReader.getTOTAL().toString(), rowCount / pageRows + (rowCount % pageRows > 0 ? 1 : 0));
+        resultMap.put(enumReader.getRECORDS().toString(), rowCount);
+        resultMap.put(enumReader.getPAGEROWS().toString(), pageRows);
         return this;
     }
 
@@ -114,7 +127,7 @@ public class BeanGridResult extends AjaxFormResult implements GridResult<BeanGri
      * @return 每頁筆數
      */
     public int getPageRows() {
-        return (Integer) resultMap.get(GridEnum.PAGEROWS.getCode());
+        return (Integer) resultMap.get(enumReader.getPAGEROWS().toString());
     }
 
     /**
@@ -127,7 +140,7 @@ public class BeanGridResult extends AjaxFormResult implements GridResult<BeanGri
      * @return this
      */
     public BeanGridResult setRecords(int rowCount) {
-        resultMap.put(GridEnum.RECORDS.getCode(), rowCount);
+        resultMap.put(enumReader.getRECORDS().toString(), rowCount);
         return this;
     }
 
@@ -139,7 +152,7 @@ public class BeanGridResult extends AjaxFormResult implements GridResult<BeanGri
      * @return 總筆數
      */
     public Integer getRecords() {
-        Object o = resultMap.get(GridEnum.RECORDS.getCode());
+        Object o = resultMap.get(enumReader.getRECORDS().toString());
         return o == null ? 0 : (Integer) o;
     }
 
@@ -159,15 +172,15 @@ public class BeanGridResult extends AjaxFormResult implements GridResult<BeanGri
 
     @Override
     public String getResult() {
-        resultMap.put(GridEnum.PAGEROWS.getCode(), getRowDataToList());
+        resultMap.put(enumReader.getPAGEROWS().toString(), getRowDataToList());
         return GsonUtil.mapToJson(resultMap);
     }
 
     @Override
     public String getLogMessage() {
         StringBuffer b = new StringBuffer();
-        b.append("page=").append(resultMap.get(GridEnum.PAGE.getCode())).append(",pagerow=").append(resultMap.get(GridEnum.PAGEROWS.getCode())).append(",rowData=")
-                .append(resultMap.get(GridEnum.PAGEROWS.getCode()));
+        b.append("page=").append(resultMap.get(enumReader.getPAGE().toString())).append(",pagerow=").append(resultMap.get(enumReader.getPAGEROWS().toString())).append(",rowData=")
+                .append(resultMap.get(enumReader.getPAGEROWS().toString()));
         return b.toString();
     }
 
