@@ -213,7 +213,7 @@
         <!--<module>cap-websocket</module>-->
         <module>cap-captcha</module>
         
-        <!--<module>cap-report</module>-->
+        <module>cap-report</module>
         <module>cap-web</module>
     </modules>
     <profiles>
@@ -419,6 +419,11 @@
 							<artifactId>c3p0</artifactId>
 							<version>0.9.5.5</version>
 						</dependency>
+						<dependency>
+							<groupId>org.eclipse.jetty</groupId>
+							<artifactId>jetty-maven-plugin</artifactId>
+							<version>11.0.25</version>
+						</dependency>
 						<!--<dependency>
 							<groupId>javax.servlet</groupId>
 							<artifactId>javax.servlet-api</artifactId>
@@ -460,12 +465,12 @@
 						<webApp>
 							<!-- Path to web.xml -->
 							<descriptor>
-								${basedir}/cap-web/src/main/webapp/WEB-INF/web.xml
+								${basedir}/src/main/webapp/WEB-INF/web.xml
 							</descriptor>
 
 							<!-- Path to jetty-env.xml -->
 							<jettyEnvXml>
-								${basedir}/cap-web/src/main/webapp/WEB-INF/jetty-env.xml
+								${basedir}/src/main/webapp/WEB-INF/jetty-env.xml
 							</jettyEnvXml>
 
 							<!-- Context Path -->
@@ -477,11 +482,11 @@
 
 						<!-- Classes Directory -->
 						<classesDirectory>
-							${basedir}/cap-web/target/cap-web-5.0.1-tcb-202503241400/WEB-INF/classes</classesDirectory>
+							${basedir}/target/cap-web-5.0.1-tcb-202503241400/WEB-INF/classes</classesDirectory>
 
 						<!-- Context XML -->
 						<contextXml>
-							${basedir}/cap-web/src/main/webapp/WEB-INF/jetty-env.xml</contextXml>
+							${basedir}/src/main/webapp/WEB-INF/jetty-env.xml</contextXml>
 
 						<!-- Annotation Scanning Timeout -->
 						<systemProperties>

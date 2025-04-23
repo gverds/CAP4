@@ -2,9 +2,9 @@
 <Configuration status="warn">
     <Properties>
         <Property name="console-appender">console</Property>
-        <Property name="basePath">/Volumes/RamDisk/tcb/logs</Property>
+        <Property name="basePath">D:/cap/logs</Property>
         <!-- 查詢個資文件日誌 -->
-        <property name="LOG_HOME">/Volumes/RamDisk/tcb/pii_logs</property>
+        <property name="LOG_HOME">D:/cap/pii_logs</property>
         <!-- 日誌備份目錄 -->
         <property name="SERVER_NAME">PersonalInformation_log</property>
     </Properties>
