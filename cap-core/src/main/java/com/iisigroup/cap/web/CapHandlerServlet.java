@@ -12,12 +12,6 @@ package com.iisigroup.cap.web;
 import java.io.IOException;
 import java.util.Locale;
 
-import jakarta.servlet.ServletConfig;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,6 +30,12 @@ import com.iisigroup.cap.utils.CapAppContext;
 import com.iisigroup.cap.utils.CapString;
 import com.iisigroup.cap.utils.CapWebUtil;
 import com.iisigroup.cap.utils.GsonUtil;
+
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * <pre>
@@ -93,6 +93,8 @@ public class CapHandlerServlet extends HttpServlet {
         String handler = (String) req.getAttribute(HANDLER);
         String action = (String) req.getAttribute(ACTION);
         long st = System.currentTimeMillis();
+        // slf4j-simple 為啥一直用info level？？
+        logger.info("Request Data: {}", GsonUtil.objToJson(req.getParameterMap()));
         if (logger.isTraceEnabled()) {
             logger.trace("Request Data: {}", GsonUtil.objToJson(req.getParameterMap()));
         }
