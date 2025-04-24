@@ -36,6 +36,14 @@
 					<groupId>org.aspectj</groupId>
 					<artifactId>aspectjweaver</artifactId>
 				</exclusion>
+            	<!--<exclusion>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+            	</exclusion>
+            	<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+            	</exclusion>-->
 			</exclusions>
         </dependency>
         <dependency>
@@ -71,6 +79,16 @@
             <artifactId>spring-batch-admin-resources</artifactId>
             <version>${spring.batch.admin.version}</version>
             <!--<scope>compile</scope>-->
+            <!--<exclusions>
+            	<exclusion>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+            	</exclusion>
+            	<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+            	</exclusion>
+            </exclusions>-->
         </dependency>
         <dependency>
             <groupId>org.springframework.batch</groupId>
