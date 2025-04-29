@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- 設定全域屬性 -->
+    <property name="LOG_DIR" value="/Volumes/RamDisk/cap/logs" />
+    <property name="LOG_FILE" value="cap-log.log" />
+
+    <!-- Console Appender -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d [%t][%X{sessionId}]| %X{uuid} | %X{login} | %X{reqURI} | %-28.28c{1} [%-5p] %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Rolling File Appender -->
+    <appender name="ROLLING_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 當前日誌檔案 -->
+        <file>${LOG_DIR}/${LOG_FILE}</file>
+        <prudent>false</prudent>
+        <encoder>
+            <pattern>%d [%t][%X{sessionId}]| %X{uuid} | %X{login} | %X{reqURI} | %-28.28c{1} [%-5p] %m%n</pattern>
+        </encoder>
+        <!-- %d參數只能有一個主要的，其他次要的必須加上aux作為聲明 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+		    <fileNamePattern>${LOG_DIR}/%d{yyyy-MM, aux}/${LOG_FILE}-%d{yyyy-MM-dd}-%i.log.gz</fileNamePattern>
+		    <maxFileSize>10MB</maxFileSize>
+		    <!-- 移除多久之前(月)的log檔案 -->
+		    <maxHistory>0</maxHistory>
+		    <totalSizeCap>3GB</totalSizeCap>
+		</rollingPolicy>
+    </appender>
+
+    <!-- 設定 Root Logger -->
+    <root level="WARN">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="ROLLING_FILE" />
+    </root>
+    
+    <!-- <Logger name="org" level="debug" />
+        <Logger name="net" level="debug" /> -->
+    <Logger name="com.iisigroup.cap.web.CapHandlerServlet" level="trace" />
+    <Logger name="com.tcb.ecol.api.command.impl" level="debug" />
+    <!-- 
+    <Logger name="com.iisigroup.cap.utils.CapBeanUtil" level="trace" />
+    <Logger name="com.iisigroup.cap.jdbc.CapNamedJdbcTemplate" level="trace" />
+     -->
+    <!-- transaction -->
+    <Logger name="org.springframework.transaction" level="error" />
+    <Logger name="org.springframework.orm.jpa" level="error" />
+    <!-- hibernate & cache -->
+    <Logger name="org.hibernate" level="warn" />
+    <!-- <Logger name="net.sf.ehcache" level="error" />
+    <Logger name="org.hibernate.SQL" level="error" />
+    <Logger name="org.hibernate.type" level="error" /> -->
+    <!-- others -->
+    <Logger name="org.springframework.security" level="error" />
+    <Logger name="org.apache.commons" level="warn" />
+    <!-- <Logger name="org.springframework" level="debug" /> -->
+    <Logger name="com.mchange.v2" level="error" />
+    <Logger name="springfox" level="debug" />
+    <!-- sas 
+    <Logger name="com.tcb.ecol.manager.command.sas.impl" level="error" />
+    -->
+    <Logger name="com.tcb.ecol.report.service.impl" level="debug" />
+</configuration>

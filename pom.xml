@@ -5,7 +5,8 @@
     <version>5.0.1-tcb-202503241400</version>
     <packaging>pom</packaging>
     <properties>
-        <slf4j.version>2.0.16</slf4j.version>
+        <slf4j.version>2.0.17</slf4j.version>
+        <logback.version>1.5.17</logback.version>
         <spring.version>6.2.5</spring.version>
         <spring-security.version>6.4.2</spring-security.version>
         <localRepositoryPath>src/localRepos</localRepositoryPath>
@@ -102,7 +103,35 @@
                 <artifactId>freemarker</artifactId>
                 <version>2.3.34</version>
             </dependency>
-            <dependency>
+			<!--2025/04/29,升級slf4j2.0,故改用logback-->
+			<dependency>
+			    <groupId>ch.qos.logback</groupId>
+			    <artifactId>logback-classic</artifactId>
+			    <version>${logback.version}</version>
+			</dependency>
+			<dependency>
+			    <groupId>org.slf4j</groupId>
+			    <artifactId>log4j-over-slf4j</artifactId>
+			    <version>${slf4j.version}</version>
+			</dependency>
+			<dependency>
+			    <groupId>org.apache.logging.log4j</groupId>
+			    <artifactId>log4j-to-slf4j</artifactId>
+			    <version>${log4j.version}</version>
+			</dependency>
+			<!--<dependency>
+			    <groupId>org.slf4j</groupId>
+			    <artifactId>slf4j-api</artifactId>
+			    <version>${slf4j.version}</version>
+			</dependency>-->
+			<dependency>
+			    <groupId>org.slf4j</groupId>
+			    <artifactId>slf4j-bom</artifactId>
+			    <version>${slf4j.version}</version>
+			    <type>pom</type>
+			</dependency>
+            
+            <!--<dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-api</artifactId>
                 <version>${log4j.version}</version>
@@ -116,17 +145,12 @@
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-web</artifactId>
                 <version>${log4j.version}</version>
-            </dependency>
-            <dependency>
+            </dependency>-->
+            <!--<dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-slf4j-impl</artifactId>
                 <version>${log4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>${slf4j.version}</version>
-            </dependency>
+            </dependency>-->
             <dependency>
                 <groupId>org.springframework.ldap</groupId>
                 <artifactId>spring-ldap-core</artifactId>
