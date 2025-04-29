@@ -94,7 +94,9 @@ public class CapHandlerServlet extends HttpServlet {
         String action = (String) req.getAttribute(ACTION);
         long st = System.currentTimeMillis();
         // slf4j-simple 為啥一直用info level？？
-        logger.info("Request Data: {}", GsonUtil.objToJson(req.getParameterMap()));
+        if(logger.isDebugEnabled()) {
+        	logger.info("Request Data: {}", GsonUtil.objToJson(req.getParameterMap()));
+        }
         if (logger.isTraceEnabled()) {
             logger.trace("Request Data: {}", GsonUtil.objToJson(req.getParameterMap()));
         }
