@@ -4,6 +4,8 @@
            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
     <context:annotation-config />
     <context:component-scan base-package="com.iisigroup.batch.sample" />
+    <!-- Security Config -->
+    <context:component-scan base-package="com.iisigroup.cap.auth.**" />
     <!-- @Repository -->
     <context:component-scan base-package="com.iisigroup.cap.**.dao.impl" />
     <!-- @Controller -->

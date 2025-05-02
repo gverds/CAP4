@@ -44,10 +44,10 @@ public class MenuHandler extends MFormHandler {
 
     public Result queryMenu(Request request) {
 
-        MenuItem menu = menuSrv.getMenuByRoles(CapSecurityContext.getRoleIds());
-        if (menu != null) {
-            return new AjaxFormResult(menu);
-        }
+    	MenuItem menu = menuSrv.getMenuByRoles(CapSecurityContext.getRoleIds());
+    	if (menu != null) {
+    		return new AjaxFormResult(menu);
+    	}
         return new AjaxFormResult();
     }
 

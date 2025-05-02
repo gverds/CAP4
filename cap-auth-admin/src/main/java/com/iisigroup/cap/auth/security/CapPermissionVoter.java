@@ -23,10 +23,14 @@ import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.vote.RoleVoter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.security.web.FilterInvocation;
 
 import com.iisigroup.cap.security.model.Role;
 import com.iisigroup.cap.security.service.AccessControlService;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * <p>
@@ -58,6 +62,14 @@ public class CapPermissionVoter extends RoleVoter implements CustomDecisionVoter
         int result = AccessDecisionVoter.ACCESS_ABSTAIN;
         Iterator iter = attributes.iterator();
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        
+        if (object != null && (object instanceof FilterInvocation)) {
+            HttpServletRequest req = ((FilterInvocation) object).getRequest();
+            if (req.getRequestURI().indexOf("j_spring") != -1 || req.getRequestURI().indexOf("page/index") != -1) {
+                SecurityContextHolderStrategy ss = SecurityContextHolder.getContextHolderStrategy();
+                System.out.println();
+            }
+        }
 
         while (iter.hasNext()) {
             ConfigAttribute attribute = (ConfigAttribute) iter.next();

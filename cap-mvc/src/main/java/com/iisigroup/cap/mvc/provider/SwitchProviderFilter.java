@@ -12,7 +12,13 @@ import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.context.DelegatingSecurityContextRepository;
+import org.springframework.security.web.context.HttpRequestResponseHolder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
 
 import com.iisigroup.cap.mvc.token.CapAuthenticationToken;
 import com.iisigroup.cap.mvc.token.LdapAuthenticationToken;
@@ -47,7 +53,7 @@ public class SwitchProviderFilter extends UsernamePasswordAuthenticationFilter {
 
         final String j_type = request.getParameter("j_type");
         final String j_username = request.getParameter("j_username");
-        final String j_pxd = request.getParameter("j_pxd");
+        final String j_pxd = request.getParameter("j_password");
         final String j_deptId = request.getParameter("deptId");
 
         UsernamePasswordAuthenticationToken authRequest;
@@ -104,7 +110,20 @@ public class SwitchProviderFilter extends UsernamePasswordAuthenticationFilter {
 
         authRequest = new CapAuthenticationToken(j_username, j_pxd);
         authRequest.setDetails(authenticationDetailsSource.buildDetails(request));
-        return this.getAuthenticationManager().authenticate(authRequest);
+        Authentication authToken = this.getAuthenticationManager().authenticate(authRequest);
+        //HttpRequestResponseHolder holder = new HttpRequestResponseHolder(request, response);
+        /*
+         * 對應SecurityContextHolderFilter的做法，需要手動把SecurityContext塞回SecurityContextRepository
+         * 
+         */
+        SecurityContext contextBeforeChainExecution = SecurityContextHolder.getContext();
+        contextBeforeChainExecution.setAuthentication(authToken);
+        DelegatingSecurityContextRepository secRepo=new DelegatingSecurityContextRepository(
+                new RequestAttributeSecurityContextRepository(),
+                new HttpSessionSecurityContextRepository());
+        SecurityContextHolder.setContext(contextBeforeChainExecution);
+        secRepo.saveContext(contextBeforeChainExecution, request, response);
+        return authToken;
 
     }
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <!-- 設定全域屬性 -->
-    <property name="LOG_DIR" value="/Volumes/RamDisk/cap/logs" />
+    <property name="LOG_DIR" value="D:/cap/logs" />
     <property name="LOG_FILE" value="cap-log.log" />
 
     <!-- Console Appender -->
@@ -60,5 +60,7 @@
     <!-- sas 
     <Logger name="com.tcb.ecol.manager.command.sas.impl" level="error" />
     -->
+    <!-- 自訂登入認證 LOG CapAuthenticationEventLogger -->
+    <!--  <Logger name="com.iisigroup.cap.auth.security" level="debug" /> -->
     <Logger name="com.tcb.ecol.report.service.impl" level="debug" />
 </configuration>

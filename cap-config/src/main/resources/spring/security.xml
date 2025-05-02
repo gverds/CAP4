@@ -3,11 +3,12 @@
     xsi:schemaLocation="
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
-    <http auto-config="false"
-	access-decision-manager-ref="accessDecisionManager"
-	use-authorization-manager="false"
-	entry-point-ref="capAuthenticationEntryPoint" use-expressions="false"
-	disable-url-rewriting="false" request-matcher="ant">
+    <!-- security-context-explicit-save="true" 等於 http.securityContext((securityContext) -> securityContext.requireExplicitSave(true)); -->
+    <http auto-config="false" security-context-explicit-save="true"
+    access-decision-manager-ref="accessDecisionManager"
+    use-authorization-manager="false"
+    entry-point-ref="capAuthenticationEntryPoint" use-expressions="false"
+    disable-url-rewriting="false" request-matcher="ant">
         <headers>
             <frame-options policy="SAMEORIGIN" />
             <!-- <content-security-policy policy-directives="script-src 'self' https://maps.googleapis.com; https://ajax.googleapis.com;" /> -->
@@ -36,10 +37,15 @@
         <session-management session-authentication-strategy-ref="sas"></session-management>
         <logout logout-url="/j_spring_security_logout" logout-success-url="/page/login" />
         <!-- cap-captcha start -->
-        <custom-filter ref="captchaCaptureFilter" before="FORM_LOGIN_FILTER" />
+        <!-- FORM_LOGIN_FILTER 改使用 switchProviderFilter， -->
+        <!-- <custom-filter ref="captchaCaptureFilter" before="FORM_LOGIN_FILTER" /> -->
         <!-- cap-captcha end -->
+        <!-- 定義 SecurityContextPersistenceFilter 因為6.4預設不會使用securityContextPersistenceFilter來串上下文的authToken -->
+        <!-- <custom-filter ref="securityContextPersistenceFilter" before="SECURITY_CONTEXT_FILTER" /> -->
         <custom-filter ref="concurrentSessionFilter" position="CONCURRENT_SESSION_FILTER" />
+        <custom-filter ref="switchProviderFilter" before="FORM_LOGIN_FILTER" />
         <custom-filter ref="anonymousAuthFilter" position="ANONYMOUS_FILTER" />
+        
         <csrf request-matcher-ref="csrfMatcher" />
     </http>
     <beans:bean id="csrfMatcher" class="org.springframework.security.web.util.matcher.AndRequestMatcher">
@@ -64,6 +70,20 @@
         <beans:constructor-arg value="cap" />
     </beans:bean>
     <beans:bean id="captchaCaptureFilter" class="com.iisigroup.cap.security.captcha.filter.CaptchaCaptureFilter"></beans:bean>
+    
+    <beans:bean id="switchProviderFilter" class="com.iisigroup.cap.mvc.provider.SwitchProviderFilter">
+        <beans:property name="authenticationManager" ref="authenticationManager" />
+        <beans:property name="authenticationFailureHandler" ref="ajaxAuthenticationFailureHandler" />
+        <beans:property name="authenticationSuccessHandler" ref="ajaxAuthenticationSuccessHandler" />
+        <beans:property name="filterProcessesUrl" value="/j_spring_security_check" />
+    </beans:bean>
+    
+    <!-- 定義 SecurityContextPersistenceFilter 因為6.4預設不會使用securityContextPersistenceFilter來串上下文的authToken -->
+    <beans:bean id="securityContextPersistenceFilter" class="org.springframework.security.web.context.SecurityContextPersistenceFilter">
+        <beans:constructor-arg ref="httpSessionSecurityContextRepository" />
+    </beans:bean>
+    <!-- 定義 HttpSessionSecurityContextRepository -->
+    <beans:bean id="httpSessionSecurityContextRepository" class="org.springframework.security.web.context.HttpSessionSecurityContextRepository" />
 
     <beans:bean id="userDetailsServiceImpl" class="com.iisigroup.cap.auth.service.impl.UserDetailsServiceImpl" />
     <beans:bean id="customAuthenticationProvider" class="com.iisigroup.cap.auth.provider.CapAuthenticationProvider" p:captchaCaptureFilter-ref="captchaCaptureFilter" p:userService-ref="userDetailsServiceImpl"

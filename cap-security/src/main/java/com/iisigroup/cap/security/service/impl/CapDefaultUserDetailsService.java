@@ -20,9 +20,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import com.iisigroup.cap.security.model.CapUserDetails;
-import com.iisigroup.cap.security.model.Role;
-import com.iisigroup.cap.security.model.User;
+import com.iisigroup.cap.security.model.*;
 
 /**
  * <pre>

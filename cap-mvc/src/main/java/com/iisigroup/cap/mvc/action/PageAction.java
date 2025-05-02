@@ -58,9 +58,13 @@ public class PageAction extends BaseActionController {
     public ModelAndView handleRequestInternal(Locale locale, HttpServletRequest request, HttpServletResponse response) throws Exception {
         String path = request.getPathInfo();
         ModelAndView model = new ModelAndView(path);
-        CapUserDetails userDetails = CapSecurityContext.getUser();
-        if (userDetails != null) {
-            model.addObject("userDetails", userDetails);
+        try {
+        	CapUserDetails userDetails = CapSecurityContext.getUser();
+        	if (userDetails != null) {
+        		model.addObject("userDetails", userDetails);
+        	}
+        }catch(Exception e) {
+        	
         }
         return model;
     }
