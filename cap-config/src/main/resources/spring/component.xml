@@ -13,6 +13,9 @@
     <context:component-scan base-package="com.iisigroup.cap.**.service.impl" />
     <!-- @Page Report -->
     <context:component-scan base-package="com.iisigroup.cap.**.page.report" />
+    <!-- @Component 
+    	 @Aspect -->
+    <context:component-scan base-package="com.iisigroup.cap.**.aop" />
     <bean class="com.iisigroup.cap.base.response.RespMsgFactoryProcessor">
         <property name="errorCodeService" ref="errorCodeService" />
     </bean>

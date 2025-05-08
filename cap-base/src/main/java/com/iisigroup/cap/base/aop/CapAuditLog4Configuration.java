@@ -1,14 +1,3 @@
-/* 
- * AuditLog4HandlerAdvice.java
- * 
- * Copyright (c) 2009-2014 International Integrated System, Inc. 
- * All Rights Reserved.
- * 
- * Licensed Materials - Property of International Integrated System, Inc.
- * 
- * This software is confidential and proprietary information of 
- * International Integrated System, Inc. (&quot;Confidential Information&quot;).
- */
 package com.iisigroup.cap.base.aop;
 
 import java.lang.reflect.Method;
@@ -21,11 +10,20 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.AfterThrowing;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
+import org.springframework.stereotype.Component;
 
 import com.iisigroup.cap.base.CapSystemProperties;
 import com.iisigroup.cap.base.annotation.CapAuditLogAction;
@@ -43,21 +41,10 @@ import com.iisigroup.cap.utils.UUIDGenerator;
 import jakarta.annotation.Resource;
 import jakarta.servlet.ServletRequest;
 
-/**
- * <pre>
- * 寫 AuditLog 使用軌跡紀錄。
- * </pre>
- * 
- * @since 2014/1/13
- * @author Sunkist Wang
- * @version
- *          <ul>
- *          <li>2014/1/13,Sunkist Wang,new
- *          <li>2014/1/20,Sunkist Wang,update 以def.properties取中文寫入
- *          <li>2014/4/18,Sunkist Wang,update get commonSrv,sysProp
- *          </ul>
- */
-public class CapAuditLog4HandlerAdvice {
+@PropertySources({ @PropertySource("classpath:config.properties") })
+@Component
+@Aspect
+public class CapAuditLog4Configuration {
 
     private static String HOST_NAME = CapWebUtil.getHostName();
     private static String HOST_ID = HOST_NAME.trim().substring(HOST_NAME.length() - 1);
@@ -66,7 +53,7 @@ public class CapAuditLog4HandlerAdvice {
     private static final String ACTION_PREFIX = "btn.";
     private static final String DISABLE_TYPE = "DisableType";
 
-    private final Logger logger = LoggerFactory.getLogger(CapAuditLog4HandlerAdvice.class);
+    private final Logger logger = LoggerFactory.getLogger(CapAuditLog4Configuration.class);
 
     protected static Set<String> capFilter;
 
@@ -85,11 +72,16 @@ public class CapAuditLog4HandlerAdvice {
     /**
      * 子系統代碼(COLA...)
      */
-    String sysId = "CAP";
+    @Value("${systemType:CAP}")
+    String sysId;
+
+    @Pointcut("execution(* com.iisigroup.cap.plugin.HandlerPlugin.execute(..)) && args(params)")
+    public void pcAuditLog4Handler(Request params) {
+    }
 
     /**
      * Log Around AjaxHandler execute.
-     * 
+     *
      * @param pjp
      *            the join point
      * @param data
@@ -99,6 +91,8 @@ public class CapAuditLog4HandlerAdvice {
      * @throws Throwable
      * @return Object
      */
+    // @Around(value = "execution(* com.iisigroup.cap.plugin.HandlerPlugin.execute(..)) && args(params)")
+    @Around(value = "pcAuditLog4Handler(params)")
     public Object logAroundAjaxHandlerExecute(ProceedingJoinPoint pjp, Request params) throws Throwable {
         long start = System.currentTimeMillis();
         params.put(CapConstants.C_AUDITLOG_START_TS, String.valueOf(System.currentTimeMillis()));
@@ -132,7 +126,7 @@ public class CapAuditLog4HandlerAdvice {
 
     /**
      * Log after AjaxHandler execute.
-     * 
+     *
      * @param joinPoint
      *            the join point
      * @param data
@@ -142,6 +136,8 @@ public class CapAuditLog4HandlerAdvice {
      * @param parent
      *            the parent
      */
+    // @AfterReturning(value = "execution(* com.iisigroup.cap.plugin.HandlerPlugin.execute(..)) && args(params)", returning = "reVal")
+    @AfterReturning(value = "pcAuditLog4Handler(params)", returning = "reVal")
     public void logAfterAjaxHandlerExecute(JoinPoint joinPoint, Request params, Object reVal) {
         long t1 = System.currentTimeMillis();
         final String sno = String.valueOf(System.nanoTime());
@@ -169,17 +165,19 @@ public class CapAuditLog4HandlerAdvice {
     }
 
     /**
-     * Log After AjaxHandler Throwing Exception.
-     * 
+     * Log after AjaxHandler execute.
+     *
      * @param joinPoint
      *            the join point
      * @param data
      *            the data
+     * @param reVal
+     *            the return Json
      * @param parent
      *            the parent
-     * @param exception
-     *            the exception
      */
+    // @AfterThrowing(value = "execution(* com.iisigroup.cap.plugin.HandlerPlugin.execute(..)) && args(params)", throwing = "exception")
+    @AfterThrowing(value = "pcAuditLog4Handler(params)", throwing = "exception")
     public void logAfterAjaxHandlerThrowingException(JoinPoint joinPoint, Request params, Exception exception) {
         long t1 = System.currentTimeMillis();
         final String TITLE = StrUtils.concat("###[AL_AFTER_EXCEPTION][", System.nanoTime(), "]");
@@ -327,16 +325,16 @@ public class CapAuditLog4HandlerAdvice {
     }
 }
 
-// class StrUtils {
-// public final static String concat(Object... params) {
-// StringBuffer strBuf = new StringBuffer();
-// for (Object o : params) {
-// if (o instanceof byte[]) {
-// strBuf.append(new String((byte[]) o));
-// } else {
-// strBuf.append(String.valueOf(o));
-// }
-// }
-// return strBuf.toString();
-// }
-// }
+class StrUtils {
+    public final static String concat(Object... params) {
+        StringBuffer strBuf = new StringBuffer();
+        for (Object o : params) {
+            if (o instanceof byte[]) {
+                strBuf.append(new String((byte[]) o));
+            } else {
+                strBuf.append(String.valueOf(o));
+            }
+        }
+        return strBuf.toString();
+    }
+}
