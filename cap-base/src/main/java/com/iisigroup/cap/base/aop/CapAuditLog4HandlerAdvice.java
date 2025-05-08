@@ -180,7 +180,7 @@ public class CapAuditLog4HandlerAdvice {
      * @param exception
      *            the exception
      */
-    public void logAfterAjaxHandlerThrowingException(JoinPoint joinPoint, Request params, Exception exception) {
+    public void logAfterAjaxHandlerThrowingException(JoinPoint joinPoint, Request params, Throwable exception) {
         long t1 = System.currentTimeMillis();
         final String TITLE = StrUtils.concat("###[AL_AFTER_EXCEPTION][", System.nanoTime(), "]");
 

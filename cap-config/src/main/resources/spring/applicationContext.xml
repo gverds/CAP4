@@ -42,7 +42,7 @@
     <!-- <import resource="classpath:spring/security.xml" /> -->
     <import resource="classpath:spring/operation.xml" />
     <!-- audit log -->
-    <import resource="classpath:spring/auditlog.xml" />
+    <!-- <import resource="classpath:spring/auditlog.xml" /> -->
     <!-- batch -->
     <import resource="classpath:batch/batch.xml" />
     <!-- web socket -->
