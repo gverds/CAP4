@@ -18,14 +18,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.ConfigAttribute;
-import org.springframework.security.access.vote.RoleVoter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.security.web.FilterInvocation;
+import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 
 import com.iisigroup.cap.security.model.Role;
 import com.iisigroup.cap.security.service.AccessControlService;
@@ -43,7 +42,7 @@ import jakarta.servlet.http.HttpServletRequest;
  *          <li>2010/9/27,iristu,new
  *          </ul>
  */
-public class CapPermissionVoter extends RoleVoter implements CustomDecisionVoter<Object> {
+public class CapPermissionVoter implements CustomDecisionVoter<Object> {
 
     protected AccessControlService securityService;
     
@@ -57,15 +56,14 @@ public class CapPermissionVoter extends RoleVoter implements CustomDecisionVoter
     }
 
     @SuppressWarnings("rawtypes")
-    @Override
     public int vote(Authentication authentication, Object object, Collection<ConfigAttribute> attributes) {
-        int result = AccessDecisionVoter.ACCESS_ABSTAIN;
+        int result = ACCESS_ABSTAIN;
         Iterator iter = attributes.iterator();
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 
         if (object != null && (object instanceof FilterInvocation)) {
             HttpServletRequest req = ((FilterInvocation) object).getRequest();
-            if (req.getRequestURI().indexOf("j_spring") != -1 || req.getRequestURI().indexOf("page/index") != -1) {
+            if (req.getRequestURI().indexOf("j_spring") != -1 || req.getRequestURI().indexOf("page/index") != -1 || req.getRequestURI().indexOf("menuhandler/queryMenu") != -1) {
             	SecurityContextHolderStrategy ss = SecurityContextHolder.getContextHolderStrategy();
                 System.out.println();
             }
@@ -73,9 +71,9 @@ public class CapPermissionVoter extends RoleVoter implements CustomDecisionVoter
         while (iter.hasNext()) {
             ConfigAttribute attribute = (ConfigAttribute) iter.next();
             if (this.supports(attribute)) {
-                result = AccessDecisionVoter.ACCESS_DENIED;
+                result = ACCESS_DENIED;
 
-                FilterInvocation filterInvocation = (FilterInvocation) object;
+                RequestAuthorizationContext filterInvocation = (RequestAuthorizationContext) object;
 
                 String url = getRequestURL(filterInvocation);
 
@@ -87,7 +85,7 @@ public class CapPermissionVoter extends RoleVoter implements CustomDecisionVoter
                     for (Role role : roles) {
                         for (GrantedAuthority auth : authorities) {
                             if (auth.getAuthority().equals(role.getCode())) {
-                                return AccessDecisionVoter.ACCESS_GRANTED;
+                                return ACCESS_GRANTED;
                             }
                         }
                     }
@@ -121,8 +119,8 @@ public class CapPermissionVoter extends RoleVoter implements CustomDecisionVoter
      * 
      * @return the request url
      */
-    protected String getRequestURL(FilterInvocation filter) {
-        String url = filter.getRequestUrl();
+    protected String getRequestURL(RequestAuthorizationContext filter) {
+        String url = filter.getRequest().getRequestURI();
 
         if (stripQueryStringFromUrls) {
             // Strip anything after a question mark symbol, as per SEC-161. See
