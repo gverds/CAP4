@@ -53,7 +53,7 @@ public class SwitchProviderFilter extends UsernamePasswordAuthenticationFilter {
 
         final String j_type = request.getParameter("j_type");
         final String j_username = request.getParameter("j_username");
-        final String j_pxd = request.getParameter("j_password");
+        final String j_pxd = request.getParameter("j_pxd");
         final String j_deptId = request.getParameter("deptId");
 
         UsernamePasswordAuthenticationToken authRequest;
