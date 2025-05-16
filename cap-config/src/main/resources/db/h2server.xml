@@ -3,12 +3,14 @@
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
-    <!-- ************** TESTING H2 DB SERVER *********************** -->
+    <!-- ************** TESTING H2 DB SERVER ***********************
+    -webAllowOthers -tcpAllowOthers -tcpPort 51065 -webPort 51066 -ifNotExists 
+    -->
     <bean id="org.h2.tools.tcpServer" class="org.h2.tools.Server" factory-method="createTcpServer" init-method="start" destroy-method="stop">
-        <constructor-arg value="-tcp,-tcpAllowOthers,-tcpPort,51045" />
+        <constructor-arg value="-tcp,-tcpAllowOthers,-tcpPort,51065 -ifNotExists " />
     </bean>
     <bean id="org.h2.tools.webServer" class="org.h2.tools.Server" factory-method="createWebServer" init-method="start" destroy-method="stop">
-        <constructor-arg value="-web,-webAllowOthers,-webPort,51046" />
+        <constructor-arg value="-web,-webAllowOthers,-webPort,51066 -ifNotExists " />
     </bean>
     <!-- ************** TESTING H2 DB SERVER *********************** -->
 </beans>
