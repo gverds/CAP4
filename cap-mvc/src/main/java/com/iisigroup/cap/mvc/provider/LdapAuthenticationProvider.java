@@ -106,7 +106,7 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
     private String qryAcct;
     private String qryXxd;
     private String qryDn;
-    private String searchFilter = "(&(objectClass=user)(userPrincipalName={0}))";
+    private String searchFilter = "(&(objectClass=user)(sAMAccountName={0}))";
     // TODOed after ladp test done, you can close debugger flag
     private boolean isDebugger = true;
     /**
@@ -274,7 +274,6 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
         // 清空前一次資料
         this.setCtxAttrs(null);
         try {
-            logger.debug("**********************");
             while (namingEnum.hasMore()) {
                 Object objId = namingEnum.next();
                 if (objId instanceof String) {
@@ -299,7 +298,6 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
                     }
                 }
             }
-            logger.debug("**********************");
             namingEnum.close();
             this.setCtxAttrs(extraAttr);
         } catch (NamingException e) {
@@ -550,17 +548,24 @@ public class LdapAuthenticationProvider extends AbstractLdapAuthenticationProvid
         logger.debug("LDAP searchForUser >> searchRoot : {}", searchRoot);
         try {
             // 2021/04/20,Tim,要查詢某分行所有使用者清單故改由參數決定searchfilter條件
-            if (CapString.isEmpty(searchFilter)) {
-                // 如果只用objectclass=user作為searchFilter,會查到多筆result..發生incorrectResults Exception
-                searchFilter = "(&(objectclass=user)(userPrincipalName={0}))";
-            }
+            // if (CapString.isEmpty(searchFilter)) {
+            // 如果只用objectclass=user作為searchFilter,會查到多筆result..發生incorrectResults Exception
+            // searchFilter = "(&(objectclass=user)(userPrincipalName={0}))";
+            // }
             // 登入頁面,沒帶查詢條件,有可能變成(&(objectCategory=Person))查資料
-            if (searchFilter.indexOf("userPrincipalName") == -1) {
-                searchFilter = "(&(objectclass=user)(userPrincipalName={0}))";
-            }
+            // if (searchFilter.indexOf("userPrincipalName") == -1) {
+            // searchFilter = "(&(objectclass=user)(userPrincipalName={0}))";
+            // }
+            // logger.debug("LDAP searchForUser >> searchFilter : {}", searchFilter);
+            // 驗證登入者
+            // return SpringSecurityLdapTemplate.searchForSingleEntryInternal(context, searchControls, searchRoot, searchFilter, new Object[] { bindPrincipal });
+            
+        	// 2025/07/09 Leon：因合庫調整，回傳的principalName會變成 ID@tcb-bank.com，但傳送的userName一樣，驗證改固定使用sAMAccountName
+        	String accountName = username.split("@")[0];
+            searchFilter = "(&(objectclass=user)(sAMAccountName={0}))";
             logger.debug("LDAP searchForUser >> searchFilter : {}", searchFilter);
             // 驗證登入者
-            return SpringSecurityLdapTemplate.searchForSingleEntryInternal(context, searchControls, searchRoot, searchFilter, new Object[] { bindPrincipal });
+            return SpringSecurityLdapTemplate.searchForSingleEntryInternal(context, searchControls, searchRoot, searchFilter, new Object[] { accountName });
         } catch (IncorrectResultSizeDataAccessException incorrectResults) {
             // Search should never return multiple results if properly configured - just
             // rethrow
