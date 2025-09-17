@@ -52,11 +52,9 @@ public class MftUtils {
 	        pb.redirectErrorStream(true);
 	
 	        Process p = pb.start();
-	        StringBuilder rtnOutput = new StringBuilder(BUFFER_CAPACITY);
-	
 	        // 修復 Denial of Service
 	        ExecutorService executor = Executors.newSingleThreadExecutor();
-	        AtomicBoolean flag = new AtomicBoolean(dirShow);
+	        StringBuilder rtnOutput = new StringBuilder(BUFFER_CAPACITY);
 	        Future<?> readerTask = executor.submit(() -> {
 	            try (BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream(), "MS950"))) {
 	                // shell 回傳編碼為 BIG5 (MS950)
@@ -64,23 +62,21 @@ public class MftUtils {
 	                String line;
 	                while ((line = reader.readLine()) != null) {
 	                    logger.debug("[Shell Output] " + line);
-	                    if (flag.get()) {
-	                        if (!CapString.isEmpty(line)) {
-	                            if (line.contains("個檔案")) {
-	                                getFileName = false;
-	                            } else if (getFileName && !line.contains("<DIR>")) {
-	                                // 排除掉資料夾
-	                                // 回傳格式" yyyy/MM/dd 上午 hh:mm bytes filename"，所以要先trim前面的空白
-	                                String[] fileDataArr = line.trim().split(" ");
-	                                if (fileDataArr.length == 5) {
-	                                    fileNameList.add(fileDataArr[4]);
-	                                }
-	                            } else if (line.contains("目錄")) {
-	                                getFileName = true;
-	                            } else if (line.contains("rtncode")) {
-	                                rtnOutput.append(line.split("=")[1]);
-	                            }
-	                        }
+	                    if (!CapString.isEmpty(line)) {
+	                    	if (line.contains("個檔案")) {
+	                    		getFileName = false;
+	                    	} else if (getFileName && !line.contains("<DIR>")) {
+	                    		// 排除掉資料夾
+	                    		// 回傳格式" yyyy/MM/dd 上午 hh:mm bytes filename"，所以要先trim前面的空白
+	                    		String[] fileDataArr = line.trim().split(" ");
+	                    		if (fileDataArr.length == 5) {
+	                    			fileNameList.add(fileDataArr[4]);
+	                    		}
+	                    	} else if (line.contains("目錄")) {
+	                    		getFileName = true;
+	                    	} else if (line.contains("rtncode")) {
+	                    		rtnOutput.append(line.split("=")[1]);
+	                    	}
 	                    }
 	                }
 	            } catch (IOException e) {
