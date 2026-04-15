@@ -15,11 +15,9 @@ CREATE TABLE CFG_SYSPARM (
 
 COMMENT ON TABLE CFG_SYSPARM IS '系統參數資料檔';
 
-COMMENT ON CFG_SYSPARM(
-	parmId          IS '參數代碼',
-	parmValue       IS '參數值',
-	parmDesc        IS '參數說明',
-	updater		    IS '最後修改人',
-	updateTime		IS '最後修改時間'
-);
+COMMENT ON COLUMN CFG_SYSPARM.parmId IS '參數代碼';
+COMMENT ON COLUMN CFG_SYSPARM.parmValue IS '參數值';
+COMMENT ON COLUMN CFG_SYSPARM.parmDesc IS '參數說明';
+COMMENT ON COLUMN CFG_SYSPARM.updater IS '最後修改人';
+COMMENT ON COLUMN CFG_SYSPARM.updateTime IS '最後修改時間';
 

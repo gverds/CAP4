@@ -12,7 +12,7 @@ create table DEF_ROLE (
    NAME                 VARCHAR(48),
    DESCRIPTION          VARCHAR(60),
    UPDATER              VARCHAR(10),
-   UPDATETIME           TIMESTAMP              default CURRENT TIMESTAMP,
+   UPDATETIME           TIMESTAMP              default CURRENT_TIMESTAMP,
    DISCRIMINATOR		VARCHAR(31)            not null,
    constraint P_DEF_ROLE primary key (OID)
 );

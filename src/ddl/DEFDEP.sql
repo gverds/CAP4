@@ -20,7 +20,7 @@ create table DEF_DEP (
    TIMEZONE             CHAR(9),
    STATUS               CHAR(1),
    UPDATER              VARCHAR(10),
-   UPDATETIME           TIMESTAMP              default CURRENT TIMESTAMP,
+   UPDATETIME           TIMESTAMP              default CURRENT_TIMESTAMP,
    DISCRIMINATOR		VARCHAR(31)            not null,
    constraint P_DEF_DEP primary key (OID)
 );
@@ -30,22 +30,20 @@ CREATE UNIQUE INDEX XDEFBRN01
 
 COMMENT ON TABLE DEF_DEP IS '單位檔';
 
-COMMENT ON DEF_DEP(
-	OID		   is 'oid',
-	CODE       is '分行代碼',
-	NAME       is '分行名稱',
-	LEVEL      is '分行層級',
-	TEL        is '分行電話',
-	ZIP        is '郵遞區號',
-	ADDR       is '分行地址',
-	DIVISION   is '單位預設分類',
-	MANAGER    is '分行經理',
-	PROXY      is '法務代理人',
-	BIZGROUP   is '所屬區域中心',
-	COUNTRY    is '國別',
-	TIMEZONE   is '格式：GMT Sign Hours : Minutes 例：GMT-08:00',
-	STATUS     is '停業註記',
-	UPDATER    is '最後異動人員',
-	UPDATETIME is '修改日期'
-);
+COMMENT ON COLUMN DEF_DEP.OID IS 'oid';
+COMMENT ON COLUMN DEF_DEP.CODE IS '分行代碼';
+COMMENT ON COLUMN DEF_DEP.NAME IS '分行名稱';
+COMMENT ON COLUMN DEF_DEP.LEVEL IS '分行層級';
+COMMENT ON COLUMN DEF_DEP.TEL IS '分行電話';
+COMMENT ON COLUMN DEF_DEP.ZIP IS '郵遞區號';
+COMMENT ON COLUMN DEF_DEP.ADDR IS '分行地址';
+COMMENT ON COLUMN DEF_DEP.DIVISION IS '單位預設分類';
+COMMENT ON COLUMN DEF_DEP.MANAGER IS '分行經理';
+COMMENT ON COLUMN DEF_DEP.PROXY IS '法務代理人';
+COMMENT ON COLUMN DEF_DEP.BIZGROUP IS '所屬區域中心';
+COMMENT ON COLUMN DEF_DEP.COUNTRY IS '國別';
+COMMENT ON COLUMN DEF_DEP.TIMEZONE IS '格式：GMT Sign Hours : Minutes 例：GMT-08:00';
+COMMENT ON COLUMN DEF_DEP.STATUS IS '停業註記';
+COMMENT ON COLUMN DEF_DEP.UPDATER IS '最後異動人員';
+COMMENT ON COLUMN DEF_DEP.UPDATETIME IS '修改日期';
 

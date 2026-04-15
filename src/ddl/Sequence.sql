@@ -11,9 +11,7 @@ create table CFG_SEQUENCE (
 );
 
 comment on table CFG_SEQUENCE is '流水號';
-COMMENT ON CFG_SEQUENCE(
-    ,seqNode IS '流水號Node'
-    ,nextSeq IS '下一個流水號'
-    ,rounds IS '重覆次數'
-    ,updateTime IS '最後異動時間'
-);
+COMMENT ON COLUMN CFG_SEQUENCE.seqNode IS '流水號Node';
+COMMENT ON COLUMN CFG_SEQUENCE.nextSeq IS '下一個流水號';
+COMMENT ON COLUMN CFG_SEQUENCE.rounds IS '重覆次數';
+COMMENT ON COLUMN CFG_SEQUENCE.updateTime IS '最後異動時間';

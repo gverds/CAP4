@@ -45,10 +45,11 @@
         </dependency>
         <!-- ******************** JExcelApi(jxl) LIB END ******************** -->
         <!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-webapp -->
-		<dependency>
+		<!--<dependency>
 		    <groupId>org.eclipse.jetty</groupId>
 		    <artifactId>jetty-webapp</artifactId>
 		    <version>11.0.25</version>
-		</dependency>
+		    <scope>provided</scope>
+		</dependency>-->
     </dependencies>
 </project>

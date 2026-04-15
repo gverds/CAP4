@@ -9,26 +9,24 @@ create table CFG_REMIND (
    SCOPEPID             VARCHAR(10),
    STARTDATE            TIMESTAMP,
    ENDDATE              TIMESTAMP,
-   CRTIME               TIMESTAMP              default CURRENT TIMESTAMP,
+   CRTIME               TIMESTAMP              default CURRENT_TIMESTAMP,
    LOCALE               CHAR(5),
    UPDATER              VARCHAR(10),
-   UPDTIME              TIMESTAMP              default CURRENT TIMESTAMP,
+   UPDTIME              TIMESTAMP              default CURRENT_TIMESTAMP,
    constraint P_REMIND primary key (OID)
 );
 
 comment on table CFG_REMIND is '提醒通知';
-COMMENT ON CFG_REMIND(
-    OID is 'OID',
-	CONTENT is '內文',
-	SCOPETYP is '0.個人 1.組別(業務) 2.群組 3.部門 9.全體',
-	SCOPEPID is '對象號碼',
-	STARTDATE is '資料有效期間',
-	ENDDATE is '資料有效期間',
-	CRTIME is '建立時間',
-	LOCALE is '語系',
-	UPDATER is '最後異動人員',
-	UPDTIME is '修改日期'
-);
+COMMENT ON COLUMN CFG_REMIND.OID IS 'OID';
+COMMENT ON COLUMN CFG_REMIND.CONTENT IS '內文';
+COMMENT ON COLUMN CFG_REMIND.SCOPETYP IS '0.個人 1.組別(業務) 2.群組 3.部門 9.全體';
+COMMENT ON COLUMN CFG_REMIND.SCOPEPID IS '對象號碼';
+COMMENT ON COLUMN CFG_REMIND.STARTDATE IS '資料有效期間';
+COMMENT ON COLUMN CFG_REMIND.ENDDATE IS '資料有效期間';
+COMMENT ON COLUMN CFG_REMIND.CRTIME IS '建立時間';
+COMMENT ON COLUMN CFG_REMIND.LOCALE IS '語系';
+COMMENT ON COLUMN CFG_REMIND.UPDATER IS '最後異動人員';
+COMMENT ON COLUMN CFG_REMIND.UPDTIME IS '修改日期';
 
 --==============================================================
 -- Table: REMINDS 通知方式
@@ -47,13 +45,11 @@ create table CFG_REMINDS (
 );
 
 comment on table CFG_REMINDS is '通知方式';
-COMMENT ON CFG_REMINDS(
-    OID is 'OID',
-	PID is 'PID',
-	SCOPEPID is '對象號碼',
-	STYLETYP is '提醒方式',
-	STYLECLR is '顏色',
-	STYLE is '數值',
-	UNIT is '單位',
-	YNFLAG is '是否完成'
-);
+COMMENT ON COLUMN CFG_REMINDS.OID IS 'OID';
+COMMENT ON COLUMN CFG_REMINDS.PID IS 'PID';
+COMMENT ON COLUMN CFG_REMINDS.SCOPEPID IS '對象號碼';
+COMMENT ON COLUMN CFG_REMINDS.STYLETYP IS '提醒方式';
+COMMENT ON COLUMN CFG_REMINDS.STYLECLR IS '顏色';
+COMMENT ON COLUMN CFG_REMINDS.STYLE IS '數値';
+COMMENT ON COLUMN CFG_REMINDS.UNIT IS '單位';
+COMMENT ON COLUMN CFG_REMINDS.YNFLAG IS '是否完成';

@@ -9,7 +9,7 @@ create table DEF_ROLEFUNC (
    ROLECODE              VARCHAR(10)            not null,
    FUNCCODE              DECIMAL(6,0)           not null,
    UPDATER              VARCHAR(10),
-   UPDATETIME              TIMESTAMP              default CURRENT TIMESTAMP,
+   UPDATETIME              TIMESTAMP              default CURRENT_TIMESTAMP,
    constraint P_DEF_ROLEFUNC primary key (ROLECODE, FUNCCODE)
 );
 

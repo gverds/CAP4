@@ -1,6 +1,6 @@
 
-insert into BAH_JOB(jobId,jobDesc,jobResource,updater,updateTime) values('messageJob','讀檔測試','classpath:batch/jobs/message-job.xml','tester',current timestamp);
-insert into BAH_JOB(jobId,jobDesc,jobResource,updater,updateTime) values('postZipImportJob','郵遞區號匯入','classpath:batch/jobs/postZipImport-job.xml','tester',current timestamp);
+insert into BAH_JOB(jobId,jobDesc,jobResource,updater,updateTime) values('messageJob','讀檔測試','classpath:batch/jobs/message-job.xml','tester',current_timestamp);
+insert into BAH_JOB(jobId,jobDesc,jobResource,updater,updateTime) values('postZipImportJob','郵遞區號匯入','classpath:batch/jobs/postZipImport-job.xml','tester',current_timestamp);
 
 create table PostZip
 (

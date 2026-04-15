@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:batch="http://www.springframework.org/schema/batch" xmlns:task="http://www.springframework.org/schema/task"
+    xsi:schemaLocation="
+	http://www.springframework.org/schema/batch https://www.springframework.org/schema/batch/spring-batch.xsd
+	http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/task https://www.springframework.org/schema/task/spring-task.xsd">
+    <batch:job id="messageJob" restartable="true">
+        <batch:step id="messageStep">
+            <batch:tasklet>
+                <batch:chunk reader="messageReader" processor="messageProcessor" writer="messageWriter" commit-interval="5" />
+            </batch:tasklet>
+        </batch:step>
+    </batch:job>
+    <bean id="messageReader" class="org.springframework.batch.item.file.FlatFileItemReader" scope="step">
+        <property name="lineMapper" ref="lineMapper" />
+        <property name="resource" value="classpath:/users.txt" />
+    </bean>
+    <bean id="messageProcessor" class="com.iisigroup.batch.sample.MessageProcessor" scope="step" />
+    <bean id="messageWriter" class="com.iisigroup.batch.sample.MessageWriter" scope="step" />
+    <bean id="lineMapper" class="org.springframework.batch.item.file.mapping.DefaultLineMapper" scope="step">
+        <property name="lineTokenizer">
+            <bean class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
+            </bean>
+        </property>
+        <property name="fieldSetMapper">
+            <bean class="com.iisigroup.batch.sample.UserMapper" />
+        </property>
+    </bean>
+</beans>

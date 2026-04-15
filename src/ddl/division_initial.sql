@@ -1,9 +1,9 @@
 --==================DIVFTITM 分案因子項目=========================
 alter table DIVCTDTL
-   drop foreign key "CTDTL_Refere_FTITM";
+   drop constraint "CTDTL_Refere_FTITM";
 
 alter table DIVFTDTL
-   drop foreign key "FTDTL_Refere_FTITM";
+   drop constraint "FTDTL_Refere_FTITM";
 
 drop index XDEFCOURT13;
 
@@ -66,16 +66,16 @@ comment on column DIVFTITM.UPDATETIME is
 --==============================================================
 -- Index: XDEFCOURT13
 --==============================================================
-create unique index XDEFCOURT13 on DIVFTITM (
-
-);
+--create unique index XDEFCOURT13 on DIVFTITM (
+--
+--);
 
 --=======================DIVCTITM 分案條件維護====================
 alter table DIVCTDTL
-   drop foreign key "CTDTL_Refere_CTITM";
+   drop constraint "CTDTL_Refere_CTITM";
 
 alter table DIVRLDTL
-   drop foreign key "RLDTL_Refere_CTITM";
+   drop constraint "RLDTL_Refere_CTITM";
 
 drop index XDEFCOURT10;
 
@@ -122,13 +122,13 @@ comment on column DIVCTITM.UPDATETIME is
 --==============================================================
 -- Index: XDEFCOURT10
 --==============================================================
-create unique index XDEFCOURT10 on DIVCTITM (
-
-);
+--create unique index XDEFCOURT10 on DIVCTITM (
+--
+--);
 
 --======================DIVRLITM 分案規則維護=====================
 alter table DIVRLDTL
-   drop foreign key "RLDTL_Refere_RLITM";
+   drop constraint "RLDTL_Refere_RLITM";
 
 drop index XDEFCOURT16;
 
@@ -176,13 +176,13 @@ comment on column DIVRLITM.UPDATETIME is
 --==============================================================
 -- Index: XDEFCOURT16
 --==============================================================
-create unique index XDEFCOURT16 on DIVRLITM (
-
-);
+--create unique index XDEFCOURT16 on DIVRLITM (
+--
+--);
 
 --========================DIVFTDTL 分案因子項目明細================
 alter table DIVFTDTL
-   drop foreign key "FTDTL_Refere_FTITM";
+   drop constraint "FTDTL_Refere_FTITM";
 
 drop index XDEFCOURT14;
 
@@ -229,9 +229,9 @@ comment on column DIVFTDTL.RANGESOR is
 --==============================================================
 -- Index: XDEFCOURT14
 --==============================================================
-create unique index XDEFCOURT14 on DIVFTDTL (
-
-);
+--create unique index XDEFCOURT14 on DIVFTDTL (
+--
+--);
 
 alter table DIVFTDTL
    add constraint "FTDTL_Refere_FTITM" foreign key (FACTORNO)
@@ -240,10 +240,10 @@ alter table DIVFTDTL
 
 --======================DIVCTDTL 分案條件明細====================
 alter table DIVCTDTL
-   drop foreign key "CTDTL_Refere_CTITM";
+   drop constraint "CTDTL_Refere_CTITM";
 
 alter table DIVCTDTL
-   drop foreign key "CTDTL_Refere_FTDTL";
+   drop constraint "CTDTL_Refere_FTDTL";
 
 drop index XDEFCOURT15;
 
@@ -258,7 +258,7 @@ create table DIVCTDTL (
    DIVRLNO				VARCHAR(10),
    FACTORNO             CHAR(10),
    DIVCTJSON            VARCHAR(5000),
-   DIVCTSOR             INT(3),
+   DIVCTSOR             INT,
    constraint "P_Key_CTDTL_1" primary key (OID)
 );
 
@@ -285,9 +285,9 @@ comment on column DIVCTDTL.DIVCTSOR is
 --==============================================================
 -- Index: XDEFCOURT15
 --==============================================================
-create unique index XDEFCOURT15 on DIVCTDTL (
-
-);
+--create unique index XDEFCOURT15 on DIVCTDTL (
+--
+--);
 
 alter table DIVCTDTL
    add constraint "CTDTL_Refere_CTITM" foreign key (DIVCTNO)
@@ -301,10 +301,10 @@ alter table DIVCTDTL
 
 --===============================DIVRLDTL 分案規則明細======================
 alter table DIVRLDTL
-   drop foreign key "RLDTL_Refere_CTITM";
+   drop constraint "RLDTL_Refere_CTITM";
 
 alter table DIVRLDTL
-   drop foreign key "RLDTL_Refere_RLITM";
+   drop constraint "RLDTL_Refere_RLITM";
 
 drop index XDEFCOURT17;
 
@@ -318,7 +318,7 @@ create table DIVRLDTL (
    DIVRLNO              CHAR(10)               not null,
    DIVCTNO              CHAR(10)               not null,
    DIVRLJSON            VARCHAR(5000),
-   DIVRLSOR             INT(3),
+   DIVRLSOR             INT,
    constraint "P_Key_RLDTL1" primary key (OID)
 );
 
@@ -343,9 +343,9 @@ comment on column DIVRLDTL.DIVRLSOR is
 --==============================================================
 -- Index: XDEFCOURT17
 --==============================================================
-create unique index XDEFCOURT17 on DIVRLDTL (
-
-);
+--create unique index XDEFCOURT17 on DIVRLDTL (
+--
+--);
 
 alter table DIVRLDTL
    add constraint "RLDTL_Refere_CTDTL" foreign key (DIVCTNO)

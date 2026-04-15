@@ -9,6 +9,7 @@ create table DEF_USER (
    CODE                 VARCHAR(10)               not null,
    NAME                 VARCHAR(12),
    DEPCODE              VARCHAR(4),
+   DEPNAME              VARCHAR(50),
    STATUSDESC           VARCHAR(30),
    UPDATER              VARCHAR(10),
    UPDATETIME           TIMESTAMP,
@@ -29,13 +30,11 @@ CREATE UNIQUE INDEX XDEFUSER01
 
 COMMENT ON TABLE DEF_USER IS '使用者基本資料檔';
 
-COMMENT ON DEF_USER(
-	OID      is 'oid',
-	CODE   is '行員編號',
-	NAME is '行員姓名',
-	DEPCODE   is '分行代碼',
-	STATUSDESC is '停用原因',
-	UPDATER is '最後異動人員',
-	UPDATETIME is '修改日期'
-);
+COMMENT ON COLUMN DEF_USER.OID IS 'oid';
+COMMENT ON COLUMN DEF_USER.CODE IS '行員編號';
+COMMENT ON COLUMN DEF_USER.NAME IS '行員姓名';
+COMMENT ON COLUMN DEF_USER.DEPCODE IS '分行代碼';
+COMMENT ON COLUMN DEF_USER.STATUSDESC IS '停用原因';
+COMMENT ON COLUMN DEF_USER.UPDATER IS '最後異動人員';
+COMMENT ON COLUMN DEF_USER.UPDATETIME IS '修改日期';
 

@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.logging.log4j.ThreadContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
@@ -37,7 +36,6 @@ import com.iisigroup.cap.db.model.Page;
 import com.iisigroup.cap.db.model.SearchModeParameter;
 import com.iisigroup.cap.jdbc.CapNamedJdbcTemplate;
 import com.iisigroup.cap.operation.simple.SimpleContextHolder;
-import com.iisigroup.cap.utils.CapWebUtil;
 
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;

@@ -7,10 +7,10 @@
     -webAllowOthers -tcpAllowOthers -tcpPort 51065 -webPort 51066 -ifNotExists 
     -->
     <bean id="org.h2.tools.tcpServer" class="org.h2.tools.Server" factory-method="createTcpServer" init-method="start" destroy-method="stop">
-        <constructor-arg value="-tcp,-tcpAllowOthers,-tcpPort,51065 -ifNotExists " />
+        <constructor-arg value="-tcp,-tcpAllowOthers,-tcpPort,51065,-ifNotExists " />
     </bean>
     <bean id="org.h2.tools.webServer" class="org.h2.tools.Server" factory-method="createWebServer" init-method="start" destroy-method="stop">
-        <constructor-arg value="-web,-webAllowOthers,-webPort,51066 -ifNotExists " />
+        <constructor-arg value="-web,-webAllowOthers,-webPort,51066,-ifNotExists " />
     </bean>
     <!-- ************** TESTING H2 DB SERVER *********************** -->
 </beans>

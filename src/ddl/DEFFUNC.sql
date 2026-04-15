@@ -16,7 +16,7 @@ create table DEF_FUNC (
    DESCRIPTION       VARCHAR(108),
    STATUS            CHAR(1)                not null default '1',
    UPDATER           CHAR(6),
-   UPDATETIME        TIMESTAMP              default CURRENT TIMESTAMP,
+   UPDATETIME        TIMESTAMP              default CURRENT_TIMESTAMP,
    DISCRIMINATOR	 VARCHAR(31)            not null,
    constraint P_DEF_FUNC primary key (OID)
 );

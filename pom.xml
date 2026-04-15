@@ -232,7 +232,7 @@
         <!--<module>cap-hg</module>-->
         <module>cap-db</module>
         <module>cap-base</module>
-        <module>cap-auth-admin</module> 
+        <module>cap-auth-admin</module>
         <module>cap-batch</module>
         <!--<module>cap-rule</module>-->
         <!--<module>cap-websocket</module>-->
@@ -484,12 +484,12 @@
 						<webApp>
 							<!-- Path to web.xml -->
 							<descriptor>
-								${basedir}/cap-web/src/main/webapp/WEB-INF/web.xml
+								${basedir}/src/main/webapp/WEB-INF/web.xml
 							</descriptor>
 
 							<!-- Path to jetty-env.xml -->
 							<jettyEnvXml>
-								${basedir}/cap-web/src/main/webapp/WEB-INF/jetty-env.xml
+								${basedir}/src/main/webapp/WEB-INF/jetty-env.xml
 							</jettyEnvXml>
 
 							<!-- Context Path -->
@@ -501,11 +501,11 @@
 
 						<!-- Classes Directory -->
 						<classesDirectory>
-							${basedir}/cap-web/target/cap-web-5.0.1-tcb-202503241400/WEB-INF/classes</classesDirectory>
+							${basedir}/target/cap-web-5.0.1-tcb-202503241400/WEB-INF/classes</classesDirectory>
 
 						<!-- Context XML -->
 						<contextXml>
-							${basedir}/cap-web/src/main/webapp/WEB-INF/jetty-env.xml</contextXml>
+							${basedir}/src/main/webapp/WEB-INF/jetty-env.xml</contextXml>
 
 						<!-- Annotation Scanning Timeout -->
 						<systemProperties>
