@@ -7,8 +7,8 @@
         <Arg>
             <New class="com.mchange.v2.c3p0.ComboPooledDataSource">
                 <Set name="driverClass">org.h2.Driver</Set>
-                <!-- <Set name="jdbcUrl">jdbc:h2:tcp://localhost:51065/D:/@Project/IISI_GIT_CAP4/CAP4_SOURCE/IISI_CAP4/h2db/capdb_tcb.v2</Set> -->
-                <Set name="jdbcUrl">jdbc:h2:D:/@Project/IISI_GIT_CAP4/CAP4_SOURCE/IISI_CAP4/h2db/capdb_tcb.v2</Set>
+                <Set name="jdbcUrl">jdbc:h2:tcp://localhost:51065/D:/@Project/IISI_GIT_CAP4/CAP4_SOURCE/IISI_CAP4/h2db/capdb_tcb.v2</Set>
+                <!-- <Set name="jdbcUrl">jdbc:h2:D:/@Project/IISI_GIT_CAP4/CAP4_SOURCE/IISI_CAP4/h2db/capdb_tcb.v2</Set> -->
                 <Set name="user">sa</Set>
                 <Set name="password"></Set>
             </New>

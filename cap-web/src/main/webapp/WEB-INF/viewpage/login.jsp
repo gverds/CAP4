@@ -27,11 +27,11 @@
                     <table class="row">
                         <tr>
                             <th width="30%" style="text-align: right; padding: 5px;">帳號</th>
-                            <td><input type="text" id="j_username" name="j_username" maxlength="10" class="validate[required,maxSize[10]]"/></td>
+                            <td><input type="text" id="j_username" name="j_username" value="1" maxlength="10" class="validate[required,maxSize[10]]"/></td>
                         </tr>
                         <tr>
                             <th style="text-align: right; padding: 5px;">密碼</th>
-                            <td><input type="password" id="j_password" name="j_password" maxlength="50" class="validate[required,maxSize[50]]" /></td>
+                            <td><input type="password" id="j_password" name="j_password" value="P@ssw0rd" maxlength="50" class="validate[required,maxSize[50]]" /></td>
                         </tr>
                     </table>
                     <table id="pwdchgArea" class="row hide">

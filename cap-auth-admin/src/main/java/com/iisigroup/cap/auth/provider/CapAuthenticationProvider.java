@@ -206,7 +206,7 @@ public class CapAuthenticationProvider implements AuthenticationProvider {
         if (passwordEncoder.matches(presentedPassword, encodedPassword)) {
             return true;
         } else {
-            return true;
+            return false;
         }
     }
 
