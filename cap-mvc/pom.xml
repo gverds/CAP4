@@ -3,7 +3,7 @@
     <parent>
         <artifactId>cap</artifactId>
         <groupId>com.iisigroup.cap</groupId>
-        <version>4.0.1-fcb-202104301910</version>
+        <version>5.0.1-fcb-202604211120</version>
     </parent>
     <artifactId>cap-mvc</artifactId>
     <dependencies>
@@ -28,9 +28,9 @@
             <artifactId>spring-context-support</artifactId>
         </dependency>
         <dependency>
-            <groupId>opensymphony</groupId>
+            <groupId>org.sitemesh</groupId>
             <artifactId>sitemesh</artifactId>
-            <version>2.4.2</version>
+            <version>3.2.0</version>
         </dependency>
     </dependencies>
 </project>

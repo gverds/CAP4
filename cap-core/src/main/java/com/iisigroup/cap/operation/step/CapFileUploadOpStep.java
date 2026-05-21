@@ -11,12 +11,12 @@
  */
 package com.iisigroup.cap.operation.step;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 
 import com.iisigroup.cap.component.Request;
 import com.iisigroup.cap.exception.CapException;
@@ -41,11 +41,11 @@ import com.iisigroup.cap.utils.CapMath;
  */
 public class CapFileUploadOpStep extends AbstractCustomizeOpStep {
 
-    private CommonsMultipartResolver multipartResolver;
+    private StandardServletMultipartResolver multipartResolver;
 
     String fileSizeLimitErrorCode;
 
-    public void setMultipartResolver(CommonsMultipartResolver multipartResolver) {
+    public void setMultipartResolver(StandardServletMultipartResolver multipartResolver) {
         this.multipartResolver = multipartResolver;
     }
 
@@ -54,12 +54,10 @@ public class CapFileUploadOpStep extends AbstractCustomizeOpStep {
     }
 
     protected MultipartHttpServletRequest uploadFile(Request params) {
-        if (params.containsKey("limitSize")) {
-            multipartResolver.setMaxUploadSize(params.getParamsAsInteger("limitSize"));
-        }
-        if (params.containsKey("fileEncoding")) {
-            multipartResolver.setDefaultEncoding(params.get("fileEncoding"));
-        }
+        // NOTE: Spring 6 removed CommonsMultipartResolver. Max upload size and encoding
+        // must now be configured via servlet MultipartConfigElement (web.xml or
+        // @MultipartConfig)
+        // instead of being set dynamically at request time.
 
         try {
             return multipartResolver.resolveMultipart((HttpServletRequest) params.getServletRequest());

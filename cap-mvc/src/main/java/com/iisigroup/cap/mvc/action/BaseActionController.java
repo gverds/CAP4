@@ -4,9 +4,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
-import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <pre>
@@ -20,7 +21,9 @@ import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
  *          <li>2011/11/1,rodeschen,new
  *          </ul>
  */
-public class BaseActionController extends MultiActionController {
+public class BaseActionController {
+
+    protected final Logger logger = LoggerFactory.getLogger(getClass());
 
     public static final String SUCCESS_VIEW = "success";
 
@@ -28,9 +31,9 @@ public class BaseActionController extends MultiActionController {
      * json 回传写入
      * 
      * @param response
-     *            response
+     *                 response
      * @param string
-     *            json String
+     *                 json String
      */
     protected void outputString(HttpServletResponse response, String contentType, String string) {
         // response.setContentType("text/xml;charset=UTF-8");
@@ -56,9 +59,9 @@ public class BaseActionController extends MultiActionController {
      * json 回传写入
      * 
      * @param response
-     *            response
+     *                 response
      * @param str
-     *            str
+     *                 str
      */
     protected void outJsonString(HttpServletResponse response, String str) {
         outputString(response, CONTENT_TYPE_JSON, str);
@@ -70,9 +73,9 @@ public class BaseActionController extends MultiActionController {
      * xml 回传写入
      * 
      * @param response
-     *            response
+     *                 response
      * @param str
-     *            str
+     *                 str
      */
     protected void outXmlString(HttpServletResponse response, String str) {
         outputString(response, CONTENT_TYPE_XML, str);

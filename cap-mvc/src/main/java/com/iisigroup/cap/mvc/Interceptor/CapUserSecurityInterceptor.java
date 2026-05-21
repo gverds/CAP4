@@ -11,12 +11,12 @@
  */
 package com.iisigroup.cap.mvc.Interceptor;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import org.springframework.web.servlet.HandlerInterceptor;
 
 import com.iisigroup.cap.security.CapSecurityContext;
 import com.iisigroup.cap.security.model.CapUserDetails;
@@ -33,13 +33,16 @@ import com.iisigroup.cap.security.model.CapUserDetails;
  *          <li>2011/11/30,rodeschen,new
  *          </ul>
  */
-public class CapUserSecurityInterceptor extends HandlerInterceptorAdapter {
+public class CapUserSecurityInterceptor implements HandlerInterceptor {
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.web.servlet.HandlerInterceptor#preHandle(javax.servlet .http.HttpServletRequest, javax.servlet.http.HttpServletResponse, java.lang.Object)
+     * @see
+     * org.springframework.web.servlet.HandlerInterceptor#preHandle(javax.servlet
+     * .http.HttpServletRequest, javax.servlet.http.HttpServletResponse,
+     * java.lang.Object)
      */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object arg2) throws Exception {

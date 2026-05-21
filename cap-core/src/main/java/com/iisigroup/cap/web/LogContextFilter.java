@@ -17,14 +17,14 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.ThreadContext;
 import org.slf4j.Logger;
@@ -63,9 +63,11 @@ public class LogContextFilter implements Filter {
     /*
      * (non-Javadoc)
      * 
-     * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
+     * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest,
+     * javax.servlet.ServletResponse, javax.servlet.FilterChain)
      */
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpSession session = req.getSession(false);
         // Host IP
@@ -97,9 +99,9 @@ public class LogContextFilter implements Filter {
     }
 }
 
-class LogContext extends InheritableThreadLocal {
+class LogContext extends InheritableThreadLocal<Map<String, Object>> {
     private static final Logger LOGGER = LoggerFactory.getLogger(LogContext.class);
-    private static ThreadLocal<Map> logContext = new InheritableThreadLocal<Map>();
+    private static ThreadLocal<Map<String, Object>> logContext = new InheritableThreadLocal<>();
     private static boolean useMDC = false;
     public static final String LOGIN = "login";
     public static final String UUID = "uuid";
@@ -119,20 +121,20 @@ class LogContext extends InheritableThreadLocal {
     }
 
     @Override
-    protected Object childValue(Object parentValue) {
-        return new LinkedHashMap((Map) parentValue);
+    protected Map<String, Object> childValue(Map<String, Object> parentValue) {
+        return new LinkedHashMap<>(parentValue);
     }
 
     /**
      * Get a map containing all the objects held by the current thread.
      */
-    private static Map getContext() {
+    private static Map<String, Object> getContext() {
         if (useMDC) {
-            return ThreadContext.getContext();
+            return new LinkedHashMap<>(ThreadContext.getContext());
         } else {
-            Map m = logContext.get();
+            Map<String, Object> m = logContext.get();
             if (m == null) {
-                m = new LinkedHashMap();
+                m = new LinkedHashMap<>();
                 logContext.set(m);
             }
             return m;
@@ -155,7 +157,8 @@ class LogContext extends InheritableThreadLocal {
     }
 
     /**
-     * Put a context value (the o parameter) as identified with the key parameter into the current thread's context map.
+     * Put a context value (the o parameter) as identified with the key parameter
+     * into the current thread's context map.
      * 
      * @param key
      *            the Key
@@ -199,11 +202,11 @@ class LogContext extends InheritableThreadLocal {
      * @return String
      */
     public static String toLogPrefixString() {
-        Map m = getContext();
-        Iterator i = m.entrySet().iterator();
+        Map<String, Object> m = getContext();
+        Iterator<Map.Entry<String, Object>> i = m.entrySet().iterator();
         StringBuilder sb = new StringBuilder("[");
         while (i.hasNext()) {
-            Map.Entry e = (Map.Entry) i.next();
+            Map.Entry<String, Object> e = i.next();
             sb.append((String) e.getKey()).append("=").append(e.getValue().toString());
             if (i.hasNext()) {
                 sb.append("&");
@@ -217,7 +220,7 @@ class LogContext extends InheritableThreadLocal {
      * set the given login in the map
      * 
      * @param login
-     *            the user Id
+     *              the user Id
      */
     public static void setLogin(String login) {
         put(LOGIN, login);
@@ -227,7 +230,7 @@ class LogContext extends InheritableThreadLocal {
      * set the given IP in the map
      * 
      * @param host
-     *            the host
+     *             the host
      */
     public static void setHost(String host) {
         put(HOST, host);
@@ -237,7 +240,7 @@ class LogContext extends InheritableThreadLocal {
      * set the given web session in the map
      * 
      * @param sessionId
-     *            the session id
+     *                  the session id
      */
     public static void setSessionId(String sessionId) {
         put(SESSION_ID, sessionId);

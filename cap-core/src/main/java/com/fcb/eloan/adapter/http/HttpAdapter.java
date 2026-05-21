@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.security.KeyManagementException;
@@ -93,11 +94,12 @@ public class HttpAdapter {
         }
     }
 
-    public HttpURLConnection connect(String url, String method, Map<String, String> headers, int timeout) throws IOException {
+    public HttpURLConnection connect(String url, String method, Map<String, String> headers, int timeout)
+            throws IOException {
         URL netUrl;
         HttpURLConnection con = null;
         try {
-            netUrl = new URL(url);
+            netUrl = URI.create(url).toURL();
             con = (HttpURLConnection) netUrl.openConnection();
             con.setRequestMethod(method);
             con.setConnectTimeout(timeout);
@@ -133,7 +135,8 @@ public class HttpAdapter {
             }
             responseCode = con.getResponseCode();
             String encoding = con.getContentEncoding();
-            // logger.info("url: " + url + ", data: " + data + ", encoding: " + encoding + "(4)");// #20778,Log Forging
+            // logger.info("url: " + url + ", data: " + data + ", encoding: " + encoding +
+            // "(4)");// #20778,Log Forging
             encoding = encoding == null ? (charset == null ? "UTF-8" : charset.name()) : encoding;
             if (responseCode == 200 || responseCode == 201) {
                 // #20777,Unreleased Resource: Streams
@@ -180,7 +183,8 @@ public class HttpAdapter {
             if ("application/pdf".equals(headers.get("contentType"))) {
 
             }
-            try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), con.getContentEncoding()));) {
+            try (BufferedReader in = new BufferedReader(
+                    new InputStreamReader(con.getInputStream(), con.getContentEncoding()));) {
                 String inputLine;
                 StringBuffer response = new StringBuffer();
                 while ((inputLine = in.readLine()) != null) {

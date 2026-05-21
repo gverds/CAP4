@@ -17,8 +17,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,7 +86,7 @@ public class CapSpringMVCRequest extends HashMap<String, Object> implements Requ
 
     private Map<String, Object> flattenJson(String key, String str) {
         Map<String, Object> result = new HashMap<>();
-        if (!StringUtils.isEmpty(str) && str.trim().startsWith("{") && str.trim().endsWith("}")) {
+        if (StringUtils.hasLength(str) && str.trim().startsWith("{") && str.trim().endsWith("}")) {
             Map<String, Object> map;
             try {
                 map = GsonUtil.jsonToMap(str);
@@ -117,7 +117,8 @@ public class CapSpringMVCRequest extends HashMap<String, Object> implements Requ
     /*
      * (non-Javadoc)
      * 
-     * @see tw.com.iisi.cap.component.ICapRequest#getParameter(java.lang.String, java.lang.String)
+     * @see tw.com.iisi.cap.component.ICapRequest#getParameter(java.lang.String,
+     * java.lang.String)
      */
     @Override
     public String get(String key, String defaultValue) {
@@ -159,33 +160,33 @@ public class CapSpringMVCRequest extends HashMap<String, Object> implements Requ
         for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
             switch (c) {
-            // case '&':
-            // writer.write("&amp;");
-            // break;
-            case '<':
-                writer.write("&lt;");
-                break;
-            case '>':
-                writer.write("&gt;");
-                break;
-            // case '\"':
-            // writer.write("&quot;");
-            // break;
-            // case '\'':
-            // writer.write("&#x27;");
-            // break;
-            // case '/':
-            // writer.write("&#x2F;");
-            // break;
-            // case '(':
-            // writer.write("&#40;");
-            // break;
-            // case ')':
-            // writer.write("&#41;");
-            // break;
-            default:
-                writer.write(c);
-                break;
+                // case '&':
+                // writer.write("&amp;");
+                // break;
+                case '<':
+                    writer.write("&lt;");
+                    break;
+                case '>':
+                    writer.write("&gt;");
+                    break;
+                // case '\"':
+                // writer.write("&quot;");
+                // break;
+                // case '\'':
+                // writer.write("&#x27;");
+                // break;
+                // case '/':
+                // writer.write("&#x2F;");
+                // break;
+                // case '(':
+                // writer.write("&#40;");
+                // break;
+                // case ')':
+                // writer.write("&#41;");
+                // break;
+                default:
+                    writer.write(c);
+                    break;
             }
         }
         return writer.toString();
@@ -194,7 +195,8 @@ public class CapSpringMVCRequest extends HashMap<String, Object> implements Requ
     /*
      * (non-Javadoc)
      * 
-     * @see tw.com.iisi.cap.component.ICapRequest#setParameter(java.lang.String, java.lang.Object)
+     * @see tw.com.iisi.cap.component.ICapRequest#setParameter(java.lang.String,
+     * java.lang.Object)
      */
     @Override
     public void setParameter(String key, Object value) {
@@ -215,7 +217,8 @@ public class CapSpringMVCRequest extends HashMap<String, Object> implements Requ
     /*
      * (non-Javadoc)
      * 
-     * @see tw.com.iisi.cap.component.ICapRequest#containsParamsKey(java.lang.String)
+     * @see
+     * tw.com.iisi.cap.component.ICapRequest#containsParamsKey(java.lang.String)
      */
     @Override
     public boolean containsParamsKey(String key) {
@@ -225,7 +228,8 @@ public class CapSpringMVCRequest extends HashMap<String, Object> implements Requ
     /*
      * (non-Javadoc)
      * 
-     * @see tw.com.iisi.cap.component.ICapRequest#getParamsAsInteger(java.lang.String )
+     * @see
+     * tw.com.iisi.cap.component.ICapRequest#getParamsAsInteger(java.lang.String )
      */
     @Override
     public int getParamsAsInteger(String key) {
@@ -235,7 +239,9 @@ public class CapSpringMVCRequest extends HashMap<String, Object> implements Requ
     /*
      * (non-Javadoc)
      * 
-     * @see tw.com.iisi.cap.component.ICapRequest#getParamsAsInteger(java.lang.String , int)
+     * @see
+     * tw.com.iisi.cap.component.ICapRequest#getParamsAsInteger(java.lang.String ,
+     * int)
      */
     @Override
     public int getParamsAsInteger(String key, int defaultValue) {
@@ -250,7 +256,8 @@ public class CapSpringMVCRequest extends HashMap<String, Object> implements Requ
     /*
      * (non-Javadoc)
      * 
-     * @see com.iisi.cap.component.ICapRequest#getParamsAsStringArray(java.lang.String )
+     * @see
+     * com.iisi.cap.component.ICapRequest#getParamsAsStringArray(java.lang.String )
      */
     @Override
     public String[] getParamsAsStringArray(String key) {

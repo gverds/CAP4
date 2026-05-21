@@ -1,4 +1,5 @@
 /*
+*
  * IResult.java
  *
  * Copyright (c) 2009-2011 International Integrated System, Inc.
@@ -14,7 +15,7 @@ package com.iisigroup.cap.component;
 
 import java.io.Serializable;
 
-import javax.servlet.ServletResponse;
+import jakarta.servlet.ServletResponse;
 
 /**
  * <p>

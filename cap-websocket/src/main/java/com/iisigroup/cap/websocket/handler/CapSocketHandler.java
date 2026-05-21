@@ -11,7 +11,7 @@
  */
 package com.iisigroup.cap.websocket.handler;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
 

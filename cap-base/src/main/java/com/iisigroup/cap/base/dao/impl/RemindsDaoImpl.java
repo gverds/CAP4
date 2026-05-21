@@ -12,7 +12,7 @@ package com.iisigroup.cap.base.dao.impl;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.persistence.Query;
+import jakarta.persistence.Query;
 
 import org.springframework.stereotype.Repository;
 

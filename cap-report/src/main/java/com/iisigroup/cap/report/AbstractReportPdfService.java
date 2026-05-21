@@ -11,6 +11,8 @@
  */
 package com.iisigroup.cap.report;
 
+import org.w3c.dom.Document;
+
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -19,13 +21,9 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Map;
 
-import javax.annotation.Resource;
-import javax.servlet.ServletContext;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
-import org.w3c.dom.Document;
 import org.xhtmlrenderer.pdf.ITextFontResolver;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 import org.xhtmlrenderer.pdf.PDFEncryption;
@@ -40,6 +38,8 @@ import com.iisigroup.cap.utils.CapSystemConfig;
 import com.lowagie.text.pdf.BaseFont;
 
 import freemarker.template.Template;
+import jakarta.annotation.Resource;
+import jakarta.servlet.ServletContext;
 
 /**
  * <pre>
@@ -73,7 +73,8 @@ public abstract class AbstractReportPdfService implements ReportService {
     /*
      * (non-Javadoc)
      * 
-     * @see com.iisigroup.cap.report.ReportService#generateReport(com.iisigroup.cap.component.Request)
+     * @see com.iisigroup.cap.report.ReportService#generateReport(com.iisigroup.cap.
+     * component.Request)
      */
     @Override
     public ByteArrayOutputStream generateReport(Request request) throws CapException {
@@ -86,14 +87,18 @@ public abstract class AbstractReportPdfService implements ReportService {
             Map<String, Object> reportData = execute(request);
 
             templateOut = new ByteArrayOutputStream();
-            wr = new OutputStreamWriter(templateOut, getSysConfig().getProperty(ReportParamEnum.defaultEncoding.toString(), DEFAULT_ENCORDING));
+            wr = new OutputStreamWriter(templateOut,
+                    getSysConfig().getProperty(ReportParamEnum.defaultEncoding.toString(), DEFAULT_ENCORDING));
             writer = new BufferedWriter(wr);
             t.process(reportData, writer);
 
             /**
-             * 1.FOR 非使用 JDK 1.7 避免找不到TransformerFactoryImpl 所以指定org.apache.xalanz裡的實作 2.當使用 org.apache.xalan.processor.TransformerFactoryImpl 會發生org.w3c.dom.DOMException: NAMESPACE_ERR:
+             * 1.FOR 非使用 JDK 1.7 避免找不到TransformerFactoryImpl 所以指定org.apache.xalanz裡的實作 2.當使用
+             * org.apache.xalan.processor.TransformerFactoryImpl
+             * 會發生org.w3c.dom.DOMException: NAMESPACE_ERR:
              */
-            System.setProperty("javax.xml.transform.TransformerFactory", "org.apache.xalan.xsltc.trax.TransformerFactoryImpl");
+            System.setProperty("javax.xml.transform.TransformerFactory",
+                    "org.apache.xalan.xsltc.trax.TransformerFactoryImpl");
 
             // process core-render
             Document document = XMLResource.load(new ByteArrayInputStream(templateOut.toByteArray())).getDocument();
@@ -119,7 +124,8 @@ public abstract class AbstractReportPdfService implements ReportService {
             }
             iTextRenderer.setPDFEncryption(pdfEncryption);
 
-            iTextRenderer.setDocument(document, FIL_URL_PREFIX + servletContext.getRealPath("").replace("\\", "/") + "/");
+            iTextRenderer.setDocument(document,
+                    FIL_URL_PREFIX + servletContext.getRealPath("").replace("\\", "/") + "/");
 
             iTextRenderer.layout();
             iTextRenderer.createPDF(out);
@@ -173,7 +179,8 @@ public abstract class AbstractReportPdfService implements ReportService {
 
     // 設定PDF權限
     protected String getFontPath() throws IOException {
-        return getFontFactory().getFontPath(getSysConfig().getProperty(ReportParamEnum.defaultFont.toString(), "MSJH.TTF"), "");
+        return getFontFactory()
+                .getFontPath(getSysConfig().getProperty(ReportParamEnum.defaultFont.toString(), "MSJH.TTF"), "");
     }
 
     /*

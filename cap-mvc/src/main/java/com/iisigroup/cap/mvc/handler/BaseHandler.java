@@ -4,8 +4,8 @@ import org.springframework.stereotype.Controller;
 
 import com.iisigroup.cap.annotation.HandlerType;
 import com.iisigroup.cap.annotation.HandlerType.HandlerTypeEnum;
-import com.iisigroup.cap.component.Result;
 import com.iisigroup.cap.component.Request;
+import com.iisigroup.cap.component.Result;
 import com.iisigroup.cap.component.impl.AjaxFormResult;
 import com.iisigroup.cap.exception.CapException;
 import com.iisigroup.cap.mvc.i18n.MessageBundleScriptCreator;
@@ -30,7 +30,7 @@ public class BaseHandler extends MFormHandler {
      * <pre>
      * 檔案作業完成後以防IE status bar 不停止
      * </pre>
-     * 
+     *
      * @param params
      *            PageParameters
      * @return IResult

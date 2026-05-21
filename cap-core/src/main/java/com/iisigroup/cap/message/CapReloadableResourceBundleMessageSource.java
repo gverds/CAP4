@@ -16,6 +16,8 @@ import java.util.Locale;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -37,7 +39,11 @@ import com.iisigroup.cap.utils.CapString;
  *          <li>2013/1/23,roodeschen,fix weglogic deployment error
  *          </ul>
  */
-public class CapReloadableResourceBundleMessageSource extends org.springframework.context.support.ReloadableResourceBundleMessageSource implements ApplicationContextAware, InitializingBean {
+public class CapReloadableResourceBundleMessageSource
+        extends org.springframework.context.support.ReloadableResourceBundleMessageSource
+        implements ApplicationContextAware, InitializingBean {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     // private final String i18nFileREG = "(_zh_CN|_en|_zh_TW).properties$";
     // private final String i18nPattern = "classpath:/i18n/**/*.properties";
@@ -49,7 +55,7 @@ public class CapReloadableResourceBundleMessageSource extends org.springframewor
 
     /**
      * @param defaultLocale
-     *            the defaultLocale to set
+     *                      the defaultLocale to set
      */
     public void setDefaultLocale(Locale defaultLocale) {
         this.defaultLocale = defaultLocale;
@@ -57,7 +63,7 @@ public class CapReloadableResourceBundleMessageSource extends org.springframewor
 
     /**
      * @param language
-     *            the language to set
+     *                 the language to set
      */
     public void setLanguages(String[] languages) {
         this.languages = languages;
@@ -65,7 +71,7 @@ public class CapReloadableResourceBundleMessageSource extends org.springframewor
 
     /**
      * @param basePath
-     *            the basePath to set
+     *                 the basePath to set
      */
     public void setBasePath(String basePath) {
         this.basePath = basePath;

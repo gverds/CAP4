@@ -13,7 +13,7 @@ package com.iisigroup.cap.base.handler;
 
 import java.util.Map;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
 

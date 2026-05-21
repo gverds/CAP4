@@ -3,7 +3,7 @@ package com.iisigroup.cap.websocket.service.impl;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Service;

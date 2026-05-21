@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.iisigroup.cap</groupId>
         <artifactId>cap</artifactId>
-        <version>4.0.1-fcb-201909170937</version>
+        <version>5.0.1-fcb-202604211120</version>
     </parent>
     <artifactId>cap-captcha</artifactId>
     <dependencies>
@@ -20,7 +20,7 @@
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
-            <version>1.10</version>
+            <version>1.17.1</version>
         </dependency>
     </dependencies>
 </project>

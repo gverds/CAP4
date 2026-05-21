@@ -112,12 +112,14 @@ public class GsonUtil {
      * @param jsonString
      * @return <T>
      */
+    @SuppressWarnings("unchecked")
     public static <T> T jsonToObj(String jsonString) {
         Gson gson = createGson(true);
         JsonReader reader = new JsonReader(new StringReader(jsonString));
         reader.setLenient(true);
-        return gson.fromJson(reader, new TypeToken<T>() {
-        }.getType());
+        // Gson 2.10+ 禁止 new TypeToken<T>(){} 使用 type variable（T 在執行期已被 type erasure 消除）
+        // 改用 Object.class，Gson 會自動將 JSON array 解析為 List、object 解析為 Map
+        return (T) gson.fromJson(reader, Object.class);
     }
 
     public static <T> T jsonToObj(String jsonString, Class<T> c) {

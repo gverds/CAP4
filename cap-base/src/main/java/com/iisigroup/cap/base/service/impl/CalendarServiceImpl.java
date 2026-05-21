@@ -3,7 +3,7 @@ package com.iisigroup.cap.base.service.impl;
 import java.sql.Timestamp;
 import java.util.List;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 

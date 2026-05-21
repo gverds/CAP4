@@ -13,8 +13,8 @@ package com.iisigroup.cap.base.service.impl;
 
 import java.util.Arrays;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -17,8 +17,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.annotation.Resource;
-import javax.servlet.ServletRequest;
+import jakarta.annotation.Resource;
+import jakarta.servlet.ServletRequest;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.math.NumberUtils;

@@ -11,12 +11,18 @@
  */
 package com.iisigroup.cap.jdbc.support;
 
-import org.hibernate.cfg.ImprovedNamingStrategy;
-import org.hibernate.internal.util.StringHelper;
+import org.hibernate.boot.model.naming.Identifier;
+import org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl;
+import org.hibernate.engine.jdbc.env.spi.JdbcEnvironment;
 
 /**
  * <pre>
  * Custom Naming Strategy.
+ * Hibernate 6 migration: ImprovedNamingStrategy was removed; now implements
+ * PhysicalNamingStrategyStandardImpl which passes through names unchanged
+ * (preserves camelCase, no underscore conversion).
+ * Note: Spring XML config must reference this class via
+ * hibernate.physical_naming_strategy property instead of hibernate.ejb.naming_strategy.
  * </pre>
  * 
  * @since 2014/3/31
@@ -24,28 +30,22 @@ import org.hibernate.internal.util.StringHelper;
  * @version
  *          <ul>
  *          <li>2014/3/31,Sunkist Wang,new
+ *          <li>2026/04/21,migration,Hibernate 6: extend
+ *          PhysicalNamingStrategyStandardImpl
  *          </ul>
  */
-public class CapNamingStrategy extends ImprovedNamingStrategy {
+public class CapNamingStrategy extends PhysicalNamingStrategyStandardImpl {
 
     /***/
     private static final long serialVersionUID = 1L;
 
-    private static final String TABLE_PREFIX = "";
-
-    public String classToTableName(String className) {
-        return (new StringBuilder()).append(TABLE_PREFIX).append(StringHelper.unqualify(className)).toString();
+    @Override
+    public Identifier toPhysicalTableName(Identifier logicalName, JdbcEnvironment jdbcEnvironment) {
+        return logicalName;
     }
 
-    public String tableName(String tableName) {
-        return (new StringBuilder()).append(TABLE_PREFIX).append(tableName).toString();
-    }
-
-    public String columnName(String columnName) {
-        return columnName;
-    }
-
-    public String propertyToColumnName(String propertyName) {
-        return propertyName;
+    @Override
+    public Identifier toPhysicalColumnName(Identifier logicalName, JdbcEnvironment jdbcEnvironment) {
+        return logicalName;
     }
 }

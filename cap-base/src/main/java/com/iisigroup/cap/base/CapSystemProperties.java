@@ -14,7 +14,7 @@ package com.iisigroup.cap.base;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import com.iisigroup.cap.base.model.SysParm;
 import com.iisigroup.cap.db.service.CommonService;

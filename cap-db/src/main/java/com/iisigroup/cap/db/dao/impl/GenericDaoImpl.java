@@ -23,18 +23,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.annotation.Resource;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Order;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import jakarta.annotation.Resource;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Expression;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Order;
+import jakarta.persistence.criteria.Path;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -94,7 +94,7 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
      * Insert.
      * 
      * @param entity
-     *            the entry
+     *               the entry
      */
     public void save(Object entity) {
         Assert.notNull(entity, "The entity to save cannot be null element");
@@ -121,7 +121,7 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
      * Delete.
      * 
      * @param entity
-     *            the entry
+     *               the entry
      */
     public void delete(Object entity) {
         if (getEntityManager().contains(entity)) {
@@ -146,7 +146,7 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
      * Find.
      * 
      * @param pk
-     *            the oid
+     *           the oid
      * 
      * @return the t
      */
@@ -204,7 +204,7 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
      * 查詢頁的資料
      * 
      * @param search
-     *            SearchSetting
+     *               SearchSetting
      * @return Page<S>
      */
     public Page<T> findPage(SearchSetting search) {
@@ -215,11 +215,11 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
      * find by SearchSetting
      * 
      * @param <S>
-     *            bean
+     *               bean
      * @param search
-     *            SearchSetting
+     *               SearchSetting
      * @param clazz
-     *            Class<S>
+     *               Class<S>
      * @return List<S>
      */
     public <S> List<S> find(Class<S> clazz, final SearchSetting search) {
@@ -230,11 +230,11 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
      * 取得筆數
      * 
      * @param <S>
-     *            bean
+     *               bean
      * @param clazz
-     *            Class<S>
+     *               Class<S>
      * @param search
-     *            SearchSetting
+     *               SearchSetting
      * @return int
      */
     public <S> int count(Class<S> clazz, SearchSetting search) {
@@ -251,11 +251,11 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
      * 查詢頁的資料
      * 
      * @param <S>
-     *            bean
+     *               bean
      * @param clazz
-     *            Class<S>
+     *               Class<S>
      * @param search
-     *            SearchSetting
+     *               SearchSetting
      * @return Page<S>
      */
     public <S> Page<S> findPage(Class<S> clazz, SearchSetting search) {
@@ -271,7 +271,7 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
         query = applySpecificationToCriteria(root, query, builder, thisSearch);
         TypedQuery<S> tquery = applyPaginationAndOrderToCriteria(root, query, builder, thisSearch);
         if (search.getPIIFlag()) {
-            piilogger.info(tquery.unwrap(org.hibernate.Query.class).getQueryString());
+            piilogger.info(tquery.unwrap(org.hibernate.query.Query.class).getQueryString());
         }
         return tquery;
     }
@@ -285,7 +285,7 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
         query = applySpecificationToCriteria(root, query, builder, thisSearch);
         TypedQuery<T> tquery = applyPaginationAndOrderToCriteria(root, query, builder, thisSearch);
         if (search.getPIIFlag()) {
-            piilogger.info(tquery.unwrap(org.hibernate.Query.class).getQueryString());
+            piilogger.info(tquery.unwrap(org.hibernate.query.Query.class).getQueryString());
         }
         return tquery;
     }
@@ -295,17 +295,18 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
      * 
      * @param <S>
      * @param root
-     *            Root
+     *                Root
      * @param query
-     *            CriteriaQuery
+     *                CriteriaQuery
      * @param builder
-     *            CriteriaBuilder
+     *                CriteriaBuilder
      * @param search
-     *            SearchSetting
+     *                SearchSetting
      * @return CriteriaQuery
      */
     @SuppressWarnings({ "rawtypes" })
-    protected <S> CriteriaQuery<S> applySpecificationToCriteria(Root root, CriteriaQuery<S> query, CriteriaBuilder builder, SearchSetting search) {
+    protected <S> CriteriaQuery<S> applySpecificationToCriteria(Root root, CriteriaQuery<S> query,
+            CriteriaBuilder builder, SearchSetting search) {
         if (search.getSearchModeParameters() != null) {
             Predicate[] aryWhere = new Predicate[search.getSearchModeParameters().size()];
             int i = 0;
@@ -323,16 +324,17 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
      * 設定查詢筆數及欄位排列順序
      * 
      * @param root
-     *            Root
+     *                Root
      * @param query
-     *            CriteriaQuery
+     *                CriteriaQuery
      * @param builder
-     *            CriteriaBuilder
+     *                CriteriaBuilder
      * @param search
-     *            SearchSetting
+     *                SearchSetting
      * @return TypedQuery
      */
-    protected <S> TypedQuery<S> applyPaginationAndOrderToCriteria(Root<S> root, CriteriaQuery<S> query, CriteriaBuilder builder, SearchSetting search) {
+    protected <S> TypedQuery<S> applyPaginationAndOrderToCriteria(Root<S> root, CriteriaQuery<S> query,
+            CriteriaBuilder builder, SearchSetting search) {
         // set order criteria if available
         if (search.hasOrderBy()) {
 
@@ -395,9 +397,11 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
                     CapSpecifications spec_key = new CapSpecifications((SearchModeParameter) _key);
                     CapSpecifications spec_value = new CapSpecifications((SearchModeParameter) _value);
                     if (SearchMode.OR == _searchMode) {
-                        return builder.or(spec_key.toPredicate(root, query, builder), spec_value.toPredicate(root, query, builder));
+                        return builder.or(spec_key.toPredicate(root, query, builder),
+                                spec_value.toPredicate(root, query, builder));
                     } else if (SearchMode.AND == _searchMode) {
-                        return builder.and(spec_key.toPredicate(root, query, builder), spec_value.toPredicate(root, query, builder));
+                        return builder.and(spec_key.toPredicate(root, query, builder),
+                                spec_value.toPredicate(root, query, builder));
                     } else {
                         return null;
                     }
@@ -440,37 +444,38 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
 
                 switch (_searchMode) {
 
-                case BETWEEN:
-                    Object[] values = asArray(_value);
-                    if (values != null) {
-                        return builder.between((Path<Comparable>) path, asComparable(values[0]), asComparable(values[1]));
-                    } else {
-                        return null;
-                    }
-                case GREATER_THAN:
-                    return builder.greaterThan((Path<Comparable>) path, asComparable(_value));
-                case GREATER_EQUALS:
-                    return builder.greaterThanOrEqualTo((Path<Comparable>) path, asComparable(_value));
-                case LESS_THAN:
-                    return builder.lessThan((Path<Comparable>) path, asComparable(_value));
-                case LESS_EQUALS:
-                    return builder.lessThanOrEqualTo((Path<Comparable>) path, asComparable(_value));
-                case IS_NULL:
-                    return builder.isNull(path);
-                case IS_NOT_NULL:
-                    return builder.isNotNull(path);
-                case IN:
-                    return path.in(asArray(_value));
-                case NOT_IN:
-                    return builder.not(path.in(asArray(_value)));
-                case LIKE:
-                    return builder.like((Path<String>) path, String.valueOf(_value));
-                case NOT_LIKE:
-                    return builder.notLike((Path<String>) path, String.valueOf(_value));
-                case EQUALS:
-                    return builder.equal(path, _value);
-                case NOT_EQUALS:
-                    return builder.notEqual(path, _value);
+                    case BETWEEN:
+                        Object[] values = asArray(_value);
+                        if (values != null) {
+                            return builder.between((Path<Comparable>) path, asComparable(values[0]),
+                                    asComparable(values[1]));
+                        } else {
+                            return null;
+                        }
+                    case GREATER_THAN:
+                        return builder.greaterThan((Path<Comparable>) path, asComparable(_value));
+                    case GREATER_EQUALS:
+                        return builder.greaterThanOrEqualTo((Path<Comparable>) path, asComparable(_value));
+                    case LESS_THAN:
+                        return builder.lessThan((Path<Comparable>) path, asComparable(_value));
+                    case LESS_EQUALS:
+                        return builder.lessThanOrEqualTo((Path<Comparable>) path, asComparable(_value));
+                    case IS_NULL:
+                        return builder.isNull(path);
+                    case IS_NOT_NULL:
+                        return builder.isNotNull(path);
+                    case IN:
+                        return path.in(asArray(_value));
+                    case NOT_IN:
+                        return builder.not(path.in(asArray(_value)));
+                    case LIKE:
+                        return builder.like((Path<String>) path, String.valueOf(_value));
+                    case NOT_LIKE:
+                        return builder.notLike((Path<String>) path, String.valueOf(_value));
+                    case EQUALS:
+                        return builder.equal(path, _value);
+                    case NOT_EQUALS:
+                        return builder.notEqual(path, _value);
                 }
             } catch (Exception e) {
                 logger.error(e.getLocalizedMessage(), e);

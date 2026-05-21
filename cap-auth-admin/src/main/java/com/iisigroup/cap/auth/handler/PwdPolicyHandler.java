@@ -10,7 +10,7 @@
  */
 package com.iisigroup.cap.auth.handler;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
 

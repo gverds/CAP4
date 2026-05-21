@@ -2,7 +2,7 @@ package com.iisigroup.cap.websocket.service.impl;
 
 import java.util.Collection;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 

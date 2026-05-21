@@ -27,10 +27,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterBatchUpdateUtils;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterUtils;
-import org.springframework.jdbc.core.namedparam.ParsedSql;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
@@ -45,7 +42,6 @@ import com.iisigroup.cap.jdbc.support.CapColumnMapRowMapper;
 import com.iisigroup.cap.jdbc.support.CapRowMapperResultSetExtractor;
 import com.iisigroup.cap.jdbc.support.CapSqlSearchQueryProvider;
 import com.iisigroup.cap.jdbc.support.CapSqlStatement;
-import com.iisigroup.cap.operation.simple.SimpleContextHolder;
 import com.iisigroup.cap.utils.CapString;
 import com.iisigroup.cap.utils.SpelUtil;
 
@@ -98,7 +94,8 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
             sql.append(' ').append(sqltemp.getValue(CapJdbcConstants.SQL_QUERY_SUFFIX, ""));
         }
         if (logger.isTraceEnabled()) {
-            logger.trace(new StringBuffer("SqlId=").append(sqlp.containsKey(sqlId) ? sqlId : "").append("\n\t").append(CapDbUtil.convertToSQLCommand(sql.toString(), args)).toString());
+            logger.trace(new StringBuffer("SqlId=").append(sqlp.containsKey(sqlId) ? sqlId : "").append("\n\t")
+                    .append(CapDbUtil.convertToSQLCommand(sql.toString(), args)).toString());
         }
         long cur = System.currentTimeMillis();
         try {
@@ -114,22 +111,23 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
      * 查詢
      * 
      * @param <T>
-     *            T
+     *                         T
      * @param sqlId
-     *            sql id
+     *                         sql id
      * @param appendDynamicSql
-     *            append dynamic sql
+     *                         append dynamic sql
      * @param args
-     *            參數
+     *                         參數
      * @param startRow
-     *            開始筆數
+     *                         開始筆數
      * @param fetchSize
-     *            截取筆數
+     *                         截取筆數
      * @param rm
-     *            RowMapper
+     *                         RowMapper
      * @return List<T>
      */
-    public <T> List<T> query(String sqlId, String appendDynamicSql, Map<String, Object> args, int startRow, int fetchSize, RowMapper<T> rm) {
+    public <T> List<T> query(String sqlId, String appendDynamicSql, Map<String, Object> args, int startRow,
+            int fetchSize, RowMapper<T> rm) {
         StringBuffer sql = new StringBuffer((String) sqlp.getValue(sqlId, sqlId));
         if (appendDynamicSql != null) {
             sql.append(' ').append(appendDynamicSql);
@@ -138,11 +136,13 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
             sql.append(' ').append(sqltemp.getValue(CapJdbcConstants.SQL_QUERY_SUFFIX, ""));
         }
         if (logger.isTraceEnabled()) {
-            logger.trace(new StringBuffer("SqlId=").append(sqlp.containsKey(sqlId) ? sqlId : "").append("\n\t").append(CapDbUtil.convertToSQLCommand(sql.toString(), args)).toString());
+            logger.trace(new StringBuffer("SqlId=").append(sqlp.containsKey(sqlId) ? sqlId : "").append("\n\t")
+                    .append(CapDbUtil.convertToSQLCommand(sql.toString(), args)).toString());
         }
         long cur = System.currentTimeMillis();
         try {
-            return super.query(sql.toString(), (Map<String, Object>) args, new CapRowMapperResultSetExtractor<T>(rm, startRow, fetchSize));
+            return super.query(sql.toString(), (Map<String, Object>) args,
+                    new CapRowMapperResultSetExtractor<T>(rm, startRow, fetchSize));
         } catch (Exception e) {
             throw new CapDBException(sqlId, e, getClass());
         } finally {
@@ -154,15 +154,15 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
      * 查詢，查詢結果為List<Map<key, value>>
      * 
      * @param <T>
-     *            bean
+     *                         bean
      * @param sqlId
-     *            sqlId
+     *                         sqlId
      * @param appendDynamicSql
-     *            append sql
+     *                         append sql
      * @param args
-     *            傳入參數
+     *                         傳入參數
      * @param rm
-     *            RowMapper
+     *                         RowMapper
      * 
      * @return List<T>
      */
@@ -175,7 +175,8 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
             sql.append(' ').append(sqltemp.getValue(CapJdbcConstants.SQL_QUERY_SUFFIX, ""));
         }
         if (logger.isTraceEnabled()) {
-            logger.trace(new StringBuffer("SqlId=").append(sqlp.containsKey(sqlId) ? sqlId : "").append("\n\t").append(CapDbUtil.convertToSQLCommand(sql.toString(), args)).toString());
+            logger.trace(new StringBuffer("SqlId=").append(sqlp.containsKey(sqlId) ? sqlId : "").append("\n\t")
+                    .append(CapDbUtil.convertToSQLCommand(sql.toString(), args)).toString());
         }
         long cur = System.currentTimeMillis();
         try {
@@ -199,15 +200,15 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
      * 查詢，查詢結果為JavaBean
      * 
      * @param <T>
-     *            JavaBean
+     *                         JavaBean
      * @param sqlId
-     *            sqlId
+     *                         sqlId
      * @param appendDynamicSql
-     *            append sql
+     *                         append sql
      * @param rm
-     *            RowMapper
+     *                         RowMapper
      * @param args
-     *            傳入參數
+     *                         傳入參數
      * @return T
      * @throws GWException
      */
@@ -223,11 +224,11 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
      * 查詢，查詢結果為Map<key,value>
      * 
      * @param sqlId
-     *            sqlId
+     *                         sqlId
      * @param appendDynamicSql
-     *            append sql
+     *                         append sql
      * @param args
-     *            傳入參數
+     *                         傳入參數
      * @return Map<String, Object>
      * @throws GWException
      */
@@ -239,9 +240,9 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
      * 查詢筆數專用
      * 
      * @param sqlId
-     *            sqlId
+     *              sqlId
      * @param args
-     *            args
+     *              args
      * @return int
      * @throws GWException
      */
@@ -249,7 +250,8 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
         StringBuffer sql = new StringBuffer((String) sqlp.getValue(sqlId, sqlId));
         sql.append(' ').append(sqltemp.getValue(CapJdbcConstants.SQL_QUERY_SUFFIX, ""));
         if (logger.isTraceEnabled()) {
-            logger.trace(new StringBuffer("SqlId=").append(sqlp.containsKey(sqlId) ? sqlId : "").append("\n\t").append(CapDbUtil.convertToSQLCommand(sql.toString(), args)).toString());
+            logger.trace(new StringBuffer("SqlId=").append(sqlp.containsKey(sqlId) ? sqlId : "").append("\n\t")
+                    .append(CapDbUtil.convertToSQLCommand(sql.toString(), args)).toString());
         }
         long cur = System.currentTimeMillis();
         try {
@@ -266,9 +268,9 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
      * 查詢，查詢結果為Map<key,value>
      * 
      * @param sqlId
-     *            sqlId
+     *              sqlId
      * @param args
-     *            傳入參數
+     *              傳入參數
      * @return Map<String, Object>
      * @throws GWException
      */
@@ -280,9 +282,9 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
      * 新增、修改、刪除
      * 
      * @param sqlId
-     *            sqlId
+     *              sqlId
      * @param args
-     *            Map<String, ?>
+     *              Map<String, ?>
      * @return int
      * @throws GWException
      */
@@ -290,7 +292,8 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
     public int update(String sqlId, Map<String, ?> args) {
         String sql = sqlp.getValue(sqlId, sqlId);
         if (logger.isTraceEnabled()) {
-            logger.trace(new StringBuffer("SqlId=").append(sqlp.containsKey(sqlId) ? sqlId : "").append("\n\t").append(CapDbUtil.convertToSQLCommand(sql, args)).toString());
+            logger.trace(new StringBuffer("SqlId=").append(sqlp.containsKey(sqlId) ? sqlId : "").append("\n\t")
+                    .append(CapDbUtil.convertToSQLCommand(sql, args)).toString());
         }
         long cur = System.currentTimeMillis();
         try {
@@ -308,7 +311,6 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
         try {
             int[] batchCount = null;
             String sql = sqlp.getValue(sqlId, sqlId);
-            ParsedSql parsedSql = NamedParameterUtils.parseSqlStatement(sql);
             if (sqlTypes != null && !sqlTypes.isEmpty()) {
                 MapSqlParameterSource[] batch = new MapSqlParameterSource[batchValues.size()];
                 for (int i = 0; i < batchValues.size(); i++) {
@@ -321,17 +323,19 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
                         batch[i].addValue(entry.getKey(), valueMap.get(entry.getKey()), entry.getValue());
                     }
                     if (logger.isTraceEnabled()) {
-                        logger.trace(new StringBuffer("SqlId=").append(sqlp.containsKey(sqlId) ? sqlId : "").append("\n#").append((i + 1)).append("\t")
+                        logger.trace(new StringBuffer("SqlId=").append(sqlp.containsKey(sqlId) ? sqlId : "")
+                                .append("\n#").append((i + 1)).append("\t")
                                 .append(CapDbUtil.convertToSQLCommand(sql, valueMap)).toString());
                     }
                 }
                 cur = System.currentTimeMillis();
-                batchCount = NamedParameterBatchUpdateUtils.executeBatchUpdateWithNamedParameters(parsedSql, batch, super.getJdbcOperations());
+                batchCount = super.batchUpdate(sql, batch);
 
             } else {
-                SqlParameterSource[] batch = SqlParameterSourceUtils.createBatch(batchValues.toArray(new HashMap[batchValues.size()]));
+                SqlParameterSource[] batch = SqlParameterSourceUtils
+                        .createBatch(batchValues.toArray(new HashMap[batchValues.size()]));
                 cur = System.currentTimeMillis();
-                batchCount = NamedParameterBatchUpdateUtils.executeBatchUpdateWithNamedParameters(parsedSql, batch, super.getJdbcOperations());
+                batchCount = super.batchUpdate(sql, batch);
             }
             int rows = 0;
             for (int i : batchCount) {
@@ -357,11 +361,11 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
      * call SP
      * 
      * @param spName
-     *            SP Name
+     *                 SP Name
      * @param params
-     *            SqlParameter/SqlOutParameter/SqlInOutParameter obj array
+     *                 SqlParameter/SqlOutParameter/SqlInOutParameter obj array
      * @param inParams
-     *            SqlParameter values
+     *                 SqlParameter values
      * @return result map
      */
     public Map<String, Object> callSPForMap(String spName, SqlParameter[] params, Map<String, ?> inParams) {
@@ -386,19 +390,21 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
     }
 
     /**
-     * wrapper SqlRowSet queryForRowSet(String sql, Object[] args) from org.springframework.jdbc.core.JdbcTemplate
+     * wrapper SqlRowSet queryForRowSet(String sql, Object[] args) from
+     * org.springframework.jdbc.core.JdbcTemplate
      * 
      * @param sqlId
-     *            sqlId
+     *              sqlId
      * @param args
-     *            參數
+     *              參數
      * @return SqlRowSet
      */
     public SqlRowSet queryForRowSet(String sqlId, Map<String, ?> args) {
         StringBuffer sql = new StringBuffer((String) sqlp.getValue(sqlId, sqlId));
         sql.append(' ').append(sqltemp.getValue(CapJdbcConstants.SQL_QUERY_SUFFIX, ""));
         if (logger.isTraceEnabled()) {
-            logger.trace(new StringBuffer("SqlId=").append(sqlp.containsKey(sqlId) ? sqlId : "").append("\n\t").append(CapDbUtil.convertToSQLCommand(sql.toString(), args)).toString());
+            logger.trace(new StringBuffer("SqlId=").append(sqlp.containsKey(sqlId) ? sqlId : "").append("\n\t")
+                    .append(CapDbUtil.convertToSQLCommand(sql.toString(), args)).toString());
         }
         long cur = System.currentTimeMillis();
         try {
@@ -425,12 +431,16 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
      * @param orderBy
      * @return
      */
-    public List<Map<String, Object>> queryPaging(String sqlId, Map<String, Object> args, int startRow, int fetchSize, String orderBy) {
+    public List<Map<String, Object>> queryPaging(String sqlId, Map<String, Object> args, int startRow, int fetchSize,
+            String orderBy) {
 
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(CapJdbcConstants.SQL_PAGING_SOURCE_SQL, getSourceSql(sqlId, args, startRow, fetchSize));
-        params.put(CapJdbcConstants.SQL_PAGING_SOURCE_ORDER, CapString.isEmpty(orderBy) ? (sqltemp.getValue(CapJdbcConstants.SQL_PAGING_DUMMY_ORDER_BY, "")) : orderBy);
-        StringBuffer sql = new StringBuffer().append(SpelUtil.spelParser((String) sqltemp.getValue(CapJdbcConstants.SQL_PAGING_QUERY), params, sqltemp.getParserContext()));
+        params.put(CapJdbcConstants.SQL_PAGING_SOURCE_ORDER,
+                CapString.isEmpty(orderBy) ? (sqltemp.getValue(CapJdbcConstants.SQL_PAGING_DUMMY_ORDER_BY, ""))
+                        : orderBy);
+        StringBuffer sql = new StringBuffer().append(SpelUtil.spelParser(
+                (String) sqltemp.getValue(CapJdbcConstants.SQL_PAGING_QUERY), params, sqltemp.getParserContext()));
         sql.append(' ').append(sqltemp.getValue(CapJdbcConstants.SQL_QUERY_SUFFIX, ""));
         if (args == null) {
             args = new HashMap<String, Object>();
@@ -438,7 +448,8 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
         args.put("startRow", startRow);
         args.put("endRow", startRow + fetchSize);
         if (logger.isTraceEnabled()) {
-            logger.trace(new StringBuffer("\n\t").append(CapDbUtil.convertToSQLCommand(sql.toString(), args)).toString());
+            logger.trace(
+                    new StringBuffer("\n\t").append(CapDbUtil.convertToSQLCommand(sql.toString(), args)).toString());
         }
         long cur = System.currentTimeMillis();
         try {
@@ -459,31 +470,36 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
      * @param sqlId
      * @param args
      * @param search
-     *            只拿OrderBy資料來用
+     *                  只拿OrderBy資料來用
      * @param startRow
      * @param fetchSize
      * @return
      */
-    public Page<Map<String, Object>> queryForPage(String sqlId, Map<String, Object> args, SearchSetting search, int startRow, int fetchSize) {
+    public Page<Map<String, Object>> queryForPage(String sqlId, Map<String, Object> args, SearchSetting search,
+            int startRow, int fetchSize) {
         CapSqlSearchQueryProvider provider = new CapSqlSearchQueryProvider(search);
 
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(CapJdbcConstants.SQL_PAGING_SOURCE_SQL, getSourceSql(sqlId, args, startRow, fetchSize));
 
-        String orderBy = search.hasOrderBy() ? provider.generateOrderClause() : sqltemp.getValue(CapJdbcConstants.SQL_PAGING_DUMMY_ORDER_BY, "");
+        String orderBy = search.hasOrderBy() ? provider.generateOrderClause()
+                : sqltemp.getValue(CapJdbcConstants.SQL_PAGING_DUMMY_ORDER_BY, "");
         params.put(CapJdbcConstants.SQL_PAGING_SOURCE_ORDER, orderBy);
 
-        StringBuffer sql = new StringBuffer().append(SpelUtil.spelParser((String) sqltemp.getValue(CapJdbcConstants.SQL_PAGING_TOTAL_PAGE), params, sqlp.getParserContext()));
+        StringBuffer sql = new StringBuffer().append(SpelUtil.spelParser(
+                (String) sqltemp.getValue(CapJdbcConstants.SQL_PAGING_TOTAL_PAGE), params, sqlp.getParserContext()));
         sql.append(' ').append(sqltemp.getValue(CapJdbcConstants.SQL_QUERY_SUFFIX, ""));
         sql.append(' ').append(orderBy);
         if (logger.isTraceEnabled()) {
-            logger.trace(new StringBuffer("\n\t").append(CapDbUtil.convertToSQLCommand(sql.toString(), args)).toString());
+            logger.trace(
+                    new StringBuffer("\n\t").append(CapDbUtil.convertToSQLCommand(sql.toString(), args)).toString());
         }
         // find list
         List<Map<String, Object>> list = this.queryPaging(sqlId, args, startRow, fetchSize, orderBy);
         long cur = System.currentTimeMillis();
         try {
-            return new Page<Map<String, Object>>(list, super.queryForObject(sql.toString(), args, Integer.class), fetchSize, startRow);
+            return new Page<Map<String, Object>>(list, super.queryForObject(sql.toString(), args, Integer.class),
+                    fetchSize, startRow);
         } catch (Exception e) {
             throw new CapDBException(sqlId, e, getClass());
         } finally {
@@ -495,17 +511,21 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
 
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(CapJdbcConstants.SQL_PAGING_SOURCE_SQL, getSourceSql(sqlId, args, startRow, fetchSize));
-        params.put(CapJdbcConstants.SQL_PAGING_SOURCE_ORDER, sqltemp.getValue(CapJdbcConstants.SQL_PAGING_DUMMY_ORDER_BY, ""));
-        StringBuffer sql = new StringBuffer().append(SpelUtil.spelParser((String) sqltemp.getValue(CapJdbcConstants.SQL_PAGING_TOTAL_PAGE), params, sqlp.getParserContext()));
+        params.put(CapJdbcConstants.SQL_PAGING_SOURCE_ORDER,
+                sqltemp.getValue(CapJdbcConstants.SQL_PAGING_DUMMY_ORDER_BY, ""));
+        StringBuffer sql = new StringBuffer().append(SpelUtil.spelParser(
+                (String) sqltemp.getValue(CapJdbcConstants.SQL_PAGING_TOTAL_PAGE), params, sqlp.getParserContext()));
         sql.append(' ').append(sqltemp.getValue(CapJdbcConstants.SQL_QUERY_SUFFIX, ""));
         if (logger.isTraceEnabled()) {
-            logger.trace(new StringBuffer("\n\t").append(CapDbUtil.convertToSQLCommand(sql.toString(), args)).toString());
+            logger.trace(
+                    new StringBuffer("\n\t").append(CapDbUtil.convertToSQLCommand(sql.toString(), args)).toString());
         }
         // find list
         List<Map<String, Object>> list = this.queryPaging(sqlId, args, startRow, fetchSize);
         long cur = System.currentTimeMillis();
         try {
-            return new Page<Map<String, Object>>(list, super.queryForObject(sql.toString(), args, Integer.class), fetchSize, startRow);
+            return new Page<Map<String, Object>>(list, super.queryForObject(sql.toString(), args, Integer.class),
+                    fetchSize, startRow);
         } catch (Exception e) {
             throw new CapDBException(sqlId, e, getClass());
         } finally {
@@ -539,26 +559,32 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(CapJdbcConstants.SQL_PAGING_SOURCE_SQL, sourceSql.toString());
         // 準備查詢筆數sql
-        StringBuffer sql = new StringBuffer().append(SpelUtil.spelParser((String) sqltemp.getValue(CapJdbcConstants.SQL_PAGING_TOTAL_PAGE), params, sqlp.getParserContext()));
+        StringBuffer sql = new StringBuffer().append(SpelUtil.spelParser(
+                (String) sqltemp.getValue(CapJdbcConstants.SQL_PAGING_TOTAL_PAGE), params, sqlp.getParserContext()));
         sql.append(' ').append(sqltemp.getValue(CapJdbcConstants.SQL_QUERY_SUFFIX, ""));
         if (logger.isTraceEnabled()) {
-            logger.trace(new StringBuffer("\n\t").append(CapDbUtil.convertToSQLCommand(sql.toString(), provider.getParams())).toString());
+            logger.trace(new StringBuffer("\n\t")
+                    .append(CapDbUtil.convertToSQLCommand(sql.toString(), provider.getParams())).toString());
         }
         String sqlRow = sql.toString();
         // 準備查詢list sql
         // sourceSql.append(provider.generateOrderCause());
         params.put(CapJdbcConstants.SQL_PAGING_SOURCE_SQL, sourceSql.toString());
-        String orderBy = search.hasOrderBy() ? provider.generateOrderClause() : sqltemp.getValue(CapJdbcConstants.SQL_PAGING_DUMMY_ORDER_BY, "");
+        String orderBy = search.hasOrderBy() ? provider.generateOrderClause()
+                : sqltemp.getValue(CapJdbcConstants.SQL_PAGING_DUMMY_ORDER_BY, "");
         params.put(CapJdbcConstants.SQL_PAGING_SOURCE_ORDER, orderBy);
-        sql = new StringBuffer().append(SpelUtil.spelParser((String) sqltemp.getValue(CapJdbcConstants.SQL_PAGING_QUERY), params, sqlp.getParserContext()));
+        sql = new StringBuffer().append(SpelUtil.spelParser(
+                (String) sqltemp.getValue(CapJdbcConstants.SQL_PAGING_QUERY), params, sqlp.getParserContext()));
         sql.append(' ').append(sqltemp.getValue(CapJdbcConstants.SQL_QUERY_SUFFIX, ""));
         // 此處的 order by 是組完分頁 sql 後，再做一次 order by，因為子查詢中的 order by 不會反映在最後的查詢結果
         sql.append(provider.generateOrderClause());
         if (logger.isTraceEnabled()) {
-            logger.trace(new StringBuffer("\n\t").append(CapDbUtil.convertToSQLCommand(sql.toString(), provider.getParams())).toString());
+            logger.trace(new StringBuffer("\n\t")
+                    .append(CapDbUtil.convertToSQLCommand(sql.toString(), provider.getParams())).toString());
         }
         if (getPIIFlag() || search.getPIIFlag()) {
-            piiLogger.info(new StringBuffer("\n\t").append(CapDbUtil.convertToSQLCommand(sql.toString(), provider.getParams())).toString());
+            piiLogger.info(new StringBuffer("\n\t")
+                    .append(CapDbUtil.convertToSQLCommand(sql.toString(), provider.getParams())).toString());
         }
         long cur = System.currentTimeMillis();
         try {
@@ -581,26 +607,32 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(CapJdbcConstants.SQL_PAGING_SOURCE_SQL, sourceSql.toString());
         // 準備查詢筆數sql
-        StringBuffer sql = new StringBuffer().append(SpelUtil.spelParser((String) sqltemp.getValue(CapJdbcConstants.SQL_PAGING_TOTAL_PAGE), params, sqlp.getParserContext()));
+        StringBuffer sql = new StringBuffer().append(SpelUtil.spelParser(
+                (String) sqltemp.getValue(CapJdbcConstants.SQL_PAGING_TOTAL_PAGE), params, sqlp.getParserContext()));
         sql.append(' ').append(sqltemp.getValue(CapJdbcConstants.SQL_QUERY_SUFFIX, ""));
         if (logger.isTraceEnabled()) {
-            logger.trace(new StringBuffer("\n\t").append(CapDbUtil.convertToSQLCommand(sql.toString(), provider.getParams())).toString());
+            logger.trace(new StringBuffer("\n\t")
+                    .append(CapDbUtil.convertToSQLCommand(sql.toString(), provider.getParams())).toString());
         }
         String sqlRow = sql.toString();
         // 準備查詢list sql
         // sourceSql.append(provider.generateOrderCause());
         params.put(CapJdbcConstants.SQL_PAGING_SOURCE_SQL, sourceSql.toString());
-        String orderBy = search.hasOrderBy() ? provider.generateOrderClause() : sqltemp.getValue(CapJdbcConstants.SQL_PAGING_DUMMY_ORDER_BY, "");
+        String orderBy = search.hasOrderBy() ? provider.generateOrderClause()
+                : sqltemp.getValue(CapJdbcConstants.SQL_PAGING_DUMMY_ORDER_BY, "");
         params.put(CapJdbcConstants.SQL_PAGING_SOURCE_ORDER, orderBy);
-        sql = new StringBuffer().append(SpelUtil.spelParser((String) sqltemp.getValue(CapJdbcConstants.SQL_PAGING_QUERY), params, sqlp.getParserContext()));
+        sql = new StringBuffer().append(SpelUtil.spelParser(
+                (String) sqltemp.getValue(CapJdbcConstants.SQL_PAGING_QUERY), params, sqlp.getParserContext()));
         sql.append(' ').append(sqltemp.getValue(CapJdbcConstants.SQL_QUERY_SUFFIX, ""));
         // 此處的 order by 是組完分頁 sql 後，再做一次 order by，因為子查詢中的 order by 不會反映在最後的查詢結果
         sql.append(provider.generateOrderClause());
         if (logger.isTraceEnabled()) {
-            logger.trace(new StringBuffer("\n\t").append(CapDbUtil.convertToSQLCommand(sql.toString(), provider.getParams())).toString());
+            logger.trace(new StringBuffer("\n\t")
+                    .append(CapDbUtil.convertToSQLCommand(sql.toString(), provider.getParams())).toString());
         }
         if (getPIIFlag() || search.getPIIFlag()) {
-            piiLogger.info(new StringBuffer("\n\t").append(CapDbUtil.convertToSQLCommand(sql.toString(), provider.getParams())).toString());
+            piiLogger.info(new StringBuffer("\n\t")
+                    .append(CapDbUtil.convertToSQLCommand(sql.toString(), provider.getParams())).toString());
         }
         long cur = System.currentTimeMillis();
         try {
@@ -614,7 +646,8 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
         }
     }
 
-    public <T> Page<T> queryForPage(String sqlId, SearchSetting search, RowMapper<T> rm, Map<String, Object> inSqlParam) {
+    public <T> Page<T> queryForPage(String sqlId, SearchSetting search, RowMapper<T> rm,
+            Map<String, Object> inSqlParam) {
         CapSqlSearchQueryProvider provider = new CapSqlSearchQueryProvider(search);
         String _sql = sqlp.getValue(sqlId, sqlId);
         // 加入 SpEL 處理 where clause
@@ -623,28 +656,34 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(CapJdbcConstants.SQL_PAGING_SOURCE_SQL, sourceSql.toString());
         // 準備查詢筆數sql
-        StringBuffer sql = new StringBuffer().append(SpelUtil.spelParser((String) sqltemp.getValue(CapJdbcConstants.SQL_PAGING_TOTAL_PAGE), params, sqlp.getParserContext()));
+        StringBuffer sql = new StringBuffer().append(SpelUtil.spelParser(
+                (String) sqltemp.getValue(CapJdbcConstants.SQL_PAGING_TOTAL_PAGE), params, sqlp.getParserContext()));
         Map<String, Object> param = provider.getParams();
         param.putAll(inSqlParam);
         sql.append(' ').append(sqltemp.getValue(CapJdbcConstants.SQL_QUERY_SUFFIX, ""));
         if (logger.isTraceEnabled()) {
-            logger.trace(new StringBuffer("\n\t").append(CapDbUtil.convertToSQLCommand(sql.toString(), param)).toString());
+            logger.trace(
+                    new StringBuffer("\n\t").append(CapDbUtil.convertToSQLCommand(sql.toString(), param)).toString());
         }
         if (getPIIFlag() || search.getPIIFlag()) {
-            piiLogger.info(new StringBuffer("\n\t").append(CapDbUtil.convertToSQLCommand(sql.toString(), param)).toString());
+            piiLogger.info(
+                    new StringBuffer("\n\t").append(CapDbUtil.convertToSQLCommand(sql.toString(), param)).toString());
         }
         String sqlRow = sql.toString();
         // 準備查詢list sql
         // sourceSql.append(provider.generateOrderCause());
         params.put(CapJdbcConstants.SQL_PAGING_SOURCE_SQL, sourceSql.toString());
-        String orderBy = search.hasOrderBy() ? provider.generateOrderClause() : sqltemp.getValue(CapJdbcConstants.SQL_PAGING_DUMMY_ORDER_BY, "");
+        String orderBy = search.hasOrderBy() ? provider.generateOrderClause()
+                : sqltemp.getValue(CapJdbcConstants.SQL_PAGING_DUMMY_ORDER_BY, "");
         params.put(CapJdbcConstants.SQL_PAGING_SOURCE_ORDER, orderBy);
-        sql = new StringBuffer().append(SpelUtil.spelParser((String) sqltemp.getValue(CapJdbcConstants.SQL_PAGING_QUERY), params, sqlp.getParserContext()));
+        sql = new StringBuffer().append(SpelUtil.spelParser(
+                (String) sqltemp.getValue(CapJdbcConstants.SQL_PAGING_QUERY), params, sqlp.getParserContext()));
         sql.append(' ').append(sqltemp.getValue(CapJdbcConstants.SQL_QUERY_SUFFIX, ""));
         // 此處的 order by 是組完分頁 sql 後，再做一次 order by，因為子查詢中的 order by 不會反映在最後的查詢結果
         sql.append(provider.generateOrderClause());
         if (logger.isTraceEnabled()) {
-            logger.trace(new StringBuffer("\n\t").append(CapDbUtil.convertToSQLCommand(sql.toString(), param)).toString());
+            logger.trace(
+                    new StringBuffer("\n\t").append(CapDbUtil.convertToSQLCommand(sql.toString(), param)).toString());
         }
         long cur = System.currentTimeMillis();
         try {
@@ -668,10 +707,12 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
         Map<String, Object> param = provider.getParams();
         param.putAll(inSqlParam);
         if (logger.isTraceEnabled()) {
-            logger.trace(new StringBuffer("\n\t").append(CapDbUtil.convertToSQLCommand(sourceSql.toString(), param)).toString());
+            logger.trace(new StringBuffer("\n\t").append(CapDbUtil.convertToSQLCommand(sourceSql.toString(), param))
+                    .toString());
         }
         if (getPIIFlag() || search.getPIIFlag()) {
-            piiLogger.info(new StringBuffer("\n\t").append(CapDbUtil.convertToSQLCommand(sourceSql.toString(), param)).toString());
+            piiLogger.info(new StringBuffer("\n\t").append(CapDbUtil.convertToSQLCommand(sourceSql.toString(), param))
+                    .toString());
         }
         long cur = System.currentTimeMillis();
         try {
@@ -690,7 +731,9 @@ public class CapNamedJdbcTemplate extends NamedParameterJdbcTemplate {
             params.put(CapJdbcConstants.SQL_SEARCH_SETTING_WHERE_CLAUSE, whereClause);
             result = SpelUtil.spelParser(_sql, params, sqlp.getParserContext());
         } else {
-            StringBuffer sourceSql = new StringBuffer(_sql).append(_sql.toUpperCase(Locale.ENGLISH).lastIndexOf("WHERE") > 0 ? " AND " : " WHERE ").append(whereClause);
+            StringBuffer sourceSql = new StringBuffer(_sql)
+                    .append(_sql.toUpperCase(Locale.ENGLISH).lastIndexOf("WHERE") > 0 ? " AND " : " WHERE ")
+                    .append(whereClause);
             result = sourceSql.toString();
         }
         return result;

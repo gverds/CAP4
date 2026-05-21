@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.iisigroup.cap</groupId>
         <artifactId>cap</artifactId>
-        <version>4.0.1-fcb-202104301910</version>
+        <version>5.0.1-fcb-202604211120</version>
     </parent>
     <artifactId>cap-report</artifactId>
     <dependencies>
@@ -23,13 +23,19 @@
         <dependency>
             <groupId>org.xhtmlrenderer</groupId>
             <artifactId>flying-saucer-pdf-openpdf</artifactId>
-            <version>9.1.12</version>
+            <version>9.4.0</version>
         </dependency>
         <dependency>
             <groupId>xalan</groupId>
             <artifactId>xalan</artifactId>
             <version>2.7.2</version>
             <scope>runtime</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>xml-apis</groupId>
+                    <artifactId>xml-apis</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- ******************** JExcelApi(jxl) LIB BEGIN ******************** -->
         <dependency>
@@ -39,6 +45,11 @@
             <type>jar</type>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+		    <groupId>jakarta.annotation</groupId>
+		    <artifactId>jakarta.annotation-api</artifactId>
+		    <scope>compile</scope>
+		</dependency>
         <!-- ******************** JExcelApi(jxl) LIB END ******************** -->
     </dependencies>
 </project>

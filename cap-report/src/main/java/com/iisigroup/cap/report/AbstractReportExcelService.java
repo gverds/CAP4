@@ -21,7 +21,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -76,7 +76,8 @@ public abstract class AbstractReportExcelService implements ReportService {
         InputStream inputWorkbook = null;
         Workbook w = null;
         try {
-            inputWorkbook = getClass().getClassLoader().getResourceAsStream("/ftl/" + getReportDefinition() + REPORT_SUFFIX);
+            inputWorkbook = getClass().getClassLoader()
+                    .getResourceAsStream("/ftl/" + getReportDefinition() + REPORT_SUFFIX);
             w = Workbook.getWorkbook(inputWorkbook);
         } catch (BiffException e) {
             e.printStackTrace();
@@ -96,7 +97,8 @@ public abstract class AbstractReportExcelService implements ReportService {
     /*
      * (non-Javadoc)
      * 
-     * @see com.iisigroup.cap.report.ReportService#generateReport(com.iisigroup.cap.component.Request)
+     * @see com.iisigroup.cap.report.ReportService#generateReport(com.iisigroup.cap.
+     * component.Request)
      */
     @SuppressWarnings("unchecked")
     @Override
@@ -112,7 +114,8 @@ public abstract class AbstractReportExcelService implements ReportService {
             NumberFormat nf2 = new NumberFormat("#,##0.00");
             // 設定字形和字體大小
             WritableFont titleWf = new WritableFont(WritableFont.createFont("標楷體"), 12);
-            // WritableFont titleWf = new WritableFont(WritableFont.createFont("DFKai-sb"),12);
+            // WritableFont titleWf = new
+            // WritableFont(WritableFont.createFont("DFKai-sb"),12);
             WritableCellFormat timesString = new WritableCellFormat(defaultFont);
             WritableCellFormat timesNumber = new WritableCellFormat(nf);
             WritableCellFormat timesDouble = new WritableCellFormat(nf2);
@@ -136,7 +139,7 @@ public abstract class AbstractReportExcelService implements ReportService {
             Map<String, Object> reportData = execute(request);
             WorkbookSettings wbSettings = new WorkbookSettings();
             wbSettings.setRationalization(false);
-            wbSettings.setLocale(new Locale("zh", "TW"));
+            wbSettings.setLocale(Locale.of("zh", "TW"));
             WritableWorkbook workbook = Workbook.createWorkbook(out, t, wbSettings);
             WritableSheet sheet = workbook.getSheet(0);
             // 判斷是否為純數字
@@ -159,12 +162,15 @@ public abstract class AbstractReportExcelService implements ReportService {
                                         String cellVal = "";
                                         if (e.getValue() != null) {
                                             if (e.getValue() instanceof Timestamp) {
-                                                cellVal = CapDate.convertDateTimeFromF1ToF2(CapDate.getDateTimeFormat((Timestamp) e.getValue()), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd");
+                                                cellVal = CapDate.convertDateTimeFromF1ToF2(
+                                                        CapDate.getDateTimeFormat((Timestamp) e.getValue()),
+                                                        "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd");
                                             } else {
                                                 cellVal = e.getValue().toString();
                                             }
                                         }
-                                        Label label = new Label(x + offset.get(e.getKey()).getAsInt(), y, cellVal, timesString);
+                                        Label label = new Label(x + offset.get(e.getKey()).getAsInt(), y, cellVal,
+                                                timesString);
                                         sheet.addCell(label);
                                     }
                                 }
@@ -173,12 +179,16 @@ public abstract class AbstractReportExcelService implements ReportService {
                         } else {
                             if (value instanceof BigDecimal) {
 
-                                jxl.write.Number number = new jxl.write.Number(x, y, ((BigDecimal) value).doubleValue(), timesNumber);
+                                jxl.write.Number number = new jxl.write.Number(x, y, ((BigDecimal) value).doubleValue(),
+                                        timesNumber);
 
                                 // 判斷是否有小數點
-                                if (!((BigDecimal) value).divideAndRemainder(new BigDecimal(2))[1].equals(BigDecimal.ZERO)
-                                        && !((BigDecimal) value).divideAndRemainder(new BigDecimal(2))[1].equals(BigDecimal.ONE)) {
-                                    number = new jxl.write.Number(x, y, ((BigDecimal) value).doubleValue(), timesDouble);
+                                if (!((BigDecimal) value).divideAndRemainder(new BigDecimal(2))[1]
+                                        .equals(BigDecimal.ZERO)
+                                        && !((BigDecimal) value).divideAndRemainder(new BigDecimal(2))[1]
+                                                .equals(BigDecimal.ONE)) {
+                                    number = new jxl.write.Number(x, y, ((BigDecimal) value).doubleValue(),
+                                            timesDouble);
                                 }
 
                                 sheet.addCell(number);

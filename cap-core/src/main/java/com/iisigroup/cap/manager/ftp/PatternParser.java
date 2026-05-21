@@ -20,7 +20,8 @@ public class PatternParser {
     /**
      * 
      * @param pattern
-     *            %yyyy% 西元年 %yyy% 民國年 %MM% 月 %dd% 日 %hh% 時 %mm% 分 %9(02)% %X(01)%
+     *                 %yyyy% 西元年 %yyy% 民國年 %MM% 月 %dd% 日 %hh% 時 %mm% 分 %9(02)%
+     *                 %X(01)%
      * @param fileName
      * @return
      */
@@ -52,9 +53,7 @@ public class PatternParser {
         // regex += "$";
         Pattern regexPattern = Pattern.compile(Pattern.quote(regex));
         Matcher matcher = regexPattern.matcher(fileName);
-        boolean t1 = matcher.find();
-        boolean t2 = fileName.matches(Pattern.quote(regex));
-        boolean t3 = fileName.matches(regex);
+        matcher.find(); // advance matcher state
         return matcher.find();
     }
 
