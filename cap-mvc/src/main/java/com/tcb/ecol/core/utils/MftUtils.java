@@ -5,13 +5,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +32,7 @@ import com.iisigroup.cap.utils.CapString;
  *          </ul>
  */
 public class MftUtils {
-
+	
     private static final Logger logger = LoggerFactory.getLogger(CapBeanUtil.class);
     private static final int BUFFER_CAPACITY = 5200;// 初始StringBuffer大小
 
@@ -41,16 +41,16 @@ public class MftUtils {
 	 * 
 	 * @param cmdList
 	 * @return
-	 *     map key：returnCode、dataList
+	 *     map key：returnCode、fileNameList
 	 */
 	public static Map<String, Object> sendMft(List<String> cmdList, Boolean dirShow) {
 		Map<String, Object> map = new HashMap<String, Object>();
-        List<String> dataList = new ArrayList<String>();
+        List<String> fileNameList = new ArrayList<String>();
 
         try {
 			ProcessBuilder pb = new ProcessBuilder(cmdList.toArray(new String[cmdList.size()]));
 	        pb.redirectErrorStream(true);
-
+	
 	        Process p = pb.start();
 	        // 修復 Denial of Service
 	        ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -67,8 +67,11 @@ public class MftUtils {
 	                    		getFileName = false;
 	                    	} else if (getFileName && !line.contains("<DIR>")) {
 	                    		// 排除掉資料夾
-	                    		// 回傳格式" yyyy/MM/dd 上下午 hh:mm bytes filename"，所以要先trim前面的空白
-	                    		dataList.add(line.trim());
+	                    		// 回傳格式" yyyy/MM/dd 上午 hh:mm bytes filename"，所以要先trim前面的空白
+	                    		String[] fileDataArr = line.trim().split(" ");
+	                    		if (fileDataArr.length == 5) {
+	                    			fileNameList.add(fileDataArr[4]);
+	                    		}
 	                    	} else if (line.contains("目錄")) {
 	                    		getFileName = true;
 	                    	} else if (line.contains("rtncode")) {
@@ -81,7 +84,7 @@ public class MftUtils {
 	            } catch (Exception e) {
 	                logger.debug("sendToMFT Exception");
 	            }
-
+	
 	        });
 	        boolean finished = p.waitFor(10, TimeUnit.SECONDS); // 加上 timeout 控制
 	        if (!finished) {
@@ -91,14 +94,14 @@ public class MftUtils {
 	            int exitCode = p.exitValue();
 	            logger.debug("Exit code: " + exitCode);
 	        }
-
+	
 	        readerTask.get(5, TimeUnit.SECONDS); // 確保 reader 結束
-
+	
 	        String rtnCode = rtnOutput.toString();
-
+	
 	        logger.debug("Return Code: " + rtnCode);
-
-	        map.put("dataList", dataList);
+	        
+	        map.put("fileNameList", fileNameList);
 	        map.put("returnCode", rtnCode);
         } catch (IOException e) {
             logger.debug("receiveFromMFT IOException");
@@ -107,10 +110,10 @@ public class MftUtils {
         } catch (Exception e) {
             logger.debug("other Exception");
         }
-
+        
 		return map;
 	}
-
+	
 	/**
 	 * MFT 檔案接收 (by shell)，將 command 以空白切割成 List 傳入
 	 * 
@@ -169,5 +172,5 @@ public class MftUtils {
         }
 		return null;
 	}
-
+	
 }
