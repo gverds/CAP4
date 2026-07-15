@@ -58,9 +58,15 @@ public class CapFileUploadOpStep extends AbstractCustomizeOpStep {
         // must now be configured via servlet MultipartConfigElement (web.xml or
         // @MultipartConfig)
         // instead of being set dynamically at request time.
-
+        //
+        // Inject CustomStandardServletMultipartResolver (instead of the plain
+        // StandardServletMultipartResolver) to replicate the behaviour of the former
+        // CommonsFileUploadSupport.parseFileItems(): non-file form fields are read and
+        // cached so that getParameter/getParameterValues work regardless of whether the
+        // servlet container surfaces multipart parameters on its own.
         try {
-            return multipartResolver.resolveMultipart((HttpServletRequest) params.getServletRequest());
+            return multipartResolver.resolveMultipart(
+                    (HttpServletRequest) params.getServletRequest());
         } catch (MaxUploadSizeExceededException fe) {
             CapMessageException me = new CapMessageException(fileSizeLimitErrorCode, getClass());
             Object[] extra = new Object[] { CapMath.divide(String.valueOf(fe.getMaxUploadSize()), "1048576", 2) };
@@ -70,7 +76,6 @@ public class CapFileUploadOpStep extends AbstractCustomizeOpStep {
         } catch (MultipartException e) {
             throw new CapException(e, getClass());
         }
-
     }
 
     @Override
