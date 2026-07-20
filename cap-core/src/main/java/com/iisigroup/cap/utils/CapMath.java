@@ -569,17 +569,28 @@ public class CapMath implements Constants {
 
     public static String formatAmount(String amount, int delimiterDigit) {
         StringBuffer formattedAmount = new StringBuffer();
-        int firstTokenLength = amount.length() % delimiterDigit;
+        String[] parts = amount.split("\\.");
+        String integerPart = parts[0];
+        String decimalPart = "";
+        if (parts.length > 1) {
+            decimalPart = "." + parts[1];
+        }
+        int firstTokenLength = integerPart.length() % delimiterDigit;
         if (firstTokenLength > 0) {
-            formattedAmount.append(amount.substring(0, firstTokenLength));
+            formattedAmount.append(integerPart.substring(0, firstTokenLength));
         }
-        for (int i = firstTokenLength; i < amount.length(); i += delimiterDigit) {
-            if (i > 0) {
-                formattedAmount.append(',');
+        int i = firstTokenLength;
+        while (true) {
+            int i2 = i;
+            if (i2 < integerPart.length()) {
+                if (i2 > 0) {
+                    formattedAmount.append(',');
+                }
+                formattedAmount.append(integerPart.substring(i2, i2 + delimiterDigit));
+                i = i2 + delimiterDigit;
+            } else {
+                return formattedAmount.toString() + decimalPart;
             }
-            formattedAmount.append(amount.substring(i, i + delimiterDigit));
         }
-        // System.out.println(formattedAmount);
-        return formattedAmount.toString();
     }
 }
